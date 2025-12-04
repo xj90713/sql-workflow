@@ -18,6 +18,8 @@
   <properties>
     <java.version>17</java.version>
     <spring.boot.version>3.2.4</spring.boot.version>
+    <guava.version>31.1-jre</guava.version>
+    <httpclient.version>4.5.13</httpclient.version>
   </properties>
 
 
@@ -93,6 +95,21 @@
       <groupId>org.antlr</groupId>
       <artifactId>antlr4-runtime</artifactId>
       <version>4.7.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>${httpclient.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpmime</artifactId>
+      <version>${httpclient.version}</version>
     </dependency>
   </dependencies>
 
