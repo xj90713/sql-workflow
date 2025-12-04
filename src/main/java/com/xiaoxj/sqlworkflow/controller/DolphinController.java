@@ -1,4 +1,4 @@
-package com.xiaoxj.sqlworkflow.api;
+package com.xiaoxj.sqlworkflow.controller;
 
 import com.xiaoxj.sqlworkflow.service.DolphinGatewayClient;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.xiaoxj.sqlworkflow.api;
+package com.xiaoxj.sqlworkflow.controller;
 
 import com.xiaoxj.sqlworkflow.domain.TaskDependency;
 import com.xiaoxj.sqlworkflow.service.SqlLineageService;
