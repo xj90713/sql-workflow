@@ -10,10 +10,10 @@ import org.apache.http.protocol.RequestContent;
 
 public class BaseTest {
 
-  protected final String dolphinAddress = "http://localhost:12345/dolphinscheduler";
-  protected final Long projectCode = 8920447405632L;
-  private final String token = "e8438bb6324f2832cc6bd416566e8c64";
-  protected final String tenantCode = "chen";
+  protected final String dolphinAddress = "https://ds.gp51.com/dolphinscheduler";
+  protected final Long projectCode = 158327516778560L;
+  private final String token = "28459a89b01e79187adeb206334d0abd";
+  protected final String tenantCode = "admin";
 
   protected DolphinsRestTemplate restTemplate =
       new DolphinsRestTemplate(

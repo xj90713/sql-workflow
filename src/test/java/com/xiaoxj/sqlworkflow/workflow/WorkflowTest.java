@@ -44,6 +44,7 @@ public class WorkflowTest extends BaseTest {
 
     List<Long> taskCodes = getClient().opsForProcess().generateTaskCode(projectCode, 2);
 
+    System.out.println("test:" + taskCodes);
     // build shell task
     ShellTask shellTask = new ShellTask();
     shellTask.setRawScript("echo 'hello dolphin scheduler java sdk'");

@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/sql_workflow?useSSL=false&serverTimezone=Asia/Shanghai}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/sql_workflow?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:xiao@duan712}
+#    password: ${DB_PASSWORD:xiao@duan712}
   jpa:
     hibernate:
       ddl-auto: update
