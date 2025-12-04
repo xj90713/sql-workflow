@@ -20,6 +20,7 @@
     <spring.boot.version>3.2.4</spring.boot.version>
     <guava.version>31.1-jre</guava.version>
     <httpclient.version>4.5.13</httpclient.version>
+    <junit.version>4.13</junit.version>
   </properties>
 
 
@@ -110,6 +111,12 @@
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpmime</artifactId>
       <version>${httpclient.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
