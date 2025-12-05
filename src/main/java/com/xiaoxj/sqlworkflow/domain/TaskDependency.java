@@ -13,8 +13,10 @@ public class TaskDependency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String taskId;
+    private String taskCode;
     private String taskName;
+    private String workflowCode;
+    private String projectCode;
     private String sourceTables;
     private String targetTable;
     private String status;

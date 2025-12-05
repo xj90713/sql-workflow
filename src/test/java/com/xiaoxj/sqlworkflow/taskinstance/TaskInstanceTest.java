@@ -9,9 +9,9 @@ public class TaskInstanceTest extends BaseTest {
 
   @Test
   public void testPage() {
-    Long processInstanceId = 1L;
+    Long workflowInstanceId = 1L;
     List<TaskInstanceQueryResp> taskInstanceQueryResps =
-        getClient().opsForTaskInstance().page(projectCode, null, null, processInstanceId);
+        getClient().opsForTaskInstance().page(projectCode, null, null, workflowInstanceId);
 
     taskInstanceQueryResps.forEach(System.out::println);
   }

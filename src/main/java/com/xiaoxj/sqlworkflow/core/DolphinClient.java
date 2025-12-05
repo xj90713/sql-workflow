@@ -1,6 +1,6 @@
 package com.xiaoxj.sqlworkflow.core;
 
-import com.xiaoxj.sqlworkflow.instance.ProcessInstanceOperator;
+import com.xiaoxj.sqlworkflow.instance.WorkflowInstanceOperator;
 import com.xiaoxj.sqlworkflow.workflow.WorkflowOperator;
 import com.xiaoxj.sqlworkflow.project.ProjectOperator;
 import com.xiaoxj.sqlworkflow.remote.DolphinsRestTemplate;
@@ -13,7 +13,7 @@ public class DolphinClient {
     private final String token;
 
     private WorkflowOperator workflowOperator;
-    private ProcessInstanceOperator processInstanceOperator;
+    private WorkflowInstanceOperator workflowInstanceOperator;
     private TaskInstanceOperator taskInstanceOperator;
     private ProjectOperator projectOperator;
 
@@ -29,8 +29,8 @@ public class DolphinClient {
     public void initOperators() {
         this.workflowOperator =
                 new WorkflowOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
-        this.processInstanceOperator =
-                new ProcessInstanceOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
+        this.workflowInstanceOperator =
+                new WorkflowInstanceOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
         this.projectOperator =
                 new ProjectOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
         this.taskInstanceOperator =
@@ -38,12 +38,12 @@ public class DolphinClient {
     }
 
 
-    public WorkflowOperator opsForProcess() {
+    public WorkflowOperator opsForWorkflow() {
         return this.workflowOperator;
     }
 
-    public ProcessInstanceOperator opsForProcessInst() {
-        return this.processInstanceOperator;
+    public WorkflowInstanceOperator opsForWorkflowInst() {
+        return this.workflowInstanceOperator;
     }
 
     public TaskInstanceOperator opsForTaskInstance() {

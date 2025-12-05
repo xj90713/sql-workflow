@@ -110,7 +110,7 @@ public class SqlLineageService {
 
         List<TaskDependency> deps = depRepo.findByTaskName(taskName);
         TaskDependency dep = (deps != null && !deps.isEmpty()) ? deps.get(deps.size() - 1) : new TaskDependency();
-        dep.setTaskId(taskName);
+        dep.setTaskCode(taskName);
         dep.setTaskName(taskName);
         dep.setSourceTables(sourceTableStrings);
         dep.setTargetTable(targetTable);

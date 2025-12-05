@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/** define process response,copied from org.apache.dolphinscheduler.dao.entity.ProcessDefinition */
+/** define workflow response,copied from org.apache.dolphinscheduler.dao.entity.workflowDefinition */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WrokflowDefineResp {
@@ -51,10 +51,10 @@ public class WrokflowDefineResp {
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
   private Date updateTime;
 
-  /** process is valid: yes/no */
+  /** workflow is valid: yes/no */
   private String flag;
 
-  /** process user id */
+  /** workflow user id */
   private int userId;
 
   /** user name */
@@ -72,7 +72,7 @@ public class WrokflowDefineResp {
   /** schedule (optional, varies by DS version) */
   private String schedule;
 
-  /** process warning time out. unit: minute */
+  /** workflow warning time out. unit: minute */
   private int timeout;
 
   /** tenant id */

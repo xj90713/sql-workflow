@@ -3,12 +3,12 @@ package com.xiaoxj.sqlworkflow.instance;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-/** re run/recover process instance */
+/** re run/recover workflow instance */
 @Data
 @Accessors(chain = true)
-public class ProcessInstanceRunParam {
+public class WorkflowInstanceRunParam {
 
-  private Long processInstanceId;
+  private Long workflowInstanceId;
 
   private String executeType;
 }

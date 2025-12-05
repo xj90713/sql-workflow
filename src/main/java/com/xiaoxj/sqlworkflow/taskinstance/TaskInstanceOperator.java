@@ -29,11 +29,11 @@ public class TaskInstanceOperator extends AbstractOperator {
    * @param projectCode project code
    * @param page page
    * @param size size
-   * @param processInstanceId process instance id
+   * @param workflowInstanceId workflow instance id
    * @return list
    */
   public List<TaskInstanceQueryResp> page(
-      Long projectCode, Integer page, Integer size, Long processInstanceId) {
+      Long projectCode, Integer page, Integer size, Long workflowInstanceId) {
     page = Optional.ofNullable(page).orElse(DolphinClientConstant.Page.DEFAULT_PAGE);
     size = Optional.ofNullable(size).orElse(DolphinClientConstant.Page.DEFAULT_SIZE);
 
@@ -42,7 +42,7 @@ public class TaskInstanceOperator extends AbstractOperator {
         new Query()
             .addParam("pageNo", String.valueOf(page))
             .addParam("pageSize", String.valueOf(size))
-            .addParam("processInstanceId", String.valueOf(processInstanceId));
+            .addParam("workflowInstanceId", String.valueOf(workflowInstanceId));
 
     try {
       HttpRestResult<JsonNode> restResult =

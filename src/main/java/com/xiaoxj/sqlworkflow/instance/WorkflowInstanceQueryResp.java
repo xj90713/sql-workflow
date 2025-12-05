@@ -8,22 +8,22 @@ import lombok.experimental.Accessors;
 
 import java.util.Date;
 
-/** copied from org.apache.dolphinscheduler.dao.entity.ProcessInstance */
+/** copied from org.apache.dolphinscheduler.dao.entity.workflowInstance */
 @Data
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProcessInstanceQueryResp {
+public class WorkflowInstanceQueryResp {
 
   /** id */
   private int id;
 
-  /** process definition code */
-  private Long processDefinitionCode;
+  /** workflow definition code */
+  private Long workflowDefinitionCode;
 
-  /** process definition version */
-  private int processDefinitionVersion;
+  /** workflow definition version */
+  private int workflowDefinitionVersion;
 
-  /** process state */
+  /** workflow state */
   private String state;
   /** recovery flag for failover */
   private String recovery;
@@ -44,9 +44,9 @@ public class ProcessInstanceQueryResp {
   /** host */
   private String host;
 
-  /** process definition structure */
-  private WrokflowDefineResp processDefinition;
-  /** process command type */
+  /** workflow definition structure */
+  private WrokflowDefineResp workflowDefinition;
+  /** workflow command type */
   private String commandType;
 
   /** command parameters */
@@ -90,8 +90,8 @@ public class ProcessInstanceQueryResp {
   /** queue */
   private String queue;
 
-  /** process is sub process */
-  private String isSubProcess;
+  /** workflow is sub workflow */
+  private String isSubWorkflow;
 
   /** task locations for web */
   private String locations;
@@ -99,18 +99,18 @@ public class ProcessInstanceQueryResp {
   /** history command */
   private String historyCmd;
 
-  /** depend processes schedule time */
+  /** depend workflows schedule time */
   private String dependenceScheduleTimes;
 
   /**
-   * process duration
+   * workflow duration
    *
    * @return
    */
   private String duration;
 
-  /** process instance priority */
-  private String processInstancePriority;
+  /** workflow instance priority */
+  private String workflowInstancePriority;
 
   /** worker group */
   private String workerGroup;
@@ -118,7 +118,7 @@ public class ProcessInstanceQueryResp {
   /** environment code */
   private Long environmentCode;
 
-  /** process timeout for warning */
+  /** workflow timeout for warning */
   private int timeout;
 
   /** tenant id */

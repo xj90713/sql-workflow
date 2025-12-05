@@ -19,7 +19,7 @@ package com.xiaoxj.sqlworkflow.taskinstance;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.xiaoxj.sqlworkflow.instance.ProcessInstanceQueryResp;
+import com.xiaoxj.sqlworkflow.instance.WorkflowInstanceQueryResp;
 import com.xiaoxj.sqlworkflow.workflow.WrokflowDefineResp;
 import com.xiaoxj.sqlworkflow.workflow.TaskDefinition;
 import lombok.Data;
@@ -44,9 +44,9 @@ public class TaskInstanceQueryResp implements Serializable {
   /** task type */
   private String taskType;
 
-  private int processInstanceId;
+  private int workflowInstanceId;
 
-  private String processInstanceName;
+  private String workflowInstanceName;
 
   private Long projectCode;
 
@@ -54,9 +54,9 @@ public class TaskInstanceQueryResp implements Serializable {
 
   private int taskDefinitionVersion;
 
-  private String processDefinitionName;
+  private String workflowDefinitionName;
 
-  /** process instance name */
+  /** workflow instance name */
   private int taskGroupPriority;
 
   /** state */
@@ -83,11 +83,11 @@ public class TaskInstanceQueryResp implements Serializable {
 
   /**
    * task shell execute path and the resource down from hdfs default path:
-   * $base_run_dir/processInstanceId/taskInstanceId/retryTimes
+   * $base_run_dir/workflowInstanceId/taskInstanceId/retryTimes
    */
   private String executePath;
 
-  /** task log path default path: $base_run_dir/processInstanceId/taskInstanceId/retryTimes */
+  /** task log path default path: $base_run_dir/workflowInstanceId/taskInstanceId/retryTimes */
   private String logPath;
 
   /** retry times */
@@ -96,16 +96,16 @@ public class TaskInstanceQueryResp implements Serializable {
   /** alert flag */
   private String alertFlag;
 
-  /** process instance */
-  private ProcessInstanceQueryResp processInstance;
+  /** workflow instance */
+  private WorkflowInstanceQueryResp workflowInstance;
 
-  /** process definition */
-  private WrokflowDefineResp processDefine;
+  /** workflow definition */
+  private WrokflowDefineResp workflowDefine;
 
   /** task definition */
   private TaskDefinition taskDefine;
 
-  /** process id */
+  /** workflow id */
   private int pid;
 
   /** appLink */
@@ -138,8 +138,8 @@ public class TaskInstanceQueryResp implements Serializable {
   /** task intance priority */
   private String taskInstancePriority;
 
-  /** process intance priority */
-  private String processInstancePriority;
+  /** workflow intance priority */
+  private String workflowInstancePriority;
 
   /** dependent state */
   private String dependentResult;

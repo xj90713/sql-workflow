@@ -16,29 +16,29 @@ public class DolphinSchedulerService {
     }
 
     public List<Long> generateTaskCodes(Long projectCode, int count) {
-        return dolphinClient.opsForProcess().generateTaskCode(projectCode, count);
+        return dolphinClient.opsForWorkflow().generateTaskCode(projectCode, count);
     }
 
     public List<WrokflowDefineResp> listWorkflows(Long projectCode, Integer pageNo, Integer pageSize, String searchVal) {
-        return dolphinClient.opsForProcess().page(projectCode, pageNo, pageSize, searchVal);
+        return dolphinClient.opsForWorkflow().page(projectCode, pageNo, pageSize, searchVal);
     }
 
     public WrokflowDefineResp createWorkflow(Long projectCode, WrokflowDefineParam param) {
-        return dolphinClient.opsForProcess().create(projectCode, param);
+        return dolphinClient.opsForWorkflow().create(projectCode, param);
     }
 
     public WrokflowDefineResp updateWorkflow(Long projectCode, Long workflowCode, WrokflowDefineParam param) {
-        return dolphinClient.opsForProcess().update(projectCode, param, workflowCode);
+        return dolphinClient.opsForWorkflow().update(projectCode, param, workflowCode);
     }
 
     public boolean deleteWorkflow(Long projectCode, Long workflowCode) {
-        return dolphinClient.opsForProcess().delete(projectCode, workflowCode);
+        return dolphinClient.opsForWorkflow().delete(projectCode, workflowCode);
     }
     public boolean onlineWorkflow(Long projectCode, Long workflowCode) {
-        return dolphinClient.opsForProcess().online(projectCode, workflowCode);
+        return dolphinClient.opsForWorkflow().online(projectCode, workflowCode);
     }
 
     public boolean offlineWorkflow(Long projectCode, Long workflowCode) {
-        return dolphinClient.opsForProcess().offline(projectCode, workflowCode);
+        return dolphinClient.opsForWorkflow().offline(projectCode, workflowCode);
     }
 }

@@ -20,7 +20,7 @@ public class TaskTest extends BaseTest {
 
   @Test
   public void testShellTask() {
-    Long taskCode = getClient().opsForProcess().generateTaskCode(projectCode, 1).get(0);
+    Long taskCode = getClient().opsForWorkflow().generateTaskCode(projectCode, 1).get(0);
     ShellTask shellTask = new ShellTask();
     shellTask.setRawScript("echo 'hello dolphin scheduler java sdk'");
 
@@ -34,7 +34,7 @@ public class TaskTest extends BaseTest {
 
   @Test
   public void testHttpTask() {
-    Long taskCode = getClient().opsForProcess().generateTaskCode(projectCode, 1).get(0);
+    Long taskCode = getClient().opsForWorkflow().generateTaskCode(projectCode, 1).get(0);
 
     HttpTask httpTask = new HttpTask();
     httpTask
@@ -54,7 +54,7 @@ public class TaskTest extends BaseTest {
   /** run this test before creating datasource and then set its id to SqlTask */
   @Test
   public void testSqlTask() {
-    Long taskCode = getClient().opsForProcess().generateTaskCode(projectCode, 1).get(0);
+    Long taskCode = getClient().opsForWorkflow().generateTaskCode(projectCode, 1).get(0);
 
     SqlTask sqlTask = new SqlTask();
     sqlTask
@@ -78,7 +78,7 @@ public class TaskTest extends BaseTest {
 
   @Test
   public void testPythonTask() {
-    Long taskCode = getClient().opsForProcess().generateTaskCode(projectCode, 1).get(0);
+    Long taskCode = getClient().opsForWorkflow().generateTaskCode(projectCode, 1).get(0);
     PythonTask pythonTask = new PythonTask();
     pythonTask.setRawScript("print('hello dolphin scheduler sdk.')");
 
@@ -91,7 +91,7 @@ public class TaskTest extends BaseTest {
 
   @Test
   public void testConditionTask() {
-    List<Long> taskCodes = getClient().opsForProcess().generateTaskCode(projectCode, 4);
+    List<Long> taskCodes = getClient().opsForWorkflow().generateTaskCode(projectCode, 4);
 
     // -------------building task------------------
     // shell task
@@ -160,15 +160,15 @@ public class TaskTest extends BaseTest {
         .setTaskRelationJson(Arrays.asList(r1, r2, r3, r4))
         .setGlobalParams(null);
 
-    WrokflowDefineResp resp = getClient().opsForProcess().create(projectCode, pcr);
+    WrokflowDefineResp resp = getClient().opsForWorkflow().create(projectCode, pcr);
     System.out.println(resp);
     Assert.assertEquals("condition-dag", resp.getName());
   }
 
   private void submit(
-      Long taskCode, TaskDefinition taskDefinition, String processName, String description) {
+      Long taskCode, TaskDefinition taskDefinition, String workflowName, String description) {
     WrokflowDefineParam pcr = new WrokflowDefineParam();
-    pcr.setName(processName)
+    pcr.setName(workflowName)
         .setLocations(TaskLocationUtils.verticalLocation(taskCode))
         .setDescription(description)
         .setTenantCode(tenantCode)
@@ -178,16 +178,16 @@ public class TaskTest extends BaseTest {
         .setTaskRelationJson(TaskRelationUtils.oneLineRelation(taskCode))
         .setGlobalParams(null);
 
-    WrokflowDefineResp resp = getClient().opsForProcess().create(projectCode, pcr);
+    WrokflowDefineResp resp = getClient().opsForWorkflow().create(projectCode, pcr);
     System.out.println(resp);
-    Assert.assertEquals(processName, resp.getName());
+    Assert.assertEquals(workflowName, resp.getName());
   }
 
   @Test
   public void testGenerateTaskCode() {
     int expectedCodeNumber = 10;
     List<Long> taskCodes =
-        super.getClient().opsForProcess().generateTaskCode(projectCode, expectedCodeNumber);
+        super.getClient().opsForWorkflow().generateTaskCode(projectCode, expectedCodeNumber);
     Assert.assertEquals(expectedCodeNumber, taskCodes.size());
   }
 }

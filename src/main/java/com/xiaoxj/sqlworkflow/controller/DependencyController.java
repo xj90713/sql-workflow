@@ -56,7 +56,7 @@ public class DependencyController {
         WrokflowDefineParam pcr = new WrokflowDefineParam();
         pcr.setName(taskName)
                 .setLocations(TaskLocationUtils.horizontalLocation(taskCodes.toArray(new Long[0])))
-                .setDescription("test-dag-description")
+                .setDescription(fileName)
                 .setTenantCode(tenantCode)
                 .setTimeout("0")
                 .setExecutionType(WrokflowDefineParam.EXECUTION_TYPE_PARALLEL)

@@ -6,9 +6,9 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 /**
- * dolphin scheduler define process param
+ * dolphin scheduler define workflow param
  *
- * <p>dolphin scheduler use post form type to create process,so in fact every attribute is string
+ * <p>dolphin scheduler use post form type to create workflow,so in fact every attribute is string
  * type
  *
  * <p>but in order to develop easier,we use TaskLocation,TaskDefinition,TaskRelation object,and
@@ -44,7 +44,7 @@ public class WrokflowDefineParam {
   /**
    * PARALLEL,SERIAL_WAIT,SERIAL_DISCARD,SERIAL_PRIORITY
    *
-   * <p>@see org.apache.dolphinscheduler.common.enums.ProcessExecutionTypeEnum
+   * <p>@see org.apache.dolphinscheduler.common.enums.workflowExecutionTypeEnum
    */
   private String executionType;
 
