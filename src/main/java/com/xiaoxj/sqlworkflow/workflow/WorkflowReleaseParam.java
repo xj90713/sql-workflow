@@ -1,11 +1,11 @@
-package com.xiaoxj.sqlworkflow.process;
+package com.xiaoxj.sqlworkflow.workflow;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class ProcessReleaseParam {
+public class WorkflowReleaseParam {
 
   public static final String ONLINE_STATE = "ONLINE";
   public static final String OFFLINE_STATE = "OFFLINE";
@@ -19,18 +19,18 @@ public class ProcessReleaseParam {
   /**
    * create instance with online state
    *
-   * @return {@link ProcessReleaseParam} with online state
+   * @return {@link WorkflowReleaseParam} with online state
    */
-  public static ProcessReleaseParam newOnlineInstance() {
-    return new ProcessReleaseParam().setReleaseState(ONLINE_STATE);
+  public static WorkflowReleaseParam newOnlineInstance() {
+    return new WorkflowReleaseParam().setReleaseState(ONLINE_STATE);
   }
 
   /**
    * create instance with offline state
    *
-   * @return {@link ProcessReleaseParam} with offline state
+   * @return {@link WorkflowReleaseParam} with offline state
    */
-  public static ProcessReleaseParam newOfflineInstance() {
-    return new ProcessReleaseParam().setReleaseState(OFFLINE_STATE);
+  public static WorkflowReleaseParam newOfflineInstance() {
+    return new WorkflowReleaseParam().setReleaseState(OFFLINE_STATE);
   }
 }

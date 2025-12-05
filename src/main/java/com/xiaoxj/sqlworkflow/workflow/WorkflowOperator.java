@@ -1,4 +1,4 @@
-package com.xiaoxj.sqlworkflow.process;
+package com.xiaoxj.sqlworkflow.workflow;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-public class ProcessOperator extends AbstractOperator {
+public class WorkflowOperator extends AbstractOperator {
 
-  public ProcessOperator(
+  public WorkflowOperator(
       String dolphinAddress, String token, DolphinsRestTemplate dolphinsRestTemplate) {
     super(dolphinAddress, token, dolphinsRestTemplate);
   }
@@ -32,13 +32,13 @@ public class ProcessOperator extends AbstractOperator {
    * @param searchVal process name
    * @return list
    */
-  public List<ProcessDefineResp> page(
+  public List<WrokflowDefineResp> page(
       Long projectCode, Integer page, Integer size, String searchVal) {
     page = Optional.ofNullable(page).orElse(DolphinClientConstant.Page.DEFAULT_PAGE);
     size = Optional.ofNullable(size).orElse(DolphinClientConstant.Page.DEFAULT_SIZE);
     searchVal = Optional.ofNullable(searchVal).orElse("");
 
-    String url = dolphinAddress + "/projects/" + projectCode + "/process-definition";
+    String url = dolphinAddress + "/projects/" + projectCode + "/workflow-definition";
     Query query =
         new Query()
             .addParam("pageNo", String.valueOf(page))
@@ -50,7 +50,7 @@ public class ProcessOperator extends AbstractOperator {
           dolphinsRestTemplate.get(url, getHeader(), query, JsonNode.class);
 
       return JacksonUtils.parseObject(
-              restResult.getData().toString(), new TypeReference<PageInfo<ProcessDefineResp>>() {})
+              restResult.getData().toString(), new TypeReference<PageInfo<WrokflowDefineResp>>() {})
           .getTotalList();
     } catch (Exception e) {
       throw new DolphinException("list dolphin scheduler workflow fail", e);
@@ -59,22 +59,22 @@ public class ProcessOperator extends AbstractOperator {
 
   /**
    * create dolphin scheduler process api:
-   * /dolphinscheduler/projects/{projectCode}/process-definition
+   * /dolphinscheduler/projects/{projectCode}/workflow-definition
    *
    * @param projectCode project code
-   * @param processDefineParam create process param
+   * @param wrokflowDefineParam create process param
    * @return create response
    */
-  public ProcessDefineResp create(Long projectCode, ProcessDefineParam processDefineParam) {
-    String url = dolphinAddress + "/projects/" + projectCode + "/process-definition";
+  public WrokflowDefineResp create(Long projectCode, WrokflowDefineParam wrokflowDefineParam) {
+    String url = dolphinAddress + "/projects/" + projectCode + "/workflow-definition";
     log.info(
         "create process definition, url:{}, param:{}",
         url,
-        JacksonUtils.toJSONString(processDefineParam));
+        JacksonUtils.toJSONString(wrokflowDefineParam));
     try {
-      HttpRestResult<ProcessDefineResp> restResult =
+      HttpRestResult<WrokflowDefineResp> restResult =
           dolphinsRestTemplate.postForm(
-              url, getHeader(), processDefineParam, ProcessDefineResp.class);
+              url, getHeader(), wrokflowDefineParam, WrokflowDefineResp.class);
       if (restResult.getSuccess()) {
         return restResult.getData();
       } else {
@@ -89,20 +89,20 @@ public class ProcessOperator extends AbstractOperator {
   /**
    * update dolphin scheduler workflow
    *
-   * <p>api:/dolphinscheduler/projects/{projectCode}/process-definition/{process-definition-code}
+   * <p>api:/dolphinscheduler/projects/{projectCode}/workflow-definition/{workflow-definition-code}
    *
-   * @param processDefineParam update process def param
+   * @param wrokflowDefineParam update process def param
    * @param processCode workflow code
    * @return update response json
    */
-  public ProcessDefineResp update(
-      Long projectCode, ProcessDefineParam processDefineParam, Long processCode) {
-    String url = dolphinAddress + "/projects/" + projectCode + "/process-definition/" + processCode;
-    log.info("update process definition, url:{}, param:{}", url, processDefineParam);
+  public WrokflowDefineResp update(
+          Long projectCode, WrokflowDefineParam wrokflowDefineParam, Long processCode) {
+    String url = dolphinAddress + "/projects/" + projectCode + "/workflow-definition/" + processCode;
+    log.info("update process definition, url:{}, param:{}", url, wrokflowDefineParam);
     try {
-      HttpRestResult<ProcessDefineResp> restResult =
+      HttpRestResult<WrokflowDefineResp> restResult =
           dolphinsRestTemplate.putForm(
-              url, getHeader(), processDefineParam, ProcessDefineResp.class);
+              url, getHeader(), wrokflowDefineParam, WrokflowDefineResp.class);
       if (restResult.getSuccess()) {
         return restResult.getData();
       } else {
@@ -122,7 +122,7 @@ public class ProcessOperator extends AbstractOperator {
    * @return true for success,otherwise false
    */
   public Boolean delete(Long projectCode, Long processCode) {
-    String url = dolphinAddress + "/projects/" + projectCode + "/process-definition/" + processCode;
+    String url = dolphinAddress + "/projects/" + projectCode + "/workflow-definition/" + processCode;
     log.info("delete process definition,processCode:{}, url:{}", processCode, url);
     try {
       HttpRestResult<String> restResult =
@@ -134,20 +134,20 @@ public class ProcessOperator extends AbstractOperator {
   }
 
   /**
-   * release, api: /dolphinscheduler/projects/{projectCode}/process-definition/{code}/release
+   * release, api: /dolphinscheduler/projects/{projectCode}/workflow-definition/{code}/release
    *
    * @param projectCode project code
    * @param code workflow id
-   * @param processReleaseParam param
+   * @param workflowReleaseParam param
    * @return true for success,otherwise false
    */
-  public Boolean release(Long projectCode, Long code, ProcessReleaseParam processReleaseParam) {
+  public Boolean release(Long projectCode, Long code, WorkflowReleaseParam workflowReleaseParam) {
     String url =
-        dolphinAddress + "/projects/" + projectCode + "/process-definition/" + code + "/release";
-    log.info("release process definition,url:{}, param:{}", url, processReleaseParam);
+        dolphinAddress + "/projects/" + projectCode + "/workflow-definition/" + code + "/release";
+    log.info("release process definition,url:{}, param:{}", url, workflowReleaseParam);
     try {
       HttpRestResult<String> restResult =
-          dolphinsRestTemplate.postForm(url, getHeader(), processReleaseParam, String.class);
+          dolphinsRestTemplate.postForm(url, getHeader(), workflowReleaseParam, String.class);
       return restResult.getSuccess();
     } catch (Exception e) {
       throw new DolphinException("release dolphin scheduler workflow fail", e);
@@ -155,25 +155,25 @@ public class ProcessOperator extends AbstractOperator {
   }
 
   /**
-   * online workflow, this method can replace {@link #release(Long, Long, ProcessReleaseParam)}
+   * online workflow, this method can replace {@link #release(Long, Long, WorkflowReleaseParam)}
    *
    * @param projectCode project code
    * @param code workflow id
    * @return true for success,otherwise false
    */
   public Boolean online(Long projectCode, Long code) {
-    return release(projectCode, code, ProcessReleaseParam.newOnlineInstance());
+    return release(projectCode, code, WorkflowReleaseParam.newOnlineInstance());
   }
 
   /**
-   * offline workflow, this method can replace {@link #release(Long, Long, ProcessReleaseParam)}
+   * offline workflow, this method can replace {@link #release(Long, Long, WorkflowReleaseParam)}
    *
    * @param projectCode project code
    * @param code workflow id
    * @return true for success,otherwise false
    */
   public Boolean offline(Long projectCode, Long code) {
-    return release(projectCode, code, ProcessReleaseParam.newOfflineInstance());
+    return release(projectCode, code, WorkflowReleaseParam.newOfflineInstance());
   }
 
   /**

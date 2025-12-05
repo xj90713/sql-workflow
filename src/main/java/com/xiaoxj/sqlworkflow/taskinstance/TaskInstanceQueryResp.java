@@ -20,8 +20,8 @@ package com.xiaoxj.sqlworkflow.taskinstance;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.xiaoxj.sqlworkflow.instance.ProcessInstanceQueryResp;
-import com.xiaoxj.sqlworkflow.process.ProcessDefineResp;
-import com.xiaoxj.sqlworkflow.process.TaskDefinition;
+import com.xiaoxj.sqlworkflow.workflow.WrokflowDefineResp;
+import com.xiaoxj.sqlworkflow.workflow.TaskDefinition;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -100,7 +100,7 @@ public class TaskInstanceQueryResp implements Serializable {
   private ProcessInstanceQueryResp processInstance;
 
   /** process definition */
-  private ProcessDefineResp processDefine;
+  private WrokflowDefineResp processDefine;
 
   /** task definition */
   private TaskDefinition taskDefine;

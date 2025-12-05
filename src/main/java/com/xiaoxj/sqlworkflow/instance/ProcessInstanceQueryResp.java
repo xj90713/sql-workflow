@@ -2,7 +2,7 @@ package com.xiaoxj.sqlworkflow.instance;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.xiaoxj.sqlworkflow.process.ProcessDefineResp;
+import com.xiaoxj.sqlworkflow.workflow.WrokflowDefineResp;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -45,7 +45,7 @@ public class ProcessInstanceQueryResp {
   private String host;
 
   /** process definition structure */
-  private ProcessDefineResp processDefinition;
+  private WrokflowDefineResp processDefinition;
   /** process command type */
   private String commandType;
 

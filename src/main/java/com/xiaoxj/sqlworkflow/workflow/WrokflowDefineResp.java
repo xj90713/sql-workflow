@@ -1,6 +1,7 @@
-package com.xiaoxj.sqlworkflow.process;
+package com.xiaoxj.sqlworkflow.workflow;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.Date;
@@ -9,7 +10,8 @@ import java.util.Map;
 
 /** define process response,copied from org.apache.dolphinscheduler.dao.entity.ProcessDefinition */
 @Data
-public class ProcessDefineResp {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class WrokflowDefineResp {
 
   /** id */
   private int id;
@@ -66,6 +68,9 @@ public class ProcessDefineResp {
 
   /** schedule release state : online/offline */
   private String scheduleReleaseState;
+
+  /** schedule (optional, varies by DS version) */
+  private String schedule;
 
   /** process warning time out. unit: minute */
   private int timeout;

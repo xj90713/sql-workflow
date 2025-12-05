@@ -1,7 +1,7 @@
 package com.xiaoxj.sqlworkflow.util;
 
 
-import com.xiaoxj.sqlworkflow.process.TaskRelation;
+import com.xiaoxj.sqlworkflow.workflow.TaskRelation;
 
 import java.util.ArrayList;
 import java.util.List;

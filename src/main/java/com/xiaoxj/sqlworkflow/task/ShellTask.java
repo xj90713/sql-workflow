@@ -1,6 +1,6 @@
 package com.xiaoxj.sqlworkflow.task;
 
-import com.xiaoxj.sqlworkflow.process.Parameter;
+import com.xiaoxj.sqlworkflow.workflow.Parameter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

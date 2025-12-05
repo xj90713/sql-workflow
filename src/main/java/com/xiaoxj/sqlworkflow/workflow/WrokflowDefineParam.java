@@ -1,4 +1,4 @@
-package com.xiaoxj.sqlworkflow.process;
+package com.xiaoxj.sqlworkflow.workflow;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class ProcessDefineParam {
+public class WrokflowDefineParam {
 
   public static final String EXECUTION_TYPE_PARALLEL = "PARALLEL";
   public static final String EXECUTION_TYPE_SERIAL_WAIT = "SERIAL_WAIT";
@@ -53,19 +53,19 @@ public class ProcessDefineParam {
 
   private String timeout;
 
-  public static ProcessDefineParam newParallelInstance() {
-    return new ProcessDefineParam().setExecutionType(EXECUTION_TYPE_PARALLEL);
+  public static WrokflowDefineParam newParallelInstance() {
+    return new WrokflowDefineParam().setExecutionType(EXECUTION_TYPE_PARALLEL);
   }
 
-  public static ProcessDefineParam newSerialWaitInstance() {
-    return new ProcessDefineParam().setExecutionType(EXECUTION_TYPE_SERIAL_WAIT);
+  public static WrokflowDefineParam newSerialWaitInstance() {
+    return new WrokflowDefineParam().setExecutionType(EXECUTION_TYPE_SERIAL_WAIT);
   }
 
-  public static ProcessDefineParam newSerialDiscardInstance() {
-    return new ProcessDefineParam().setExecutionType(EXECUTION_TYPE_SERIAL_DISCARD);
+  public static WrokflowDefineParam newSerialDiscardInstance() {
+    return new WrokflowDefineParam().setExecutionType(EXECUTION_TYPE_SERIAL_DISCARD);
   }
 
-  public static ProcessDefineParam newSerialPriorityInstance() {
-    return new ProcessDefineParam().setExecutionType(EXECUTION_TYPE_SERIAL_PRIORITY);
+  public static WrokflowDefineParam newSerialPriorityInstance() {
+    return new WrokflowDefineParam().setExecutionType(EXECUTION_TYPE_SERIAL_PRIORITY);
   }
 }

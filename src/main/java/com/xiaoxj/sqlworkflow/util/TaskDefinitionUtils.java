@@ -2,7 +2,7 @@ package com.xiaoxj.sqlworkflow.util;
 
 
 import com.google.common.base.Strings;
-import com.xiaoxj.sqlworkflow.process.TaskDefinition;
+import com.xiaoxj.sqlworkflow.workflow.TaskDefinition;
 import com.xiaoxj.sqlworkflow.task.AbstractTask;
 
 import java.util.Optional;
@@ -29,6 +29,10 @@ public class TaskDefinitionUtils {
    */
   public static TaskDefinition createDefaultTaskDefinition(Long taskCode, AbstractTask task) {
     return createTaskDefinition(null, taskCode, 0, task, FLAG_YES, PRIORITY_MEDIUM, null, null);
+  }
+
+  public static TaskDefinition createDefaultTaskDefinition(Long taskCode, AbstractTask task, String description) {
+    return createTaskDefinition(null, taskCode, 0, task, FLAG_YES, PRIORITY_MEDIUM, null, null, description);
   }
 
   /**
@@ -120,6 +124,41 @@ public class TaskDefinitionUtils {
         .setTimeoutFlag("CLOSE")
         .setTimeoutNotifyStrategy("WARN")
         .setIsCache("NO");
+    Optional.ofNullable(cpuQuota).ifPresent(taskDefinition::setCpuQuota);
+    Optional.ofNullable(memoryMax).ifPresent(taskDefinition::setMemoryMax);
+    return taskDefinition;
+  }
+
+  public static TaskDefinition createTaskDefinition(
+          String taskName,
+          Long taskCode,
+          Integer version,
+          AbstractTask task,
+          String flag,
+          String taskPriority,
+          Integer cpuQuota,
+          Long memoryMax,
+          String description) {
+    TaskDefinition taskDefinition = new TaskDefinition();
+    if (Strings.isNullOrEmpty(taskName)) {
+      taskName = task.getTaskType().concat(String.valueOf(System.currentTimeMillis()));
+    }
+
+    taskDefinition
+            .setCode(taskCode)
+            .setVersion(version)
+            .setName(taskName)
+            .setDescription(description)
+            .setTaskType(task.getTaskType())
+            .setTaskParams(task)
+            .setFlag(flag)
+            .setTaskPriority(taskPriority)
+            .setWorkerGroup("default")
+            .setFailRetryTimes("0")
+            .setFailRetryInterval("1")
+            .setTimeoutFlag("CLOSE")
+            .setTimeoutNotifyStrategy("WARN")
+            .setIsCache("NO");
     Optional.ofNullable(cpuQuota).ifPresent(taskDefinition::setCpuQuota);
     Optional.ofNullable(memoryMax).ifPresent(taskDefinition::setMemoryMax);
     return taskDefinition;

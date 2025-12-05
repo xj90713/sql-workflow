@@ -1,7 +1,8 @@
 package com.xiaoxj.sqlworkflow.core;
 
 import com.xiaoxj.sqlworkflow.instance.ProcessInstanceOperator;
-import com.xiaoxj.sqlworkflow.process.ProcessOperator;
+import com.xiaoxj.sqlworkflow.workflow.WorkflowOperator;
+import com.xiaoxj.sqlworkflow.project.ProjectOperator;
 import com.xiaoxj.sqlworkflow.remote.DolphinsRestTemplate;
 import com.xiaoxj.sqlworkflow.taskinstance.TaskInstanceOperator;
 
@@ -11,9 +12,11 @@ public class DolphinClient {
     private final String dolphinAddress;
     private final String token;
 
-    private ProcessOperator processOperator;
+    private WorkflowOperator workflowOperator;
     private ProcessInstanceOperator processInstanceOperator;
     private TaskInstanceOperator taskInstanceOperator;
+    private ProjectOperator projectOperator;
+
 
     public DolphinClient(
             String token, String dolphinAddress, DolphinsRestTemplate dolphinsRestTemplate) {
@@ -24,17 +27,19 @@ public class DolphinClient {
     }
 
     public void initOperators() {
-        this.processOperator =
-                new ProcessOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
+        this.workflowOperator =
+                new WorkflowOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
         this.processInstanceOperator =
                 new ProcessInstanceOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
+        this.projectOperator =
+                new ProjectOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
         this.taskInstanceOperator =
                 new TaskInstanceOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
     }
 
 
-    public ProcessOperator opsForProcess() {
-        return this.processOperator;
+    public WorkflowOperator opsForProcess() {
+        return this.workflowOperator;
     }
 
     public ProcessInstanceOperator opsForProcessInst() {
@@ -45,4 +50,7 @@ public class DolphinClient {
         return this.taskInstanceOperator;
     }
 
+    public ProjectOperator opsForProject() {
+        return this.projectOperator;
+    }
 }

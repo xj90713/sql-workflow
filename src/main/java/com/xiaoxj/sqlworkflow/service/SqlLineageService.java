@@ -65,7 +65,10 @@ public class SqlLineageService {
         dep.setSourceTables(sourceTableStrings);
         dep.setTargetTable(targetTable);
         dep.setStatus("PARSED");
-        return depRepo.save(dep);
+        depRepo.save(dep);
+
+
+        return dep;
     }
 
     @Transactional
@@ -127,5 +130,30 @@ public class SqlLineageService {
     private String inferTargetFromFilename(String filename) {
         int dot = filename.lastIndexOf('.');
         return dot > 0 ? filename.substring(0, dot) : filename;
+    }
+
+    public String extractComments(String sql) {
+        String[] lines = sql.split("\n");
+        StringBuilder comments = new StringBuilder();
+        // 只处理开头部分的注释行
+        boolean startExtracting = false;
+        for (String line : lines) {
+            // 当遇到第一个 -- 注释行，开始提取
+            if (line.trim().startsWith("--")) {
+                startExtracting = true;
+            }
+            // 一旦遇到非注释行，停止提取
+            if (startExtracting && !line.trim().startsWith("--")) {
+                break;
+            }
+            // 提取注释
+            if (startExtracting && line.trim().startsWith("--")) {
+                // 去掉 -- 和 # 后的内容
+                String comment = line.replaceAll("^--", "").replaceAll("#", "").trim();
+                comments.append(comment).append("\n");
+            }
+        }
+
+        return comments.toString().trim();
     }
 }

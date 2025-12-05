@@ -1,7 +1,7 @@
 package com.xiaoxj.sqlworkflow.task;
 
 
-import com.xiaoxj.sqlworkflow.process.Parameter;
+import com.xiaoxj.sqlworkflow.workflow.Parameter;
 import com.xiaoxj.sqlworkflow.util.JacksonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;

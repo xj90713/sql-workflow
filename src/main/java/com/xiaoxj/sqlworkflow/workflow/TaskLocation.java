@@ -1,4 +1,4 @@
-package com.xiaoxj.sqlworkflow.process;
+package com.xiaoxj.sqlworkflow.workflow;
 
 import com.xiaoxj.sqlworkflow.util.JacksonUtils;
 import lombok.AllArgsConstructor;

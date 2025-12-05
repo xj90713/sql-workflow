@@ -7,11 +7,10 @@ import com.xiaoxj.sqlworkflow.remote.request.DefaultHttpClientRequest;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.RequestContent;
-
 public class BaseTest {
 
   protected final String dolphinAddress = "https://ds.gp51.com/dolphinscheduler";
-  protected final Long projectCode = 158327516778560L;
+  protected final Long projectCode = 159198460609120L;
   private final String token = "28459a89b01e79187adeb206334d0abd";
   protected final String tenantCode = "admin";
 
