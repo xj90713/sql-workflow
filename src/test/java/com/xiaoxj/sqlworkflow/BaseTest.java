@@ -22,7 +22,6 @@ public class BaseTest {
                   .setDefaultRequestConfig(RequestConfig.custom().build())
                   .build(),
               RequestConfig.custom().build()));
-
   protected DolphinClient getClient() {
     return new DolphinClient(token, dolphinAddress, restTemplate);
   }
