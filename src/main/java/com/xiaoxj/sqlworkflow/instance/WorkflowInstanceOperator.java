@@ -46,6 +46,28 @@ public class WorkflowInstanceOperator extends AbstractOperator {
   }
 
   /**
+   * patch start/run workflow instances
+   *
+   * <p>api: /dolphinscheduler/projects/{projectCode}/executors/batch-start-workflow-instance
+   *
+   * @param workflowInstanceCreateParams workflow instance create param
+   * @return true for success,otherwise false
+   */
+  public Boolean batchStart(Long projectCode, WorkflowInstanceCreateParams workflowInstanceCreateParams) {
+    String url = dolphinAddress + "/projects/" + projectCode + "/executors/batch-start-workflow-instance";
+    log.info("batch start workflow instances ,url:{}", url);
+    try {
+      HttpRestResult<JsonNode> restResult =
+              dolphinsRestTemplate.postForm(
+                      url, getHeader(), workflowInstanceCreateParams, JsonNode.class);
+      log.info("batch start workflows response:{}", restResult);
+      return restResult.getSuccess();
+    } catch (Exception e) {
+      throw new DolphinException("batch start dolphin scheduler workflow instances fail", e);
+    }
+  }
+
+  /**
    * page query workflow's instance list
    *
    * @param page page,default 1 while is null

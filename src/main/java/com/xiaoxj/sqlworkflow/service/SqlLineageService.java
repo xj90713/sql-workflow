@@ -26,7 +26,7 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public TaskDependency addTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser) {
+    public TaskDependency addTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, long taskCode, long workflowCode, long projectCode) {
 
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
@@ -57,10 +57,13 @@ public class SqlLineageService {
         deploy.setFileContent(sqlContent);
         deploy.setFileMd5(md5(sqlContent));
         deploy.setCommitUser(commitUser);
+        deploy.setTaskCode(taskCode);
+        deploy.setWorkflowCode(workflowCode);
+        deploy.setProjectCode(projectCode);
         deployRepo.save(deploy);
 
         TaskDependency dep = new TaskDependency();
-        dep.setTaskId(taskName);
+        dep.setTaskCode(taskName);
         dep.setTaskName(taskName);
         dep.setSourceTables(sourceTableStrings);
         dep.setTargetTable(targetTable);
@@ -72,10 +75,10 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public TaskDependency updateTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser) {
+    public TaskDependency updateTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, long taskCode, long workflowCode, long projectCode) {
         TaskDeploy latest = deployRepo.findTopByTaskNameOrderByUpdateTimeDesc(taskName);
         if (latest == null) {
-            return addTask(taskName, filePath, fileName, sqlContent, commitUser);
+            return addTask(taskName, filePath, fileName, sqlContent, commitUser, taskCode, workflowCode, projectCode);
         }
 
         String newMd5 = md5(sqlContent);

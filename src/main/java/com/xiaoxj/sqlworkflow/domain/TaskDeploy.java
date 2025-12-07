@@ -15,9 +15,9 @@ public class TaskDeploy {
     private Integer id;
     private String taskId;
     private String taskName;
-    private String taskCode;
-    private String workflowCode;
-    private String projectCode;
+    private long taskCode;
+    private long workflowCode;
+    private long projectCode;
     private String filePath;
     private String fileName;
     @Column(columnDefinition = "LONGTEXT")

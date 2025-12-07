@@ -41,6 +41,7 @@ public class WorkflowTest extends BaseTest {
   public void testCreateWorkflowDefinition() {
 
     List<Long> taskCodes = getClient().opsForWorkflow().generateTaskCode(projectCode, 3);
+    Long[] array = taskCodes.toArray(new Long[0]);
     System.out.println("test:" + taskCodes);
     // build hivecli task
     HivecliTask hivecliTask = new HivecliTask();
