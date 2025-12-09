@@ -116,7 +116,7 @@ public class WorkflowTest extends BaseTest {
 
   @Test
   public void testGetWorkflowInstance() {
-    WorkflowInstanceQueryResp workflowInstanceStatus = getClient().opsForWorkflowInst().getWorkflowInstanceStatus(projectCode, 485L);
+    WorkflowInstanceQueryResp workflowInstanceStatus = getClient().opsForWorkflowInst().getWorkflowInstanceStatus(projectCode, 486L);
     System.out.println(workflowInstanceStatus);
   }
 }

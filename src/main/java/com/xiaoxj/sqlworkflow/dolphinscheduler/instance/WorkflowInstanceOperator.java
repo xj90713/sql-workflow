@@ -113,6 +113,10 @@ public class WorkflowInstanceOperator extends AbstractOperator {
     try {
       HttpRestResult<JsonNode> restResult =
               dolphinsRestTemplate.get(url, getHeader(), null, JsonNode.class);
+      JsonNode state = restResult.getData().get("state");
+      Boolean failed = restResult.getFailed();
+      System.out.println("success:" + state);
+      System.out.println("");
       return JacksonUtils.parseObject(restResult.getData().toString(), WorkflowInstanceQueryResp.class);
     } catch (Exception e) {
       throw new DolphinException("page dolphin scheduler workflow instance list fail", e);
