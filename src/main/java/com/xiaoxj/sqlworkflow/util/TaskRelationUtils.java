@@ -1,7 +1,7 @@
 package com.xiaoxj.sqlworkflow.util;
 
 
-import com.xiaoxj.sqlworkflow.workflow.TaskRelation;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskRelation;
 
 import java.util.ArrayList;
 import java.util.List;

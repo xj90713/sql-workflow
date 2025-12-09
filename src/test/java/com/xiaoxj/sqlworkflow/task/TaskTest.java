@@ -2,8 +2,9 @@ package com.xiaoxj.sqlworkflow.task;
 
 
 import com.xiaoxj.sqlworkflow.BaseTest;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.*;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.*;
 import com.xiaoxj.sqlworkflow.enums.HttpCheckCondition;
-import com.xiaoxj.sqlworkflow.workflow.*;
 import com.xiaoxj.sqlworkflow.remote.HttpMethod;
 import com.xiaoxj.sqlworkflow.util.TaskDefinitionUtils;
 import com.xiaoxj.sqlworkflow.util.TaskLocationUtils;

@@ -2,11 +2,14 @@ package com.xiaoxj.sqlworkflow.workflow;
 
 
 import com.xiaoxj.sqlworkflow.BaseTest;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineParam;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineResp;
 import com.xiaoxj.sqlworkflow.enums.HttpCheckCondition;
 import com.xiaoxj.sqlworkflow.remote.HttpMethod;
-import com.xiaoxj.sqlworkflow.task.HivecliTask;
-import com.xiaoxj.sqlworkflow.task.HttpTask;
-import com.xiaoxj.sqlworkflow.task.ShellTask;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HttpTask;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ShellTask;
 import com.xiaoxj.sqlworkflow.util.TaskDefinitionUtils;
 import com.xiaoxj.sqlworkflow.util.TaskLocationUtils;
 import com.xiaoxj.sqlworkflow.util.TaskRelationUtils;
@@ -20,7 +23,7 @@ import java.util.List;
 /** the test for workflow */
 public class WorkflowTest extends BaseTest {
 
-  public static final String WORKFLOW_NAME = "test-dag2";
+  public static final String WORKFLOW_NAME = "test-dag1";
 
   /**
    * create simple workflow like: shellTask -> httpTask
@@ -41,6 +44,7 @@ public class WorkflowTest extends BaseTest {
   public void testCreateWorkflowDefinition() {
 
     List<Long> taskCodes = getClient().opsForWorkflow().generateTaskCode(projectCode, 3);
+    System.out.println("test:" + taskCodes);
     Long[] array = taskCodes.toArray(new Long[0]);
     System.out.println("test:" + taskCodes);
     // build hivecli task

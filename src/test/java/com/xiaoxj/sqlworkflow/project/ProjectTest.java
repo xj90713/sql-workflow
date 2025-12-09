@@ -1,6 +1,9 @@
 package com.xiaoxj.sqlworkflow.project;
 
 import com.xiaoxj.sqlworkflow.BaseTest;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.project.ProjectCreateParam;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.project.ProjectInfoResp;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.project.ProjectUpdateParam;
 import org.junit.Assert;
 import org.junit.Test;
 

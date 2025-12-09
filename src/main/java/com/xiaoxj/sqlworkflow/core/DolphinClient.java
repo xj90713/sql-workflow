@@ -1,10 +1,10 @@
 package com.xiaoxj.sqlworkflow.core;
 
-import com.xiaoxj.sqlworkflow.instance.WorkflowInstanceOperator;
-import com.xiaoxj.sqlworkflow.workflow.WorkflowOperator;
-import com.xiaoxj.sqlworkflow.project.ProjectOperator;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceOperator;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowOperator;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.project.ProjectOperator;
 import com.xiaoxj.sqlworkflow.remote.DolphinsRestTemplate;
-import com.xiaoxj.sqlworkflow.taskinstance.TaskInstanceOperator;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.TaskInstanceOperator;
 
 public class DolphinClient {
 

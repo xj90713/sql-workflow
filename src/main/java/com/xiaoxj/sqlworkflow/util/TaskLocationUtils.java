@@ -1,7 +1,7 @@
 package com.xiaoxj.sqlworkflow.util;
 
 
-import com.xiaoxj.sqlworkflow.workflow.TaskLocation;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskLocation;
 
 import java.util.ArrayList;
 import java.util.List;

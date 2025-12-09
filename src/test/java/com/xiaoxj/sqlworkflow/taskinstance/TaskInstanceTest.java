@@ -1,6 +1,7 @@
 package com.xiaoxj.sqlworkflow.taskinstance;
 
 import com.xiaoxj.sqlworkflow.BaseTest;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.TaskInstanceQueryResp;
 import org.junit.Test;
 
 import java.util.List;

@@ -5,20 +5,19 @@ import com.xiaoxj.sqlworkflow.domain.TaskDeploy;
 import com.xiaoxj.sqlworkflow.repo.TaskDeployRepository;
 import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import com.xiaoxj.sqlworkflow.service.SqlLineageService;
-import com.xiaoxj.sqlworkflow.task.HivecliTask;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
 import com.xiaoxj.sqlworkflow.util.TaskDefinitionUtils;
 import com.xiaoxj.sqlworkflow.util.TaskLocationUtils;
 import com.xiaoxj.sqlworkflow.util.TaskRelationUtils;
-import com.xiaoxj.sqlworkflow.workflow.TaskDefinition;
-import com.xiaoxj.sqlworkflow.workflow.WrokflowDefineParam;
-import com.xiaoxj.sqlworkflow.workflow.WrokflowDefineResp;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineParam;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -51,31 +50,16 @@ public class DependencyController {
         sqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
                 .replace("${imp_pt_date}", "'2025-01-01'");
         String user = payload.getOrDefault("commit_user", "system");
-        List<Long> taskCodes = dolphinSchedulerService.generateTaskCodes(projectCode, 1);
-        HivecliTask hivecliTask = new HivecliTask();
-
+        List<Map<String, String>> taskTriples = lineageService.taskTriples(sqlContent);
         String describe = lineageService.extractComments(sqlContent);
-        TaskDefinition hiveTaskDefinition =
-                TaskDefinitionUtils.createDefaultTaskDefinition(taskCodes.get(0), hivecliTask, describe);
-        WrokflowDefineParam pcr = new WrokflowDefineParam();
-        pcr.setName(taskName)
-                .setLocations(TaskLocationUtils.horizontalLocation(taskCodes.toArray(new Long[0])))
-                .setDescription(fileName)
-                .setTenantCode(tenantCode)
-                .setTimeout("0")
-                .setExecutionType(WrokflowDefineParam.EXECUTION_TYPE_PARALLEL)
-                .setTaskDefinitionJson(List.of(hiveTaskDefinition))
-                .setTaskRelationJson(TaskRelationUtils.oneLineRelation(taskCodes.toArray(new Long[0])))
-                .setGlobalParams(null);
-        hivecliTask.setHiveSqlScript(sqlContent);
-        WrokflowDefineResp wrokflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, pcr);
+        WrokflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, taskName,describe);
+        WrokflowDefineResp wrokflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);
+        String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
         long workflowCode = wrokflowDefineResp.getCode();
         // 创建任务流之后 需要上线该任务
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
-
-        long taskCode = taskCodes.get(0);
         long projectCode = wrokflowDefineResp.getProjectCode();
-        lineageService.addTask(taskName, filePath, fileName, sqlContent, user, projectCode, workflowCode, taskCode);
+        lineageService.addTask(taskName, filePath, fileName, sqlContent, user, projectCode, workflowCode, taskCodesString);
 
         return null;
     }
@@ -100,7 +84,6 @@ public class DependencyController {
                 .replace("${imp_pt_date}", "'2025-01-01'");
         String user = payload.getOrDefault("commit_user", "system");
         TaskDeploy taskDeploy = deployRepo.findByTaskName(taskName);
-        long taskCode = taskDeploy.getTaskCode();
         long workflowCode = taskDeploy.getWorkflowCode();
         long projectCode = taskDeploy.getProjectCode();
         HivecliTask hivecliTask = new HivecliTask();
@@ -108,22 +91,12 @@ public class DependencyController {
         String describe = lineageService.extractComments(sqlContent);
         // 更新工作流之前，必须要下线改任务
         dolphinSchedulerService.offlineWorkflow(projectCode, workflowCode);
-        TaskDefinition hiveTaskDefinition =
-                TaskDefinitionUtils.createDefaultTaskDefinition(taskCode, hivecliTask, describe);
-        WrokflowDefineParam pcr = new WrokflowDefineParam();
-        pcr.setName(taskName)
-                .setLocations(TaskLocationUtils.horizontalLocation(new Long[]{taskCode}))
-                .setDescription(fileName)
-                .setTenantCode(tenantCode)
-                .setTimeout("0")
-                .setExecutionType(WrokflowDefineParam.EXECUTION_TYPE_PARALLEL)
-                .setTaskDefinitionJson(List.of(hiveTaskDefinition))
-                .setTaskRelationJson(TaskRelationUtils.oneLineRelation(new Long[]{taskCode}))
-                .setGlobalParams(null);
-        hivecliTask.setHiveSqlScript(sqlContent);
-        WrokflowDefineResp wrokflowDefineResp = dolphinSchedulerService.updateWorkflow(projectCode, workflowCode, pcr);
+        List<Map<String, String>> taskTriples = lineageService.taskTriples(sqlContent);
+        WrokflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, taskName, describe);
+        String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
+        WrokflowDefineResp wrokflowDefineResp = dolphinSchedulerService.updateWorkflow(projectCode, workflowCode, workDefinition);
         // 更新工作流之后，在上线工作流
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
-        return lineageService.updateTask(taskName, filePath, fileName, sqlContent, user, taskCode, workflowCode, projectCode);
+        return lineageService.updateTask(taskName, filePath, fileName, sqlContent, user, taskCodesString, workflowCode, projectCode);
     }
 }

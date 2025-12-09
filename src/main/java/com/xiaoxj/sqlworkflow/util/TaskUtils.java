@@ -2,7 +2,7 @@ package com.xiaoxj.sqlworkflow.util;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.xiaoxj.sqlworkflow.task.ConditionTask;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ConditionTask;
 
 import java.util.Collections;
 import java.util.List;

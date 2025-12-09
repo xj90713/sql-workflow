@@ -1,18 +1,36 @@
 package com.xiaoxj.sqlworkflow.service;
 
 import com.xiaoxj.sqlworkflow.core.DolphinClient;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HttpTask;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ShellTask;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
 import com.xiaoxj.sqlworkflow.enums.*;
-import com.xiaoxj.sqlworkflow.instance.WorkflowInstanceCreateParam;
-import com.xiaoxj.sqlworkflow.instance.WorkflowInstanceCreateParams;
-import com.xiaoxj.sqlworkflow.workflow.WrokflowDefineParam;
-import com.xiaoxj.sqlworkflow.workflow.WrokflowDefineResp;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParam;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParams;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineParam;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineResp;
+import com.xiaoxj.sqlworkflow.remote.HttpMethod;
+import com.xiaoxj.sqlworkflow.util.TaskDefinitionUtils;
+import com.xiaoxj.sqlworkflow.util.TaskLocationUtils;
+import com.xiaoxj.sqlworkflow.util.TaskRelationUtils;
+import com.xiaoxj.sqlworkflow.util.TaskUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DolphinSchedulerService {
     private final DolphinClient dolphinClient;
+
+    @Value("dolphin.token")
+    private String token;
+    @Value("dolphin.project.code")
+    private Long projectCode;
+    @Value("dolphin.tenant.code")
+    private String tenantCode;
 
     public DolphinSchedulerService(DolphinClient dolphinClient) {
         this.dolphinClient = dolphinClient;
@@ -95,5 +113,62 @@ public class DolphinSchedulerService {
                 .setExpectedParallelismNumber("")
                 .setDryRun(0);
         return startParams;
+    }
+
+    public WrokflowDefineParam createWorkDefinition(List<Map<String, String>> tasks, Long projectCode, String workflowName, String describe) {
+        java.util.List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, tasks.size());
+        java.util.List<TaskDefinition> defs = new java.util.ArrayList<>();
+        for (int i = 0; i < tasks.size(); i++) {
+            java.util.Map<String, String> t = tasks.get(i);
+            String type = String.valueOf(t.getOrDefault("task_type", "default")).toLowerCase();
+            String content = String.valueOf(t.getOrDefault("task_content", ""));
+            if ("hive".equals(type)) {
+                HivecliTask hive = new HivecliTask();
+                hive.setHiveSqlScript(content);
+                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(taskCodes.get(i), hive));
+            } else if ("shell".equals(type)) {
+                ShellTask sh = new ShellTask();
+                sh.setRawScript(content);
+                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(taskCodes.get(i), sh));
+            } else if ("http".equals(type)) {
+                HttpTask http = new HttpTask();
+                http
+                        .setUrl(content)
+                        .setHttpMethod(HttpMethod.GET.toString())
+                        .setHttpCheckCondition(HttpCheckCondition.STATUS_CODE_DEFAULT.toString())
+                        .setCondition("")
+                        .setConditionResult(TaskUtils.createEmptyConditionResult());
+                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(taskCodes.get(i), http));
+            } else {
+                ShellTask sh = new ShellTask();
+                sh.setRawScript(content);
+                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(taskCodes.get(i), sh));
+            }
+        }
+        WrokflowDefineParam pcr = new WrokflowDefineParam();
+        pcr.setName(workflowName)
+                .setLocations(TaskLocationUtils.horizontalLocation(taskCodes.toArray(new Long[0])))
+                .setDescription(describe)
+                .setTenantCode(tenantCode)
+                .setTimeout("0")
+                .setExecutionType(WrokflowDefineParam.EXECUTION_TYPE_PARALLEL)
+                .setTaskDefinitionJson(defs)
+                .setTaskRelationJson(TaskRelationUtils.oneLineRelation(taskCodes.toArray(new Long[0])))
+                .setGlobalParams(null);
+
+        return pcr;
+    }
+
+    public String getTaskCodesString(WrokflowDefineParam param) {
+        if (param == null || param.getTaskDefinitionJson() == null) return "";
+        StringBuilder sb = new StringBuilder();
+        List<TaskDefinition> list = param.getTaskDefinitionJson();
+        for (int i = 0; i < list.size(); i++) {
+            Long code = list.get(i).getCode();
+            if (code == null) continue;
+            if (sb.length() > 0) sb.append(',');
+            sb.append(code);
+        }
+        return sb.toString();
     }
 }

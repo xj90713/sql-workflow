@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
@@ -26,7 +28,7 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public TaskDependency addTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, long taskCode, long workflowCode, long projectCode) {
+    public TaskDependency addTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
 
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
@@ -57,7 +59,7 @@ public class SqlLineageService {
         deploy.setFileContent(sqlContent);
         deploy.setFileMd5(md5(sqlContent));
         deploy.setCommitUser(commitUser);
-        deploy.setTaskCode(taskCode);
+        deploy.setTaskCodes(taskCodes);
         deploy.setWorkflowCode(workflowCode);
         deploy.setProjectCode(projectCode);
         deployRepo.save(deploy);
@@ -75,10 +77,10 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public TaskDependency updateTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, long taskCode, long workflowCode, long projectCode) {
+    public TaskDependency updateTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes, long workflowCode, long projectCode) {
         TaskDeploy latest = deployRepo.findTopByTaskNameOrderByUpdateTimeDesc(taskName);
         if (latest == null) {
-            return addTask(taskName, filePath, fileName, sqlContent, commitUser, taskCode, workflowCode, projectCode);
+            return addTask(taskName, filePath, fileName, sqlContent, commitUser, workflowCode, projectCode, taskCodes);
         }
 
         String newMd5 = md5(sqlContent);
@@ -109,6 +111,7 @@ public class SqlLineageService {
         latest.setFileMd5(newMd5);
         latest.setCommitUser(commitUser);
         latest.setUpdateTime(LocalDateTime.now());
+        latest.setTaskCodes(taskCodes);
         deployRepo.save(latest);
 
         List<TaskDependency> deps = depRepo.findByTaskName(taskName);
@@ -158,5 +161,39 @@ public class SqlLineageService {
         }
 
         return comments.toString().trim();
+    }
+
+
+    public List<Map<String, String>> taskTriples(String sql) {
+        ArrayList<Integer> sepStarts = new ArrayList<>();
+        ArrayList<Integer> sepEnds = new ArrayList<>();
+        ArrayList<String> types = new ArrayList<>();
+        Pattern p = Pattern.compile("(?m)^\\s*---\\s*([a-zA-Z0-9_]+)\\s*---\\s*$");
+        Matcher m = p.matcher(sql);
+        while (m.find()) {
+            sepStarts.add(m.start());
+            sepEnds.add(m.end());
+            types.add(m.group(1));
+        }
+        List<Map<String, String>> res = new ArrayList<>();
+        if (types.isEmpty()) {
+            Map<String, String> t = new LinkedHashMap<>();
+            t.put("task_name", "task_1");
+            t.put("task_type", "default");
+            t.put("task_content", sql.trim());
+            res.add(t);
+            return res;
+        }
+        for (int i = 0; i < types.size(); i++) {
+            int contentStart = sepEnds.get(i);
+            int contentEnd = (i + 1 < sepStarts.size()) ? sepStarts.get(i + 1) : sql.length();
+            String content = sql.substring(contentStart, contentEnd).trim();
+            Map<String, String> t = new LinkedHashMap<>();
+            t.put("task_name", "task_" + (i + 1));
+            t.put("task_type", types.get(i) == null ? "default" : types.get(i).toLowerCase());
+            t.put("task_content", content);
+            res.add(t);
+        }
+        return res;
     }
 }

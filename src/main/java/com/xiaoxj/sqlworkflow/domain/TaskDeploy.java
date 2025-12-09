@@ -15,7 +15,7 @@ public class TaskDeploy {
     private Integer id;
     private String taskId;
     private String taskName;
-    private long taskCode;
+    private String taskCodes;
     private long workflowCode;
     private long projectCode;
     private String filePath;
