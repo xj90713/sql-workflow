@@ -2,7 +2,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/sql_workflow?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
     username: ${DB_USERNAME:root}
-#    password: ${DB_PASSWORD:xiao@duan712}
+    password: ${DB_PASSWORD:xiao@duan712}
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,7 +18,10 @@ server:
 dolphin:
   baseUrl: ${DS_BASE_URL:https://ds.gp51.com}
   authToken: ${DS_AUTH_TOKEN:28459a89b01e79187adeb206334d0abd}
-
+  project:
+    code: 1231231231
+  tenant:
+    code: 1231231231
 workflow:
   maxParallelism: ${WORKFLOW_MAX_PARALLELISM:4}
   triggerIntervalSeconds: ${WORKFLOW_TRIGGER_INTERVAL:300}
@@ -32,3 +35,8 @@ management:
     web:
       exposure:
         include: health,metrics,info
+
+openmetadata:
+  api:
+#    url: http://openmetadata-api.grp-arch.svc.cluster.local:8080
+    url: http://localhost:8080/api/lineage

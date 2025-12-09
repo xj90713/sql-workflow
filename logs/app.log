@@ -1,86 +1,517 @@
-2025-12-07 00:58:26.275 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m46s118ms).
-2025-12-07 01:17:44.394 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m18s116ms).
-2025-12-07 01:19:53.908 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m9s476ms).
-2025-12-07 01:38:04.037 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m10s86ms).
-2025-12-07 01:56:46.539 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m42s478ms).
-2025-12-07 02:15:24.950 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m8s398ms).
-2025-12-07 02:33:51.754 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m26s804ms).
-2025-12-07 02:42:07.265 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m15s484ms).
-2025-12-07 02:58:56.986 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m49s721ms).
-2025-12-07 03:17:16.825 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m19s831ms).
-2025-12-07 03:38:07.147 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m20s260ms).
-2025-12-07 03:43:05.005 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m57s860ms).
-2025-12-07 04:00:57.731 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m22s702ms).
-2025-12-07 04:19:28.685 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m30s913ms).
-2025-12-07 04:36:04.477 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m5s769ms).
-2025-12-07 04:44:04.619 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m128ms).
-2025-12-07 05:01:35.928 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m31s282ms).
-2025-12-07 05:20:51.088 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m15s134ms).
-2025-12-07 05:39:00.152 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m9s34ms).
-2025-12-07 05:44:53.279 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m23s105ms).
-2025-12-07 05:58:16.077 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11m22s768ms).
-2025-12-07 06:16:42.754 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m26s645ms).
-2025-12-07 06:33:18.415 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m5s650ms).
-2025-12-07 06:46:01.943 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=10m43s505ms).
-2025-12-07 07:03:59.814 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m57s850ms).
-2025-12-07 07:22:29.096 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m29s258ms).
-2025-12-07 07:41:35.476 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m6s349ms).
-2025-12-07 07:47:13.459 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m37s945ms).
-2025-12-07 07:52:27.753 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m44s268ms).
-2025-12-07 08:12:39.454 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=18m11s674ms).
-2025-12-07 08:18:25.568 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m46s79ms).
-2025-12-07 08:36:04.056 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m8s481ms).
-2025-12-07 08:47:53.120 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=9m49s26ms).
-2025-12-07 09:08:05.942 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m42s760ms).
-2025-12-07 09:33:05.305 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m59s229ms).
-2025-12-07 09:49:00.037 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=14m24s708ms).
-2025-12-07 10:06:42.559 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m12s514ms).
-2025-12-07 10:24:12.570 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m29s998ms).
-2025-12-07 10:42:21.192 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m38s585ms).
-2025-12-07 10:50:04.886 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m43s660ms).
-2025-12-07 11:09:02.222 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m57s309ms).
-2025-12-07 11:26:32.413 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m30s182ms).
-2025-12-07 11:29:48.633 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m16s179ms).
-2025-12-07 11:33:09.725 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m21s54ms).
-2025-12-07 11:52:59.699 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m9s54ms).
-2025-12-07 12:08:39.575 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m39s877ms).
-2025-12-07 12:13:16.879 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m7s275ms).
-2025-12-07 12:29:21.621 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m34s732ms).
-2025-12-07 12:47:47.324 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m55s680ms).
-2025-12-07 12:53:59.308 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m41s904ms).
-2025-12-07 13:13:37.044 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m37s706ms).
-2025-12-07 13:16:37.927 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m30s870ms).
-2025-12-07 13:34:34.753 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m56s794ms).
-2025-12-07 13:53:16.700 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m41s917ms).
-2025-12-07 14:10:59.174 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m12s451ms).
-2025-12-07 14:28:00.784 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m1s588ms).
-2025-12-07 14:32:27.243 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m26s435ms).
-2025-12-07 14:37:19.938 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m52s657ms).
-2025-12-07 14:55:35.592 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m15s621ms).
-2025-12-07 15:13:43.564 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m7s938ms).
-2025-12-07 15:30:53.769 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m40s177ms).
-2025-12-07 15:38:03.079 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m9s276ms).
-2025-12-07 15:58:14.062 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m10s922ms).
-2025-12-07 16:14:33.908 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m49s832ms).
-2025-12-07 16:32:32.333 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m58s409ms).
-2025-12-07 16:39:20.907 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m48s544ms).
-2025-12-07 16:45:42.373 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m21s446ms).
-2025-12-07 17:08:27.424 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m44s958ms).
-2025-12-07 17:24:57.641 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m202ms).
-2025-12-07 17:40:18.905 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=12m51s228ms).
-2025-12-07 18:57:26.100 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m36s387ms).
-2025-12-07 19:15:25.770 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m59s706ms).
-2025-12-07 19:33:04.802 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m39s22ms).
-2025-12-07 19:41:17.667 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m42s856ms).
-2025-12-07 20:00:28.169 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m10s478ms).
-2025-12-07 20:06:43.681 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m15s416ms).
-2025-12-07 20:25:04.384 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m20s682ms).
-2025-12-07 20:42:03.314 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=14m58s858ms).
-2025-12-07 21:02:18.514 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m45s160ms).
-2025-12-07 21:20:47.527 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m28s987ms).
-2025-12-07 21:38:21.036 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m33s477ms).
-2025-12-07 21:43:07.338 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m16s288ms).
-2025-12-07 22:02:02.796 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m55s430ms).
-2025-12-07 22:21:46.041 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m32s994ms).
-2025-12-07 22:25:54.815 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m8s764ms).
-2025-12-07 22:29:13.377 WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m18s523ms).
+2025-12-09 10:06:17.984 INFO  c.x.s.SqlWorkflowApplication - Starting SqlWorkflowApplication using Java 21.0.6 with PID 80226 (/Users/xiaojunxiao/codes/xiaoxj/sql-workflow/target/classes started by xiaojunxiao in /Users/xiaojunxiao/codes/xiaoxj/sql-workflow)
+2025-12-09 10:06:17.988 INFO  c.x.s.SqlWorkflowApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-09 10:06:18.340 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-09 10:06:18.365 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 21 ms. Found 3 JPA repository interfaces.
+2025-12-09 10:06:18.766 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9000 (http)
+2025-12-09 10:06:18.771 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-09 10:06:18.771 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-12-09 10:06:18.791 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-09 10:06:18.792 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 791 ms
+2025-12-09 10:06:18.947 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-09 10:06:18.979 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-12-09 10:06:18.993 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-12-09 10:06:19.103 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-09 10:06:19.114 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-09 10:06:19.284 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4301fa39
+2025-12-09 10:06:19.285 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-09 10:06:19.359 WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-09 10:06:19.755 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-09 10:06:19.803 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-09 10:06:20.139 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-09 10:06:20.577 INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoint(s) beneath base path '/actuator'
+2025-12-09 10:06:20.618 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9000 (http) with context path ''
+2025-12-09 10:06:20.630 INFO  c.x.s.SqlWorkflowApplication - Started SqlWorkflowApplication in 2.841 seconds (process running for 3.017)
+2025-12-09 10:10:10.230 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-09 10:10:10.230 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-09 10:10:10.233 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2025-12-09 10:10:36.311 ERROR c.x.s.e.GlobalExceptionHandler - Unhandled exception
+org.springframework.web.client.HttpServerErrorException$ServiceUnavailable: 503 Service Unavailable: [no body]
+	at org.springframework.web.client.HttpServerErrorException.create(HttpServerErrorException.java:111)
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:186)
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:137)
+	at org.springframework.web.client.ResponseErrorHandler.handleError(ResponseErrorHandler.java:63)
+	at org.springframework.web.client.RestTemplate.handleResponse(RestTemplate.java:942)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:891)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790)
+	at org.springframework.web.client.RestTemplate.postForObject(RestTemplate.java:507)
+	at com.xiaoxj.sqlworkflow.service.OpenmetadataService.getSqlLineage(OpenmetadataService.java:26)
+	at com.xiaoxj.sqlworkflow.controller.OpenmetadataController.getSqlLineage(OpenmetadataController.java:29)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:925)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:830)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2025-12-09 10:12:12.726 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-09 10:12:12.733 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-09 10:12:12.745 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-09 10:12:21.577 INFO  c.x.s.SqlWorkflowApplication - Starting SqlWorkflowApplication using Java 21.0.6 with PID 81948 (/Users/xiaojunxiao/codes/xiaoxj/sql-workflow/target/classes started by xiaojunxiao in /Users/xiaojunxiao/codes/xiaoxj/sql-workflow)
+2025-12-09 10:12:21.578 INFO  c.x.s.SqlWorkflowApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-09 10:12:21.984 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-09 10:12:22.010 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 23 ms. Found 3 JPA repository interfaces.
+2025-12-09 10:12:22.393 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9000 (http)
+2025-12-09 10:12:22.397 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-09 10:12:22.397 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-12-09 10:12:22.422 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-09 10:12:22.422 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 829 ms
+2025-12-09 10:12:22.570 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-09 10:12:22.592 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-12-09 10:12:22.604 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-12-09 10:12:22.675 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-09 10:12:22.683 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-09 10:12:22.759 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@62aee901
+2025-12-09 10:12:22.760 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-09 10:12:22.794 WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-09 10:12:23.088 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-09 10:12:23.128 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-09 10:12:23.458 WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'openmetadataController': Unsatisfied dependency expressed through field 'openmetadataService': Error creating bean with name 'openmetadataService': Injection of autowired dependencies failed
+2025-12-09 10:12:23.458 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-09 10:12:23.459 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-09 10:12:23.463 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-09 10:12:23.463 INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2025-12-09 10:12:23.474 INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-09 10:12:23.479 ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'openmetadataController': Unsatisfied dependency expressed through field 'openmetadataService': Error creating bean with name 'openmetadataService': Injection of autowired dependencies failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:787)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:145)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:508)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1419)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:962)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+	at com.xiaoxj.sqlworkflow.SqlWorkflowApplication.main(SqlWorkflowApplication.java:11)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'openmetadataService': Injection of autowired dependencies failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:514)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1419)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1443)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784)
+	... 20 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'openmetadata.api.url' in value "${openmetadata.api.url}"
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:180)
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:126)
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239)
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210)
+	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:922)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1374)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:145)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:508)
+	... 31 common frames omitted
+2025-12-09 10:12:35.251 INFO  c.x.s.SqlWorkflowApplication - Starting SqlWorkflowApplication using Java 21.0.6 with PID 82045 (/Users/xiaojunxiao/codes/xiaoxj/sql-workflow/target/classes started by xiaojunxiao in /Users/xiaojunxiao/codes/xiaoxj/sql-workflow)
+2025-12-09 10:12:35.251 INFO  c.x.s.SqlWorkflowApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-09 10:12:35.598 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-09 10:12:35.619 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 18 ms. Found 3 JPA repository interfaces.
+2025-12-09 10:12:35.958 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9000 (http)
+2025-12-09 10:12:35.962 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-09 10:12:35.962 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-12-09 10:12:35.987 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-09 10:12:35.987 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 722 ms
+2025-12-09 10:12:36.125 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-09 10:12:36.147 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-12-09 10:12:36.158 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-12-09 10:12:36.233 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-09 10:12:36.241 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-09 10:12:36.293 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@310f8a05
+2025-12-09 10:12:36.293 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-09 10:12:36.314 WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-09 10:12:36.608 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-09 10:12:36.628 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-09 10:12:37.017 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-09 10:12:37.427 INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoint(s) beneath base path '/actuator'
+2025-12-09 10:12:37.457 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9000 (http) with context path ''
+2025-12-09 10:12:37.468 INFO  c.x.s.SqlWorkflowApplication - Started SqlWorkflowApplication in 2.422 seconds (process running for 2.702)
+2025-12-09 10:12:41.616 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-09 10:12:41.617 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-09 10:12:41.617 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-12-09 10:12:41.663 ERROR c.x.s.e.GlobalExceptionHandler - Unhandled exception
+org.springframework.web.client.HttpClientErrorException$UnprocessableEntity: 422 Unprocessable Entity: "{"detail":[{"type":"missing","loc":["body","service_name"],"msg":"Field required","input":{"sql_content":"-- drop view edw.blacklist_delete_detail\ncreate view edw.blacklist_delete_detail as\nwith sc as (\nselect distinct user_id,su.staff_code,sb.staff_name\nfrom odshk.sys_user_leader_relation su\nleft join odsyy.staff_basic_info sb\non su.staff_code=sb.staff_code\nwhere su.staff_code is not null and principal_id is not null)\nselect t0.*,if(LENGTH(follower_name)>0,'未删微','已删微') as delete_wx_status,\nCOALESCE(fbl.is_delete,'是') as is_delete,fbl.restore_reason,fbl.restore_datetime\n-- ,if(t0.fill_datetime<=COALESCE(rph.create_time,'3000-01-01 00:00:00'),t0.fill_datetime,rph.create_time) as fill_datetime_new\n,if(t0.fill_datetime>=COALESCE(rph.create_time,'1000-01-01 00:00:00'),t0.fill_datetime,rph.create_time) as fill_datetime_new\n,rph.delwx_reason\nfrom(\nselect \nscb.name,scb.cid,fb.user_number,scb.wx_nick,zy.unionid,fb.data_resource,fb.fill_datetime,\nif(risk.risk_no is null,'否','是') as is_risk,risk.is_malice_protect,risk.is_out_complaint,risk.is_blacklist,risk.blacklist_reason,risk.is_refund,risk.risk_no,\nmax(zy.avatar) as avatar,\nGROUP_CONCAT(distinct zy.follower_name) as follower_name,GROUP_CONCAT(distinct zy.follower_staff_code) as follower_staff_code,\nGROUP_CONCAT(distinct zy.executive_name) as executive_name,\nGROUP_CONCAT(distinct zy.majordomo_name) as majordomo_name,\nGROUP_CONCAT(distinct (case when zy.principal_id=154 then '推广一区'\nwhen zy.principal_id=155 then '推广二区'\nwhen zy.principal_id=1308 then '创新业务部'\nelse '' end)) as region\nfrom (\nselect user_number,min(fill_datetime) as fill_datetime,GROUP_CONCAT(data_resource) as data_resource\nfrom (\nselect user_number,max(fill_datetime) as fill_datetime,'导入' as data_resource\nfrom report.fill_blacklist_resource\nwhere user_number is not null\ngroup by 1\nunion ALL\nselect customer_num as user_number,'1000-01-01 00:00:00' as fill_datetime,'新增' as data_resource from odshk.sys_customer_base\nwhere customer_num is not null and in_del_wx=1\n)fb0\ngroup by 1\n)fb\nleft join (\nselect * from odshk.sys_customer_base\nwhere customer_num is not null)scb\non scb.customer_num=fb.user_number \nleft join(\nselect w.*,fsc.staff_code as follower_staff_code,scb.cid as cid0\nfrom odshk.we_customer w\nleft join odshk.sys_customer_base scb\non w.unionid=scb.union_id and scb.union_id is not null\nleft join odshk.we_employee we\non w.add_user_id=we.we_user_id\nleft join sc psc\non w.principal_id=psc.user_id\nleft join sc msc\non w.majordomo_id=msc.user_id\nleft join sc esc\non w.executive_id=esc.user_id\nleft join sc fsc\non w.follower_id=fsc.user_id\nwhere w.del_flag=0 and w.principal_id+w.majordomo_id+w.executive_id+w.follower_id>0\nand we.del_flag=0 and we.use_status=1\n)zy\non scb.cid=zy.cid0\nleft join(\nselect * from(\nselect ro.risk_no,ro.customer_num,rpp.is_malice_protect,rpp.is_out_complaint,rpp.is_blacklist,rpp.blacklist_reason,rpp.is_refund,rph.is_delwx,rph.delwx_reason,rpp.process_time,\nROW_NUMBER()OVER (PARTITION by ro.customer_num ORDER BY rpp.is_out_complaint desc,rph.is_delwx desc,rpp.process_time desc) as order_num\nfrom (\nselect risk_no,customer_num from odsfk.risk_order\nwhere customer_num is not null and length(customer_num)>0)ro\nleft join (\nselect risk_no\n,if(max(malice_protect_power)=1,'是','否') as is_malice_protect\n,if(max(is_out_complaint)=1,'是','否') as is_out_complaint\n,if(max(is_blacklist)=1,'是','否') as is_blacklist\n,GROUP_CONCAT(distinct blacklist_reason) as  blacklist_reason\n,if(max(is_refund)=1,'是','否') as is_refund\n,max(process_time) as process_time\nfrom odsfk.risk_process_plan\nwhere is_draft =0\ngroup by 1)rpp\non ro.risk_no=rpp.risk_no\nleft join (\nselect risk_no,delwx_reason,is_delwx from (\nselect risk_no,delwx_reason,is_delwx,ROW_NUMBER()OVER (PARTITION by risk_no ORDER BY create_time desc) as order_num\nfrom odsfk.risk_process_history\nwhere is_delwx=1)rph0\nwhere order_num=1)rph\non ro.risk_no=rph.risk_no\n)risk0\nwhere order_num=1)risk\non fb.user_number=risk.customer_num\ngroup by 1,2,3,4,5,6,7,8,9,10,11,12,13,14\n)t0\nleft join report.fill_blacklist_log fbl\non t0.cid=fbl.cid and t0.user_number=fbl.user_number\nleft join(\nselect * from (\nselect risk_no,create_time,\ndelwx_reason,\nROW_NUMBER()OVER (PARTITION by risk_no ORDER BY create_time desc) as risk_num\nfrom odsfk.risk_process_history\nwhere is_delwx=1\n)rph0\nwhere risk_num=1\n)rph\non t0.risk_no=rph.risk_no","file_name":"edw.blacklist_delete_detail.sql"}},{"type":"missing","loc":["body","sql"],"msg":"Field required","input":{"sql_content":"-- drop view edw.blacklist_delete_detail\ncreate view edw.blacklist_delete_detail as\nwith sc as (\nselect distinct user_id,su.staff_code,sb.staff_name\nfrom odshk.sys_user_leader_relation su\nleft join odsyy.staff_basic_info sb\non su.staff_code=sb.staff_code\nwhere su.staff_code is not null and principal_id is not null)\nselect t0.*,if(LENGTH(follower_name)>0,'未删微','已删微') as delete_wx_status,\nCOALESCE(fbl.is_delete,'是') as is_delete,fbl.restore_reason,fbl.restore_datetime\n-- ,if(t0.fill_datetime<=COALESCE(rph.create_time,'3000-01-01 00:00:00'),t0.fill_datetime,rph.create_time) as fill_datetime_new\n,if(t0.fill_datetime>=COALESCE(rph.create_time,'1000-01-01 00:00:00'),t0.fill_datetime,rph.create_time) as fill_datetime_new\n,rph.delwx_reason\nfrom(\nselect \nscb.name,scb.cid,fb.user_number,scb.wx_nick,zy.unionid,fb.data_resource,fb.fill_datetime,\nif(risk.risk_no is null,'否','是') as is_risk,risk.is_malice_protect,risk.is_out_complaint,risk.is_blacklist,risk.blacklist_reason,risk.is_refund,risk.risk_no,\nmax(zy.avatar) as avatar,\nGROUP_CONCAT(distinct zy.follower_name) as follower_name,GROUP_CONCAT(distinct zy.follower_staff_code) as follower_staff_code,\nGROUP_CONCAT(distinct zy.executive_name) as executive_name,\nGROUP_CONCAT(distinct zy.majordomo_name) as majordomo_name,\nGROUP_CONCAT(distinct (case when zy.principal_id=154 then '推广一区'\nwhen zy.principal_id=155 then '推广二区'\nwhen zy.principal_id=1308 then '创新业务部'\nelse '' end)) as region\nfrom (\nselect user_number,min(fill_datetime) as fill_datetime,GROUP_CONCAT(data_resource) as data_resource\nfrom (\nselect user_number,max(fill_datetime) as fill_datetime,'导入' as data_resource\nfrom report.fill_blacklist_resource\nwhere user_number is not null\ngroup by 1\nunion ALL\nselect customer_num as user_number,'1000-01-01 00:00:00' as fill_datetime,'新增' as data_resource from odshk.sys_customer_base\nwhere customer_num is not null and in_del_wx=1\n)fb0\ngroup by 1\n)fb\nleft join (\nselect * from odshk.sys_customer_base\nwhere customer_num is not null)scb\non scb.customer_num=fb.user_number \nleft join(\nselect w.*,fsc.staff_code as follower_staff_code,scb.cid as cid0\nfrom odshk.we_customer w\nleft join odshk.sys_customer_base scb\non w.unionid=scb.union_id and scb.union_id is not null\nleft join odshk.we_employee we\non w.add_user_id=we.we_user_id\nleft join sc psc\non w.principal_id=psc.user_id\nleft join sc msc\non w.majordomo_id=msc.user_id\nleft join sc esc\non w.executive_id=esc.user_id\nleft join sc fsc\non w.follower_id=fsc.user_id\nwhere w.del_flag=0 and w.principal_id+w.majordomo_id+w.executive_id+w.follower_id>0\nand we.del_flag=0 and we.use_status=1\n)zy\non scb.cid=zy.cid0\nleft join(\nselect * from(\nselect ro.risk_no,ro.customer_num,rpp.is_malice_protect,rpp.is_out_complaint,rpp.is_blacklist,rpp.blacklist_reason,rpp.is_refund,rph.is_delwx,rph.delwx_reason,rpp.process_time,\nROW_NUMBER()OVER (PARTITION by ro.customer_num ORDER BY rpp.is_out_complaint desc,rph.is_delwx desc,rpp.process_time desc) as order_num\nfrom (\nselect risk_no,customer_num from odsfk.risk_order\nwhere customer_num is not null and length(customer_num)>0)ro\nleft join (\nselect risk_no\n,if(max(malice_protect_power)=1,'是','否') as is_malice_protect\n,if(max(is_out_complaint)=1,'是','否') as is_out_complaint\n,if(max(is_blacklist)=1,'是','否') as is_blacklist\n,GROUP_CONCAT(distinct blacklist_reason) as  blacklist_reason\n,if(max(is_refund)=1,'是','否') as is_refund\n,max(process_time) as process_time\nfrom odsfk.risk_process_plan\nwhere is_draft =0\ngroup by 1)rpp\non ro.risk_no=rpp.risk_no\nleft join (\nselect risk_no,delwx_reason,is_delwx from (\nselect risk_no,delwx_reason,is_delwx,ROW_NUMBER()OVER (PARTITION by risk_no ORDER BY create_time desc) as order_num\nfrom odsfk.risk_process_history\nwhere is_delwx=1)rph0\nwhere order_num=1)rph\non ro.risk_no=rph.risk_no\n)risk0\nwhere order_num=1)risk\non fb.user_number=risk.customer_num\ngroup by 1,2,3,4,5,6,7,8,9,10,11,12,13,14\n)t0\nleft join report.fill_blacklist_log fbl\non t0.cid=fbl.cid and t0.user_number=fbl.user_number\nleft join(\nselect * from (\nselect risk_no,create_time,\ndelwx_reason,\nROW_NUMBER()OVER (PARTITION by risk_no ORDER BY create_time desc) as risk_num\nfrom odsfk.risk_process_history\nwhere is_delwx=1\n)rph0\nwhere risk_num=1\n)rph\non t0.risk_no=rph.risk_no","file_name":"edw.blacklist_delete_detail.sql"}},{"type":"missing","loc":["body","sql_name"],"msg":"Field required","input":{"sql_content":"-- drop view edw.blacklist_delete_detail\ncreate view edw.blacklist_delete_detail as\nwith sc as (\nselect distinct user_id,su.staff_code,sb.staff_name\nfrom odshk.sys_user_leader_relation su\nleft join odsyy.staff_basic_info sb\non su.staff_code=sb.staff_code\nwhere su.staff_code is not null and principal_id is not null)\nselect t0.*,if(LENGTH(follower_name)>0,'未删微','已删微') as delete_wx_status,\nCOALESCE(fbl.is_delete,'是') as is_delete,fbl.restore_reason,fbl.restore_datetime\n-- ,if(t0.fill_datetime<=COALESCE(rph.create_time,'3000-01-01 00:00:00'),t0.fill_datetime,rph.create_time) as fill_datetime_new\n,if(t0.fill_datetime>=COALESCE(rph.create_time,'1000-01-01 00:00:00'),t0.fill_datetime,rph.create_time) as fill_datetime_new\n,rph.delwx_reason\nfrom(\nselect \nscb.name,scb.cid,fb.user_number,scb.wx_nick,zy.unionid,fb.data_resource,fb.fill_datetime,\nif(risk.risk_no is null,'否','是') as is_risk,risk.is_malice_protect,risk.is_out_complaint,risk.is_blacklist,risk.blacklist_reason,risk.is_refund,risk.risk_no,\nmax(zy.avatar) as avatar,\nGROUP_CONCAT(distinct zy.follower_name) as follower_name,GROUP_CONCAT(distinct zy.follower_staff_code) as follower_staff_code,\nGROUP_CONCAT(distinct zy.executive_name) as executive_name,\nGROUP_CONCAT(distinct zy.majordomo_name) as majordomo_name,\nGROUP_CONCAT(distinct (case when zy.principal_id=154 then '推广一区'\nwhen zy.principal_id=155 then '推广二区'\nwhen zy.principal_id=1308 then '创新业务部'\nelse '' end)) as region\nfrom (\nselect user_number,min(fill_datetime) as fill_datetime,GROUP_CONCAT(data_resource) as data_resource\nfrom (\nselect user_number,max(fill_datetime) as fill_datetime,'导入' as data_resource\nfrom report.fill_blacklist_resource\nwhere user_number is not null\ngroup by 1\nunion ALL\nselect customer_num as user_number,'1000-01-01 00:00:00' as fill_datetime,'新增' as data_resource from odshk.sys_customer_base\nwhere customer_num is not null and in_del_wx=1\n)fb0\ngroup by 1\n)fb\nleft join (\nselect * from odshk.sys_customer_base\nwhere customer_num is not null)scb\non scb.customer_num=fb.user_number \nleft join(\nselect w.*,fsc.staff_code as follower_staff_code,scb.cid as cid0\nfrom odshk.we_customer w\nleft join odshk.sys_customer_base scb\non w.unionid=scb.union_id and scb.union_id is not null\nleft join odshk.we_employee we\non w.add_user_id=we.we_user_id\nleft join sc psc\non w.principal_id=psc.user_id\nleft join sc msc\non w.majordomo_id=msc.user_id\nleft join sc esc\non w.executive_id=esc.user_id\nleft join sc fsc\non w.follower_id=fsc.user_id\nwhere w.del_flag=0 and w.principal_id+w.majordomo_id+w.executive_id+w.follower_id>0\nand we.del_flag=0 and we.use_status=1\n)zy\non scb.cid=zy.cid0\nleft join(\nselect * from(\nselect ro.risk_no,ro.customer_num,rpp.is_malice_protect,rpp.is_out_complaint,rpp.is_blacklist,rpp.blacklist_reason,rpp.is_refund,rph.is_delwx,rph.delwx_reason,rpp.process_time,\nROW_NUMBER()OVER (PARTITION by ro.customer_num ORDER BY rpp.is_out_complaint desc,rph.is_delwx desc,rpp.process_time desc) as order_num\nfrom (\nselect risk_no,customer_num from odsfk.risk_order\nwhere customer_num is not null and length(customer_num)>0)ro\nleft join (\nselect risk_no\n,if(max(malice_protect_power)=1,'是','否') as is_malice_protect\n,if(max(is_out_complaint)=1,'是','否') as is_out_complaint\n,if(max(is_blacklist)=1,'是','否') as is_blacklist\n,GROUP_CONCAT(distinct blacklist_reason) as  blacklist_reason\n,if(max(is_refund)=1,'是','否') as is_refund\n,max(process_time) as process_time\nfrom odsfk.risk_process_plan\nwhere is_draft =0\ngroup by 1)rpp\non ro.risk_no=rpp.risk_no\nleft join (\nselect risk_no,delwx_reason,is_delwx from (\nselect risk_no,delwx_reason,is_delwx,ROW_NUMBER()OVER (PARTITION by risk_no ORDER BY create_time desc) as order_num\nfrom odsfk.risk_process_history\nwhere is_delwx=1)rph0\nwhere order_num=1)rph\non ro.risk_no=rph.risk_no\n)risk0\nwhere order_num=1)risk\non fb.user_number=risk.customer_num\ngroup by 1,2,3,4,5,6,7,8,9,10,11,12,13,14\n)t0\nleft join report.fill_blacklist_log fbl\non t0.cid=fbl.cid and t0.user_number=fbl.user_number\nleft join(\nselect * from (\nselect risk_no,create_time,\ndelwx_reason,\nROW_NUMBER()OVER (PARTITION by risk_no ORDER BY create_time desc) as risk_num\nfrom odsfk.risk_process_history\nwhere is_delwx=1\n)rph0\nwhere risk_num=1\n)rph\non t0.risk_no=rph.risk_no","file_name":"edw.blacklist_delete_detail.sql"}}]}"
+	at org.springframework.web.client.HttpClientErrorException.create(HttpClientErrorException.java:133)
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:183)
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:137)
+	at org.springframework.web.client.ResponseErrorHandler.handleError(ResponseErrorHandler.java:63)
+	at org.springframework.web.client.RestTemplate.handleResponse(RestTemplate.java:942)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:891)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790)
+	at org.springframework.web.client.RestTemplate.postForObject(RestTemplate.java:507)
+	at com.xiaoxj.sqlworkflow.service.OpenmetadataService.getSqlLineage(OpenmetadataService.java:26)
+	at com.xiaoxj.sqlworkflow.controller.OpenmetadataController.getSqlLineage(OpenmetadataController.java:29)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:925)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:830)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2025-12-09 10:15:53.971 ERROR c.x.s.e.GlobalExceptionHandler - Unhandled exception
+org.springframework.web.client.HttpClientErrorException$UnprocessableEntity: 422 Unprocessable Entity: "{"detail":[{"type":"missing","loc":["body","sql"],"msg":"Field required","input":{"sql_content":"-- drop view edw.blacklist_delete_detail\ncreate view edw.blacklist_delete_detail as\nwith sc as (\nselect distinct user_id,su.staff_code,sb.staff_name\nfrom odshk.sys_user_leader_relation su\nleft join odsyy.staff_basic_info sb\non su.staff_code=sb.staff_code\nwhere su.staff_code is not null and principal_id is not null)\nselect t0.*,if(LENGTH(follower_name)>0,'未删微','已删微') as delete_wx_status,\nCOALESCE(fbl.is_delete,'是') as is_delete,fbl.restore_reason,fbl.restore_datetime\n-- ,if(t0.fill_datetime<=COALESCE(rph.create_time,'3000-01-01 00:00:00'),t0.fill_datetime,rph.create_time) as fill_datetime_new\n,if(t0.fill_datetime>=COALESCE(rph.create_time,'1000-01-01 00:00:00'),t0.fill_datetime,rph.create_time) as fill_datetime_new\n,rph.delwx_reason\nfrom(\nselect \nscb.name,scb.cid,fb.user_number,scb.wx_nick,zy.unionid,fb.data_resource,fb.fill_datetime,\nif(risk.risk_no is null,'否','是') as is_risk,risk.is_malice_protect,risk.is_out_complaint,risk.is_blacklist,risk.blacklist_reason,risk.is_refund,risk.risk_no,\nmax(zy.avatar) as avatar,\nGROUP_CONCAT(distinct zy.follower_name) as follower_name,GROUP_CONCAT(distinct zy.follower_staff_code) as follower_staff_code,\nGROUP_CONCAT(distinct zy.executive_name) as executive_name,\nGROUP_CONCAT(distinct zy.majordomo_name) as majordomo_name,\nGROUP_CONCAT(distinct (case when zy.principal_id=154 then '推广一区'\nwhen zy.principal_id=155 then '推广二区'\nwhen zy.principal_id=1308 then '创新业务部'\nelse '' end)) as region\nfrom (\nselect user_number,min(fill_datetime) as fill_datetime,GROUP_CONCAT(data_resource) as data_resource\nfrom (\nselect user_number,max(fill_datetime) as fill_datetime,'导入' as data_resource\nfrom report.fill_blacklist_resource\nwhere user_number is not null\ngroup by 1\nunion ALL\nselect customer_num as user_number,'1000-01-01 00:00:00' as fill_datetime,'新增' as data_resource from odshk.sys_customer_base\nwhere customer_num is not null and in_del_wx=1\n)fb0\ngroup by 1\n)fb\nleft join (\nselect * from odshk.sys_customer_base\nwhere customer_num is not null)scb\non scb.customer_num=fb.user_number \nleft join(\nselect w.*,fsc.staff_code as follower_staff_code,scb.cid as cid0\nfrom odshk.we_customer w\nleft join odshk.sys_customer_base scb\non w.unionid=scb.union_id and scb.union_id is not null\nleft join odshk.we_employee we\non w.add_user_id=we.we_user_id\nleft join sc psc\non w.principal_id=psc.user_id\nleft join sc msc\non w.majordomo_id=msc.user_id\nleft join sc esc\non w.executive_id=esc.user_id\nleft join sc fsc\non w.follower_id=fsc.user_id\nwhere w.del_flag=0 and w.principal_id+w.majordomo_id+w.executive_id+w.follower_id>0\nand we.del_flag=0 and we.use_status=1\n)zy\non scb.cid=zy.cid0\nleft join(\nselect * from(\nselect ro.risk_no,ro.customer_num,rpp.is_malice_protect,rpp.is_out_complaint,rpp.is_blacklist,rpp.blacklist_reason,rpp.is_refund,rph.is_delwx,rph.delwx_reason,rpp.process_time,\nROW_NUMBER()OVER (PARTITION by ro.customer_num ORDER BY rpp.is_out_complaint desc,rph.is_delwx desc,rpp.process_time desc) as order_num\nfrom (\nselect risk_no,customer_num from odsfk.risk_order\nwhere customer_num is not null and length(customer_num)>0)ro\nleft join (\nselect risk_no\n,if(max(malice_protect_power)=1,'是','否') as is_malice_protect\n,if(max(is_out_complaint)=1,'是','否') as is_out_complaint\n,if(max(is_blacklist)=1,'是','否') as is_blacklist\n,GROUP_CONCAT(distinct blacklist_reason) as  blacklist_reason\n,if(max(is_refund)=1,'是','否') as is_refund\n,max(process_time) as process_time\nfrom odsfk.risk_process_plan\nwhere is_draft =0\ngroup by 1)rpp\non ro.risk_no=rpp.risk_no\nleft join (\nselect risk_no,delwx_reason,is_delwx from (\nselect risk_no,delwx_reason,is_delwx,ROW_NUMBER()OVER (PARTITION by risk_no ORDER BY create_time desc) as order_num\nfrom odsfk.risk_process_history\nwhere is_delwx=1)rph0\nwhere order_num=1)rph\non ro.risk_no=rph.risk_no\n)risk0\nwhere order_num=1)risk\non fb.user_number=risk.customer_num\ngroup by 1,2,3,4,5,6,7,8,9,10,11,12,13,14\n)t0\nleft join report.fill_blacklist_log fbl\non t0.cid=fbl.cid and t0.user_number=fbl.user_number\nleft join(\nselect * from (\nselect risk_no,create_time,\ndelwx_reason,\nROW_NUMBER()OVER (PARTITION by risk_no ORDER BY create_time desc) as risk_num\nfrom odsfk.risk_process_history\nwhere is_delwx=1\n)rph0\nwhere risk_num=1\n)rph\non t0.risk_no=rph.risk_no","file_name":"edw.blacklist_delete_detail.sql"}},{"type":"missing","loc":["body","sql_name"],"msg":"Field required","input":{"sql_content":"-- drop view edw.blacklist_delete_detail\ncreate view edw.blacklist_delete_detail as\nwith sc as (\nselect distinct user_id,su.staff_code,sb.staff_name\nfrom odshk.sys_user_leader_relation su\nleft join odsyy.staff_basic_info sb\non su.staff_code=sb.staff_code\nwhere su.staff_code is not null and principal_id is not null)\nselect t0.*,if(LENGTH(follower_name)>0,'未删微','已删微') as delete_wx_status,\nCOALESCE(fbl.is_delete,'是') as is_delete,fbl.restore_reason,fbl.restore_datetime\n-- ,if(t0.fill_datetime<=COALESCE(rph.create_time,'3000-01-01 00:00:00'),t0.fill_datetime,rph.create_time) as fill_datetime_new\n,if(t0.fill_datetime>=COALESCE(rph.create_time,'1000-01-01 00:00:00'),t0.fill_datetime,rph.create_time) as fill_datetime_new\n,rph.delwx_reason\nfrom(\nselect \nscb.name,scb.cid,fb.user_number,scb.wx_nick,zy.unionid,fb.data_resource,fb.fill_datetime,\nif(risk.risk_no is null,'否','是') as is_risk,risk.is_malice_protect,risk.is_out_complaint,risk.is_blacklist,risk.blacklist_reason,risk.is_refund,risk.risk_no,\nmax(zy.avatar) as avatar,\nGROUP_CONCAT(distinct zy.follower_name) as follower_name,GROUP_CONCAT(distinct zy.follower_staff_code) as follower_staff_code,\nGROUP_CONCAT(distinct zy.executive_name) as executive_name,\nGROUP_CONCAT(distinct zy.majordomo_name) as majordomo_name,\nGROUP_CONCAT(distinct (case when zy.principal_id=154 then '推广一区'\nwhen zy.principal_id=155 then '推广二区'\nwhen zy.principal_id=1308 then '创新业务部'\nelse '' end)) as region\nfrom (\nselect user_number,min(fill_datetime) as fill_datetime,GROUP_CONCAT(data_resource) as data_resource\nfrom (\nselect user_number,max(fill_datetime) as fill_datetime,'导入' as data_resource\nfrom report.fill_blacklist_resource\nwhere user_number is not null\ngroup by 1\nunion ALL\nselect customer_num as user_number,'1000-01-01 00:00:00' as fill_datetime,'新增' as data_resource from odshk.sys_customer_base\nwhere customer_num is not null and in_del_wx=1\n)fb0\ngroup by 1\n)fb\nleft join (\nselect * from odshk.sys_customer_base\nwhere customer_num is not null)scb\non scb.customer_num=fb.user_number \nleft join(\nselect w.*,fsc.staff_code as follower_staff_code,scb.cid as cid0\nfrom odshk.we_customer w\nleft join odshk.sys_customer_base scb\non w.unionid=scb.union_id and scb.union_id is not null\nleft join odshk.we_employee we\non w.add_user_id=we.we_user_id\nleft join sc psc\non w.principal_id=psc.user_id\nleft join sc msc\non w.majordomo_id=msc.user_id\nleft join sc esc\non w.executive_id=esc.user_id\nleft join sc fsc\non w.follower_id=fsc.user_id\nwhere w.del_flag=0 and w.principal_id+w.majordomo_id+w.executive_id+w.follower_id>0\nand we.del_flag=0 and we.use_status=1\n)zy\non scb.cid=zy.cid0\nleft join(\nselect * from(\nselect ro.risk_no,ro.customer_num,rpp.is_malice_protect,rpp.is_out_complaint,rpp.is_blacklist,rpp.blacklist_reason,rpp.is_refund,rph.is_delwx,rph.delwx_reason,rpp.process_time,\nROW_NUMBER()OVER (PARTITION by ro.customer_num ORDER BY rpp.is_out_complaint desc,rph.is_delwx desc,rpp.process_time desc) as order_num\nfrom (\nselect risk_no,customer_num from odsfk.risk_order\nwhere customer_num is not null and length(customer_num)>0)ro\nleft join (\nselect risk_no\n,if(max(malice_protect_power)=1,'是','否') as is_malice_protect\n,if(max(is_out_complaint)=1,'是','否') as is_out_complaint\n,if(max(is_blacklist)=1,'是','否') as is_blacklist\n,GROUP_CONCAT(distinct blacklist_reason) as  blacklist_reason\n,if(max(is_refund)=1,'是','否') as is_refund\n,max(process_time) as process_time\nfrom odsfk.risk_process_plan\nwhere is_draft =0\ngroup by 1)rpp\non ro.risk_no=rpp.risk_no\nleft join (\nselect risk_no,delwx_reason,is_delwx from (\nselect risk_no,delwx_reason,is_delwx,ROW_NUMBER()OVER (PARTITION by risk_no ORDER BY create_time desc) as order_num\nfrom odsfk.risk_process_history\nwhere is_delwx=1)rph0\nwhere order_num=1)rph\non ro.risk_no=rph.risk_no\n)risk0\nwhere order_num=1)risk\non fb.user_number=risk.customer_num\ngroup by 1,2,3,4,5,6,7,8,9,10,11,12,13,14\n)t0\nleft join report.fill_blacklist_log fbl\non t0.cid=fbl.cid and t0.user_number=fbl.user_number\nleft join(\nselect * from (\nselect risk_no,create_time,\ndelwx_reason,\nROW_NUMBER()OVER (PARTITION by risk_no ORDER BY create_time desc) as risk_num\nfrom odsfk.risk_process_history\nwhere is_delwx=1\n)rph0\nwhere risk_num=1\n)rph\non t0.risk_no=rph.risk_no","file_name":"edw.blacklist_delete_detail.sql"}}]}"
+	at org.springframework.web.client.HttpClientErrorException.create(HttpClientErrorException.java:133)
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:183)
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:137)
+	at org.springframework.web.client.ResponseErrorHandler.handleError(ResponseErrorHandler.java:63)
+	at org.springframework.web.client.RestTemplate.handleResponse(RestTemplate.java:942)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:891)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790)
+	at org.springframework.web.client.RestTemplate.postForObject(RestTemplate.java:507)
+	at com.xiaoxj.sqlworkflow.service.OpenmetadataService.getSqlLineage(OpenmetadataService.java:26)
+	at com.xiaoxj.sqlworkflow.controller.OpenmetadataController.getSqlLineage(OpenmetadataController.java:29)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:925)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:830)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2025-12-09 10:16:49.279 ERROR c.x.s.e.GlobalExceptionHandler - Unhandled exception
+java.lang.NullPointerException: Cannot invoke "String.lastIndexOf(String)" because "filePath" is null
+	at com.xiaoxj.sqlworkflow.controller.OpenmetadataController.getSqlLineage(OpenmetadataController.java:23)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:925)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:830)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2025-12-09 10:17:14.058 ERROR c.x.s.e.GlobalExceptionHandler - Unhandled exception
+java.lang.NullPointerException: Cannot invoke "String.lastIndexOf(String)" because "filePath" is null
+	at com.xiaoxj.sqlworkflow.controller.OpenmetadataController.getSqlLineage(OpenmetadataController.java:23)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:925)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:830)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2025-12-09 10:18:09.389 INFO  c.x.s.SqlWorkflowApplication - Starting SqlWorkflowApplication using Java 21.0.6 with PID 84500 (/Users/xiaojunxiao/codes/xiaoxj/sql-workflow/target/classes started by xiaojunxiao in /Users/xiaojunxiao/codes/xiaoxj/sql-workflow)
+2025-12-09 10:18:09.390 INFO  c.x.s.SqlWorkflowApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-09 10:18:09.792 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-09 10:18:09.812 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 18 ms. Found 3 JPA repository interfaces.
+2025-12-09 10:18:10.165 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9000 (http)
+2025-12-09 10:18:10.169 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-09 10:18:10.169 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-12-09 10:18:10.193 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-09 10:18:10.194 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 787 ms
+2025-12-09 10:18:10.357 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-09 10:18:10.380 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-12-09 10:18:10.393 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-12-09 10:18:10.476 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-09 10:18:10.485 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-09 10:18:10.560 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2ae7c1d
+2025-12-09 10:18:10.561 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-09 10:18:10.592 WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-09 10:18:10.891 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-09 10:18:10.927 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-09 10:18:11.293 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-09 10:18:11.742 INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoint(s) beneath base path '/actuator'
+2025-12-09 10:18:11.775 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9000 (http) with context path ''
+2025-12-09 10:18:11.785 INFO  c.x.s.SqlWorkflowApplication - Started SqlWorkflowApplication in 2.636 seconds (process running for 2.834)
+2025-12-09 10:18:16.065 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-09 10:18:16.065 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-09 10:18:16.066 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-12-09 10:21:26.137 INFO  c.x.s.SqlWorkflowApplication - Starting SqlWorkflowApplication using Java 21.0.6 with PID 85757 (/Users/xiaojunxiao/codes/xiaoxj/sql-workflow/target/classes started by xiaojunxiao in /Users/xiaojunxiao/codes/xiaoxj/sql-workflow)
+2025-12-09 10:21:26.138 INFO  c.x.s.SqlWorkflowApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-09 10:21:26.524 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-09 10:21:26.545 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 18 ms. Found 3 JPA repository interfaces.
+2025-12-09 10:21:26.906 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9000 (http)
+2025-12-09 10:21:26.911 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-09 10:21:26.911 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-12-09 10:21:26.930 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-09 10:21:26.930 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 770 ms
+2025-12-09 10:21:27.078 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-09 10:21:27.102 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-12-09 10:21:27.115 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-12-09 10:21:27.189 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-09 10:21:27.197 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-09 10:21:27.249 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@29b4444a
+2025-12-09 10:21:27.249 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-09 10:21:27.267 WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-09 10:21:27.580 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-09 10:21:27.597 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-09 10:21:27.940 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-09 10:21:28.363 INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoint(s) beneath base path '/actuator'
+2025-12-09 10:21:28.393 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9000 (http) with context path ''
+2025-12-09 10:21:28.404 INFO  c.x.s.SqlWorkflowApplication - Started SqlWorkflowApplication in 2.492 seconds (process running for 2.668)
+2025-12-09 10:21:34.606 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-09 10:21:34.606 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-09 10:21:34.607 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-12-09 10:24:33.358 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-12-09 10:24:33.366 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-12-09 10:24:33.377 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-12-09 10:24:35.528 INFO  c.x.s.SqlWorkflowApplication - Starting SqlWorkflowApplication using Java 21.0.6 with PID 86692 (/Users/xiaojunxiao/codes/xiaoxj/sql-workflow/target/classes started by xiaojunxiao in /Users/xiaojunxiao/codes/xiaoxj/sql-workflow)
+2025-12-09 10:24:35.529 INFO  c.x.s.SqlWorkflowApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-09 10:24:35.901 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-09 10:24:35.920 INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 17 ms. Found 3 JPA repository interfaces.
+2025-12-09 10:24:36.274 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9000 (http)
+2025-12-09 10:24:36.278 INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-09 10:24:36.278 INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-12-09 10:24:36.298 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-09 10:24:36.298 INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 751 ms
+2025-12-09 10:24:36.439 INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-09 10:24:36.456 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-12-09 10:24:36.465 INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-12-09 10:24:36.529 INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-09 10:24:36.537 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-09 10:24:36.587 INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@546c30c2
+2025-12-09 10:24:36.587 INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-09 10:24:36.608 WARN  org.hibernate.orm.deprecation - HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-09 10:24:36.890 INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-09 10:24:36.912 INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-09 10:24:37.244 WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-09 10:24:37.672 INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoint(s) beneath base path '/actuator'
+2025-12-09 10:24:37.700 INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9000 (http) with context path ''
+2025-12-09 10:24:37.711 INFO  c.x.s.SqlWorkflowApplication - Started SqlWorkflowApplication in 2.427 seconds (process running for 2.593)
+2025-12-09 10:24:57.315 INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-09 10:24:57.316 INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-09 10:24:57.319 INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2025-12-09 10:25:07.852 INFO  c.x.s.c.OpenmetadataController - file_name=edw.blacklist_delete_detail.sql, duration_ms=10501

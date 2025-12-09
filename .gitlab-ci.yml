@@ -1,31 +1,6 @@
-stages:
-  - analyze
-
-variables:
-  API_URL: "http://dependency-service:9001/api/dependencies/analyze"
-
-analyze_sql:
-  stage: analyze
-  image: python:3.10
-  script:
-    - pip install requests
-    - python tools/gitlab/generate_task_sql.py sql/spec.json sql/tasks $GITLAB_USER_NAME
-    - |
-      python - << 'PY'
-      import os, json, requests
-      base = 'sql/tasks'
-      for root, _, files in os.walk(base):
-          for f in files:
-              if f.endswith('_process.sql'):
-                  path = os.path.join(root, f)
-                  sql = open(path, 'r', encoding='utf-8').read()
-                  task_id = f.replace('_process.sql','')
-                  payload = { 'task_id': task_id, 'sql_file_path': path, 'sql_content': sql }
-                  r = requests.post(os.environ.get('API_URL'), json=payload)
-                  print(path, r.status_code, r.text[:200])
-      PY
-  artifacts:
-    paths:
-      - sql/tasks
-  only:
-    - branches
+image: nexus.gp51.com/library/maven:3.8.5-openjdk-17
+include:
+  project: 'grp-arch/sp-push'
+  ref: main
+  file:
+    - argocd-maven-ci-new.yml
