@@ -39,6 +39,8 @@ public class DependencyController {
 
     @Autowired
     private TaskDeployRepository deployRepo;
+    @Autowired
+    private com.xiaoxj.sqlworkflow.service.WorkflowOrchestrator orchestrator;
     @PostMapping(value = "/addTask", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TaskDependency addTask(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
@@ -98,5 +100,12 @@ public class DependencyController {
         // 更新工作流之后，在上线工作流
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         return lineageService.updateTask(taskName, filePath, fileName, sqlContent, user, taskCodesString, workflowCode, projectCode);
+    }
+
+    @PostMapping("/ready")
+    public Map<String, Object> markReady(@RequestBody Map<String, String> payload) {
+        String table = payload.get("table_name");
+        orchestrator.markReady(table);
+        return java.util.Map.of("table_name", table, "status", "SUCCESS");
     }
 }

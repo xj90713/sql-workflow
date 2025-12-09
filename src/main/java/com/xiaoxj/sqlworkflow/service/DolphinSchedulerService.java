@@ -1,16 +1,22 @@
 package com.xiaoxj.sqlworkflow.service;
 
 import com.xiaoxj.sqlworkflow.core.DolphinClient;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryResp;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HttpTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ShellTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
+import com.xiaoxj.sqlworkflow.domain.TaskDeploy;
+import com.xiaoxj.sqlworkflow.domain.TaskStatus;
 import com.xiaoxj.sqlworkflow.enums.*;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParams;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineResp;
 import com.xiaoxj.sqlworkflow.remote.HttpMethod;
+import com.xiaoxj.sqlworkflow.repo.TaskDependencyRepository;
+import com.xiaoxj.sqlworkflow.repo.TaskDeployRepository;
+import com.xiaoxj.sqlworkflow.repo.TaskStatusRepository;
 import com.xiaoxj.sqlworkflow.util.TaskDefinitionUtils;
 import com.xiaoxj.sqlworkflow.util.TaskLocationUtils;
 import com.xiaoxj.sqlworkflow.util.TaskRelationUtils;
@@ -18,6 +24,7 @@ import com.xiaoxj.sqlworkflow.util.TaskUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -25,15 +32,29 @@ import java.util.Map;
 public class DolphinSchedulerService {
     private final DolphinClient dolphinClient;
 
+    private final TaskStatusRepository statusRepo;
+    private final TaskDependencyRepository depRepo;
+    private final TaskDeployRepository deployRepo;
+    private final DolphinSchedulerService dolphinService;
+
     @Value("dolphin.token")
     private String token;
+
     @Value("dolphin.project.code")
     private Long projectCode;
+
     @Value("dolphin.tenant.code")
     private String tenantCode;
 
-    public DolphinSchedulerService(DolphinClient dolphinClient) {
+    @Value("dolphin.max.parallelism")
+    private int maxParallelism;
+
+    public DolphinSchedulerService(DolphinClient dolphinClient, TaskStatusRepository statusRepo, TaskDependencyRepository depRepo, TaskDeployRepository deployRepo, DolphinSchedulerService dolphinService) {
         this.dolphinClient = dolphinClient;
+        this.statusRepo = statusRepo;
+        this.depRepo = depRepo;
+        this.deployRepo = deployRepo;
+        this.dolphinService = dolphinService;
     }
 
     public List<Long> generateTaskCodes(Long projectCode, int count) {
@@ -71,6 +92,10 @@ public class DolphinSchedulerService {
     public boolean startWorkflows(Long projectCode, String workflowCodes) {
         WorkflowInstanceCreateParams workflowInstanceCreateParams = createWorkflowInstanceCreateParams(workflowCodes);
         return dolphinClient.opsForWorkflowInst().batchStart(projectCode, workflowInstanceCreateParams);
+    }
+
+    public List<WorkflowInstanceQueryResp> listWorkflowInstances(Long projectCode, Long workflowCode) {
+        return dolphinClient.opsForWorkflowInst().page(null, null, projectCode, workflowCode);
     }
 
     public WorkflowInstanceCreateParam createWorkflowInstanceCreateParam(Long workflowCode) {
@@ -170,5 +195,23 @@ public class DolphinSchedulerService {
             sb.append(code);
         }
         return sb.toString();
+    }
+
+    public void triggerPending(long projectCode, String startWorkflows) {
+        List<TaskStatus> pending = statusRepo.findByCurrentStatus(TaskStatus.Status.PENDING);
+        int runningCount = statusRepo.findByCurrentStatus(TaskStatus.Status.RUNNING).size();
+        int slots = Math.max(0, maxParallelism - runningCount);
+        for (TaskStatus t : pending) {
+            if (slots <= 0) break;
+            TaskDeploy deploy = deployRepo.findByTaskName(t.getTaskName());
+            if (deploy == null) continue;
+            boolean started = dolphinService.startWorkflows(projectCode, startWorkflows);
+            if (started) {
+                t.setCurrentStatus(TaskStatus.Status.RUNNING);
+                t.setUpdatedAt(LocalDateTime.now());
+                statusRepo.save(t);
+                slots--;
+            }
+        }
     }
 }

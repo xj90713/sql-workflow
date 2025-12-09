@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/sql_workflow?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:xiao@duan712}
+    url: jdbc:mysql://localhost:3306/sql_workflow?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: xiao@duan712
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,18 +16,18 @@ server:
   port: 9000
 
 dolphin:
-  baseUrl: ${DS_BASE_URL:https://ds.gp51.com}
-  authToken: ${DS_AUTH_TOKEN:28459a89b01e79187adeb206334d0abd}
+  baseUrl: https://ds.gp51.com
+  authToken: 28459a89b01e79187adeb206334d0abd
   project:
     code: 1231231231
   tenant:
     code: 1231231231
 workflow:
-  maxParallelism: ${WORKFLOW_MAX_PARALLELISM:4}
-  triggerIntervalSeconds: ${WORKFLOW_TRIGGER_INTERVAL:300}
+  maxParallelism: 4
+  triggerIntervalSeconds: 300
 
 monitor:
-  timeoutSeconds: ${TASK_TIMEOUT_SECONDS:7200}
+  timeoutSeconds: 7200
   dingWebhook: ${DING_WEBHOOK_URL:}
 
 management:

@@ -1,11 +1,12 @@
 package com.xiaoxj.sqlworkflow.domain;
 
 import jakarta.persistence.*;
-import java.time.Instant;
+import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "task_status")
+@Data
 public class TaskStatus {
     public enum Status { PENDING, RUNNING, SUCCESS, FAILED }
     @Id

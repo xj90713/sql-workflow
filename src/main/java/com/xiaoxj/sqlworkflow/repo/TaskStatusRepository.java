@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TaskStatusRepository extends JpaRepository<TaskStatus, Integer> {
     List<TaskStatus> findByCurrentStatus(TaskStatus.Status currentStatus);
+    List<TaskStatus> findByTaskName(String taskName);
+    TaskStatus findTopByTaskNameOrderByUpdatedAtDesc(String taskName);
 }
