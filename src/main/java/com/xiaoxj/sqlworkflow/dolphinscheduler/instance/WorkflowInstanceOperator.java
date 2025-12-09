@@ -102,6 +102,26 @@ public class WorkflowInstanceOperator extends AbstractOperator {
   }
 
   /**
+   * page query workflow's instance list
+   *
+   * @param projectCode project code
+   * @param workflowInstanceId workflow id
+   * @return
+   */
+  public WorkflowInstanceQueryResp getWorkflowInstanceStatus(Long projectCode, Long workflowInstanceId) {
+    String url = dolphinAddress + "/projects/" + projectCode + "/workflow-instances/" + workflowInstanceId;
+    try {
+      HttpRestResult<JsonNode> restResult =
+              dolphinsRestTemplate.get(url, getHeader(), null, JsonNode.class);
+      return JacksonUtils.parseObject(restResult.getData().toString(), WorkflowInstanceQueryResp.class);
+    } catch (Exception e) {
+      throw new DolphinException("page dolphin scheduler workflow instance list fail", e);
+    }
+  }
+
+
+
+  /**
    * repeat run dolphin scheduler workflow instance
    *
    * @param projectCode project code

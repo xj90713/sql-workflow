@@ -35,7 +35,6 @@ public class DolphinSchedulerService {
     private final TaskStatusRepository statusRepo;
     private final TaskDependencyRepository depRepo;
     private final TaskDeployRepository deployRepo;
-    private final DolphinSchedulerService dolphinService;
 
     @Value("dolphin.token")
     private String token;
@@ -49,12 +48,11 @@ public class DolphinSchedulerService {
     @Value("dolphin.max.parallelism")
     private int maxParallelism;
 
-    public DolphinSchedulerService(DolphinClient dolphinClient, TaskStatusRepository statusRepo, TaskDependencyRepository depRepo, TaskDeployRepository deployRepo, DolphinSchedulerService dolphinService) {
+    public DolphinSchedulerService(DolphinClient dolphinClient, TaskStatusRepository statusRepo, TaskDependencyRepository depRepo, TaskDeployRepository deployRepo) {
         this.dolphinClient = dolphinClient;
         this.statusRepo = statusRepo;
         this.depRepo = depRepo;
         this.deployRepo = deployRepo;
-        this.dolphinService = dolphinService;
     }
 
     public List<Long> generateTaskCodes(Long projectCode, int count) {
@@ -205,7 +203,7 @@ public class DolphinSchedulerService {
             if (slots <= 0) break;
             TaskDeploy deploy = deployRepo.findByTaskName(t.getTaskName());
             if (deploy == null) continue;
-            boolean started = dolphinService.startWorkflows(projectCode, startWorkflows);
+            boolean started = startWorkflows(projectCode, startWorkflows);
             if (started) {
                 t.setCurrentStatus(TaskStatus.Status.RUNNING);
                 t.setUpdatedAt(LocalDateTime.now());

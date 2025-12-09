@@ -2,6 +2,7 @@ package com.xiaoxj.sqlworkflow.workflow;
 
 
 import com.xiaoxj.sqlworkflow.BaseTest;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryResp;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineResp;
@@ -111,5 +112,11 @@ public class WorkflowTest extends BaseTest {
     List<WrokflowDefineResp> page =
         getClient().opsForWorkflow().page(projectCode, null, null, WORKFLOW_NAME);
     Assert.assertTrue(getClient().opsForWorkflow().delete(projectCode, page.get(0).getCode()));
+  }
+
+  @Test
+  public void testGetWorkflowInstance() {
+    WorkflowInstanceQueryResp workflowInstanceStatus = getClient().opsForWorkflowInst().getWorkflowInstanceStatus(projectCode, 485L);
+    System.out.println(workflowInstanceStatus);
   }
 }
