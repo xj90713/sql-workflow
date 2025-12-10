@@ -2,7 +2,7 @@ package com.xiaoxj.sqlworkflow.dolphinscheduler.instance;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineResp;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -45,7 +45,7 @@ public class WorkflowInstanceQueryResp {
   private String host;
 
   /** workflow definition structure */
-  private WrokflowDefineResp workflowDefinition;
+  private WorkflowDefineResp workflowDefinition;
   /** workflow command type */
   private String commandType;
 

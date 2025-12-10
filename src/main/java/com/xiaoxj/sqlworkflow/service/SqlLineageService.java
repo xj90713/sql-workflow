@@ -1,9 +1,11 @@
 package com.xiaoxj.sqlworkflow.service;
 
-import com.xiaoxj.sqlworkflow.domain.TaskDeploy;
-import com.xiaoxj.sqlworkflow.domain.TaskDependency;
-import com.xiaoxj.sqlworkflow.repo.TaskDeployRepository;
-import com.xiaoxj.sqlworkflow.repo.TaskDependencyRepository;
+import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
+import com.xiaoxj.sqlworkflow.domain.WorkflowDependency;
+import com.xiaoxj.sqlworkflow.domain.WorkflowInstance;
+import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
+import com.xiaoxj.sqlworkflow.repo.WorkflowDependencyRepository;
+import com.xiaoxj.sqlworkflow.repo.WorkflowInstanceRepository;
 import io.github.reata.sqllineage4j.common.model.Table;
 import io.github.reata.sqllineage4j.core.LineageRunner;
 import org.springframework.stereotype.Service;
@@ -19,16 +21,18 @@ import java.time.LocalDateTime;
 
 @Service
 public class SqlLineageService {
-    private final TaskDeployRepository deployRepo;
-    private final TaskDependencyRepository depRepo;
+    private final WorkflowDeployRepository deployRepo;
+    private final WorkflowDependencyRepository depRepo;
+    private final WorkflowInstanceRepository workflowInstanceRepo;
 
-    public SqlLineageService(TaskDeployRepository deployRepo, TaskDependencyRepository depRepo) {
+    public SqlLineageService(WorkflowDeployRepository deployRepo, WorkflowDependencyRepository depRepo, WorkflowInstanceRepository workflowInstanceRepo) {
         this.deployRepo = deployRepo;
         this.depRepo = depRepo;
+        this.workflowInstanceRepo = workflowInstanceRepo;
     }
 
     @Transactional
-    public TaskDependency addTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
+    public WorkflowDependency addTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
 
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
@@ -51,7 +55,7 @@ public class SqlLineageService {
                 .map(table -> table.replace("..", "."))
                 .collect(Collectors.joining(","));
 
-        TaskDeploy deploy = new TaskDeploy();
+        WorkflowDeploy deploy = new WorkflowDeploy();
         deploy.setTaskId(taskName);
         deploy.setTaskName(taskName);
         deploy.setFilePath(filePath);
@@ -64,7 +68,7 @@ public class SqlLineageService {
         deploy.setProjectCode(projectCode);
         deployRepo.save(deploy);
 
-        TaskDependency dep = new TaskDependency();
+        WorkflowDependency dep = new WorkflowDependency();
         dep.setTaskCode(taskName);
         dep.setTaskName(taskName);
         dep.setSourceTables(sourceTableStrings);
@@ -77,8 +81,8 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public TaskDependency updateTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes, long workflowCode, long projectCode) {
-        TaskDeploy latest = deployRepo.findTopByTaskNameOrderByUpdateTimeDesc(taskName);
+    public WorkflowDependency updateTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes, long workflowCode, long projectCode) {
+        WorkflowDeploy latest = deployRepo.findTopByTaskNameOrderByUpdateTimeDesc(taskName);
         if (latest == null) {
             return addTask(taskName, filePath, fileName, sqlContent, commitUser, workflowCode, projectCode, taskCodes);
         }
@@ -101,7 +105,7 @@ public class SqlLineageService {
         String sourceTableStrings = sourceTables.stream().map(t -> t.replace("..", ".")).collect(Collectors.joining(","));
 
         if (Objects.equals(latest.getFileMd5(), newMd5)) {
-            List<TaskDependency> deps = depRepo.findByTaskName(taskName);
+            List<WorkflowDependency> deps = depRepo.findByTaskName(taskName);
             return (deps != null && !deps.isEmpty()) ? deps.get(deps.size() - 1) : null;
         }
 
@@ -114,14 +118,31 @@ public class SqlLineageService {
         latest.setTaskCodes(taskCodes);
         deployRepo.save(latest);
 
-        List<TaskDependency> deps = depRepo.findByTaskName(taskName);
-        TaskDependency dep = (deps != null && !deps.isEmpty()) ? deps.get(deps.size() - 1) : new TaskDependency();
+        List<WorkflowDependency> deps = depRepo.findByTaskName(taskName);
+        WorkflowDependency dep = (deps != null && !deps.isEmpty()) ? deps.get(deps.size() - 1) : new WorkflowDependency();
         dep.setTaskCode(taskName);
         dep.setTaskName(taskName);
         dep.setSourceTables(sourceTableStrings);
         dep.setTargetTable(targetTable);
         dep.setStatus("UPDATED");
         return depRepo.save(dep);
+    }
+
+    @Transactional
+    public WorkflowInstance addWorkflowInstance(String name, String fileName, String sqlContent, int state, long workflowCode, long projectCode, String taskCodes) {
+        WorkflowInstance workflowInstance = new WorkflowInstance();
+        workflowInstance.setName(name);
+        workflowInstance.setWorkflowCode(workflowCode);
+        workflowInstance.setProjectCode(projectCode);
+        workflowInstance.setState(state);
+        workflowInstance.setRunTimes(1);
+        return workflowInstanceRepo.save(workflowInstance);
+    }
+
+    @Transactional
+    public WorkflowInstance updateWorkflowInstance(WorkflowInstance workflowInstance, int state) {
+        workflowInstance.setState(state);
+        return workflowInstanceRepo.save(workflowInstance);
     }
 
     private String md5(String s) {

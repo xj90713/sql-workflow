@@ -2,6 +2,7 @@ package com.xiaoxj.sqlworkflow.dolphinscheduler.instance;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xiaoxj.sqlworkflow.common.PageInfo;
 import com.xiaoxj.sqlworkflow.core.AbstractOperator;
 import com.xiaoxj.sqlworkflow.core.DolphinClientConstant;
@@ -12,7 +13,9 @@ import com.xiaoxj.sqlworkflow.remote.Query;
 import com.xiaoxj.sqlworkflow.util.JacksonUtils;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -31,15 +34,22 @@ public class WorkflowInstanceOperator extends AbstractOperator {
    * @param workflowInstanceCreateParam workflow instance create param
    * @return true for success,otherwise false
    */
-  public Boolean start(Long projectCode, WorkflowInstanceCreateParam workflowInstanceCreateParam) {
+  public HttpRestResult<JsonNode>  start(Long projectCode, WorkflowInstanceCreateParam workflowInstanceCreateParam) {
     String url = dolphinAddress + "/projects/" + projectCode + "/executors/start-workflow-instance";
     log.info("start workflow instance ,url:{}", url);
     try {
       HttpRestResult<JsonNode> restResult =
           dolphinsRestTemplate.postForm(
               url, getHeader(), workflowInstanceCreateParam, JsonNode.class);
-      log.info("start workflow response:{}", restResult);
-      return restResult.getSuccess();
+      Long workflowCode = workflowInstanceCreateParam.getWorkflowDefinitionCode();
+      log.info("start workflow response:{}", restResult.getData().get(0).asLong());
+      HashMap<String, Long> workflowMap = new HashMap<>();
+      ObjectMapper mapper = new ObjectMapper();
+      workflowMap.put("workflowCode", workflowCode);
+      workflowMap.put("workflowInstanceId", restResult.getData().get(0).asLong());
+      JsonNode jsonNode = mapper.convertValue(workflowMap, JsonNode.class);
+      restResult.setData(jsonNode);
+      return restResult;
     } catch (Exception e) {
       throw new DolphinException("start dolphin scheduler workflow instance fail", e);
     }
@@ -55,6 +65,7 @@ public class WorkflowInstanceOperator extends AbstractOperator {
    */
   public Boolean batchStart(Long projectCode, WorkflowInstanceCreateParams workflowInstanceCreateParams) {
     String url = dolphinAddress + "/projects/" + projectCode + "/executors/batch-start-workflow-instance";
+    System.out.println("workflowInstanceCreateParams" + workflowInstanceCreateParams);
     log.info("batch start workflow instances ,url:{}", url);
     try {
       HttpRestResult<JsonNode> restResult =
@@ -102,24 +113,22 @@ public class WorkflowInstanceOperator extends AbstractOperator {
   }
 
   /**
-   * page query workflow's instance list
+   * query workflow's instance status
    *
    * @param projectCode project code
    * @param workflowInstanceId workflow id
    * @return
    */
-  public WorkflowInstanceQueryResp getWorkflowInstanceStatus(Long projectCode, Long workflowInstanceId) {
+  public String getWorkflowInstanceStatus(Long projectCode, Long workflowInstanceId) {
     String url = dolphinAddress + "/projects/" + projectCode + "/workflow-instances/" + workflowInstanceId;
     try {
       HttpRestResult<JsonNode> restResult =
               dolphinsRestTemplate.get(url, getHeader(), null, JsonNode.class);
       JsonNode state = restResult.getData().get("state");
-      Boolean failed = restResult.getFailed();
-      System.out.println("success:" + state);
-      System.out.println("");
-      return JacksonUtils.parseObject(restResult.getData().toString(), WorkflowInstanceQueryResp.class);
+//      return JacksonUtils.parseObject(restResult.getData().toString(), WorkflowInstanceQueryResp.class);
+      return state.textValue();
     } catch (Exception e) {
-      throw new DolphinException("page dolphin scheduler workflow instance list fail", e);
+      throw new DolphinException("get workflow instance status fail", e);
     }
   }
 

@@ -19,7 +19,7 @@ package com.xiaoxj.sqlworkflow.dolphinscheduler.instance;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineResp;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -99,7 +99,7 @@ public class TaskInstanceQueryResp implements Serializable {
   private WorkflowInstanceQueryResp workflowInstance;
 
   /** workflow definition */
-  private WrokflowDefineResp workflowDefine;
+  private WorkflowDefineResp workflowDefine;
 
   /** task definition */
   private TaskDefinition taskDefine;

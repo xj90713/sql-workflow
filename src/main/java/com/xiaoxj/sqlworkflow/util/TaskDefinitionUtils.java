@@ -2,18 +2,9 @@ package com.xiaoxj.sqlworkflow.util;
 
 
 import com.google.common.base.Strings;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HttpTask;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ShellTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.AbstractTask;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineParam;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineResp;
-import com.xiaoxj.sqlworkflow.enums.HttpCheckCondition;
-import com.xiaoxj.sqlworkflow.remote.HttpMethod;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class TaskDefinitionUtils {

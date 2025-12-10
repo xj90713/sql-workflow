@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/sql_workflow?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
-#    password: xiao@duan712
+    password: xiao@duan712
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,14 +16,14 @@ server:
   port: 9000
 
 dolphin:
-  baseUrl: https://ds.gp51.com
+  baseUrl: https://ds.gp51.com/dolphinscheduler
   authToken: 28459a89b01e79187adeb206334d0abd
   project:
     code: 1231231231
   tenant:
     code: 1231231231
-workflow:
-  maxParallelism: 4
+  max:
+    Parallelism: 4
   triggerIntervalSeconds: 300
 
 monitor:
@@ -40,3 +40,8 @@ openmetadata:
   api:
 #    url: http://openmetadata-api.grp-arch.svc.cluster.local:8080
     url: http://localhost:8080/api/lineage
+
+postgres:
+  url: jdbc:postgresql://127.0.0.1:5432/addax_admin
+  username: addax
+  password: addax@123

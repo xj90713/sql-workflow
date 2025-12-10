@@ -1,12 +1,12 @@
 package com.xiaoxj.sqlworkflow.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xiaoxj.sqlworkflow.domain.TaskDependency;
-import com.xiaoxj.sqlworkflow.domain.TaskDeploy;
+import com.xiaoxj.sqlworkflow.domain.WorkflowDependency;
+import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.domain.TaskStatus;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryResp;
-import com.xiaoxj.sqlworkflow.repo.TaskDependencyRepository;
-import com.xiaoxj.sqlworkflow.repo.TaskDeployRepository;
+import com.xiaoxj.sqlworkflow.repo.WorkflowDependencyRepository;
+import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.repo.TaskStatusRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,16 +19,16 @@ import java.util.*;
 @Service
 public class WorkflowOrchestrator {
     private final TaskStatusRepository statusRepo;
-    private final TaskDependencyRepository depRepo;
-    private final TaskDeployRepository deployRepo;
+    private final WorkflowDependencyRepository depRepo;
+    private final WorkflowDeployRepository deployRepo;
     private final DolphinSchedulerService dolphinService;
     private final ObjectMapper mapper = new ObjectMapper();
     @Value("${workflow.maxParallelism:4}")
     private int maxParallelism;
 
     public WorkflowOrchestrator(TaskStatusRepository statusRepo,
-                                TaskDependencyRepository depRepo,
-                                TaskDeployRepository deployRepo,
+                                WorkflowDependencyRepository depRepo,
+                                WorkflowDeployRepository deployRepo,
                                 DolphinSchedulerService dolphinService) {
         this.statusRepo = statusRepo;
         this.depRepo = depRepo;
@@ -50,7 +50,7 @@ public class WorkflowOrchestrator {
         ts.setCurrentStatus(TaskStatus.Status.SUCCESS);
         ts.setUpdatedAt(LocalDateTime.now());
         statusRepo.save(ts);
-        for (TaskDependency d : depRepo.findAll()) {
+        for (WorkflowDependency d : depRepo.findAll()) {
             List<String> sources = parseSources(d.getSourceTables());
             if (sources.contains(tableName)) {
                 boolean allReady = sources.stream().allMatch(src -> {
@@ -79,9 +79,10 @@ public class WorkflowOrchestrator {
         int slots = Math.max(0, maxParallelism - runningCount);
         for (TaskStatus t : pending) {
             if (slots <= 0) break;
-            TaskDeploy deploy = deployRepo.findByTaskName(t.getTaskName());
+            WorkflowDeploy deploy = deployRepo.findByTaskName(t.getTaskName());
             if (deploy == null) continue;
-            boolean started = dolphinService.startWorkflow(deploy.getProjectCode(), deploy.getWorkflowCode());
+//            boolean started = dolphinService.startWorkflow(deploy.getProjectCode(), deploy.getWorkflowCode());
+            boolean started = true;
             if (started) {
                 t.setCurrentStatus(TaskStatus.Status.RUNNING);
                 t.setUpdatedAt(LocalDateTime.now());
@@ -96,7 +97,7 @@ public class WorkflowOrchestrator {
     public void checkRunning() {
         List<TaskStatus> running = statusRepo.findByCurrentStatus(TaskStatus.Status.RUNNING);
         for (TaskStatus t : running) {
-            TaskDeploy deploy = deployRepo.findByTaskName(t.getTaskName());
+            WorkflowDeploy deploy = deployRepo.findByTaskName(t.getTaskName());
             if (deploy == null) continue;
             List<WorkflowInstanceQueryResp> instances = dolphinService.listWorkflowInstances(deploy.getProjectCode(), deploy.getWorkflowCode());
             if (instances == null || instances.isEmpty()) continue;
@@ -105,7 +106,7 @@ public class WorkflowOrchestrator {
                 t.setCurrentStatus(TaskStatus.Status.SUCCESS);
                 t.setUpdatedAt(LocalDateTime.now());
                 statusRepo.save(t);
-                List<TaskDependency> deps = depRepo.findByTaskName(t.getTaskName());
+                List<WorkflowDependency> deps = depRepo.findByTaskName(t.getTaskName());
                 if (deps != null && !deps.isEmpty()) {
                     String targetTable = deps.get(deps.size()-1).getTargetTable();
                     if (targetTable != null && !targetTable.isBlank()) {

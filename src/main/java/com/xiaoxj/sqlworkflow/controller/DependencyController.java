@@ -1,17 +1,12 @@
 package com.xiaoxj.sqlworkflow.controller;
 
-import com.xiaoxj.sqlworkflow.domain.TaskDependency;
-import com.xiaoxj.sqlworkflow.domain.TaskDeploy;
-import com.xiaoxj.sqlworkflow.repo.TaskDeployRepository;
+import com.xiaoxj.sqlworkflow.domain.WorkflowDependency;
+import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
+import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import com.xiaoxj.sqlworkflow.service.SqlLineageService;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
-import com.xiaoxj.sqlworkflow.util.TaskDefinitionUtils;
-import com.xiaoxj.sqlworkflow.util.TaskLocationUtils;
-import com.xiaoxj.sqlworkflow.util.TaskRelationUtils;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineParam;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineResp;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -38,11 +33,11 @@ public class DependencyController {
     private String tenantCode;
 
     @Autowired
-    private TaskDeployRepository deployRepo;
+    private WorkflowDeployRepository deployRepo;
     @Autowired
     private com.xiaoxj.sqlworkflow.service.WorkflowOrchestrator orchestrator;
     @PostMapping(value = "/addTask", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public TaskDependency addTask(@RequestBody Map<String, String> payload) {
+    public WorkflowDependency addTask(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
         String taskName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
@@ -54,13 +49,13 @@ public class DependencyController {
         String user = payload.getOrDefault("commit_user", "system");
         List<Map<String, String>> taskTriples = lineageService.taskTriples(sqlContent);
         String describe = lineageService.extractComments(sqlContent);
-        WrokflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, taskName,describe);
-        WrokflowDefineResp wrokflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);
+        WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, taskName,describe);
+        WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);
         String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
-        long workflowCode = wrokflowDefineResp.getCode();
+        long workflowCode = workflowDefineResp.getCode();
         // 创建任务流之后 需要上线该任务
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
-        long projectCode = wrokflowDefineResp.getProjectCode();
+        long projectCode = workflowDefineResp.getProjectCode();
         lineageService.addTask(taskName, filePath, fileName, sqlContent, user, projectCode, workflowCode, taskCodesString);
 
         return null;
@@ -75,7 +70,7 @@ public class DependencyController {
     // 触发执行，需要调用dolphinScheduler接口，记需要找到workflowcode和taskcode为执行的状态对联，通过接口提交执行任务；
     //
     @PostMapping(value = "/updateTask", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public TaskDependency updateTask(@RequestBody Map<String, String> payload) {
+    public WorkflowDependency updateTask(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
         String taskName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
@@ -85,18 +80,16 @@ public class DependencyController {
         sqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
                 .replace("${imp_pt_date}", "'2025-01-01'");
         String user = payload.getOrDefault("commit_user", "system");
-        TaskDeploy taskDeploy = deployRepo.findByTaskName(taskName);
-        long workflowCode = taskDeploy.getWorkflowCode();
-        long projectCode = taskDeploy.getProjectCode();
-        HivecliTask hivecliTask = new HivecliTask();
-        hivecliTask.setHiveSqlScript(sqlContent);
+        WorkflowDeploy workflowDeploy = deployRepo.findByTaskName(taskName);
+        long workflowCode = workflowDeploy.getWorkflowCode();
+        long projectCode = workflowDeploy.getProjectCode();
         String describe = lineageService.extractComments(sqlContent);
         // 更新工作流之前，必须要下线改任务
         dolphinSchedulerService.offlineWorkflow(projectCode, workflowCode);
         List<Map<String, String>> taskTriples = lineageService.taskTriples(sqlContent);
-        WrokflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, taskName, describe);
+        WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, taskName, describe);
         String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
-        WrokflowDefineResp wrokflowDefineResp = dolphinSchedulerService.updateWorkflow(projectCode, workflowCode, workDefinition);
+        WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.updateWorkflow(projectCode, workflowCode, workDefinition);
         // 更新工作流之后，在上线工作流
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         return lineageService.updateTask(taskName, filePath, fileName, sqlContent, user, taskCodesString, workflowCode, projectCode);

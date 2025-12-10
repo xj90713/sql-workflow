@@ -2,15 +2,15 @@ package com.xiaoxj.sqlworkflow.workflow;
 
 
 import com.xiaoxj.sqlworkflow.BaseTest;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryResp;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineParam;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WrokflowDefineResp;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
 import com.xiaoxj.sqlworkflow.enums.HttpCheckCondition;
 import com.xiaoxj.sqlworkflow.remote.HttpMethod;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HttpTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ShellTask;
+import com.xiaoxj.sqlworkflow.repo.WorkflowInstanceRepository;
 import com.xiaoxj.sqlworkflow.util.TaskDefinitionUtils;
 import com.xiaoxj.sqlworkflow.util.TaskLocationUtils;
 import com.xiaoxj.sqlworkflow.util.TaskRelationUtils;
@@ -24,7 +24,7 @@ import java.util.List;
 /** the test for workflow */
 public class WorkflowTest extends BaseTest {
 
-  public static final String WORKFLOW_NAME = "test-dag1";
+  public static final String WORKFLOW_NAME = "test-dag1-3";
 
   /**
    * create simple workflow like: shellTask -> httpTask
@@ -70,13 +70,13 @@ public class WorkflowTest extends BaseTest {
     TaskDefinition httpTaskDefinition =
         TaskDefinitionUtils.createDefaultTaskDefinition(taskCodes.get(2), httpTask);
 
-    WrokflowDefineParam pcr = new WrokflowDefineParam();
+    WorkflowDefineParam pcr = new WorkflowDefineParam();
     pcr.setName(WORKFLOW_NAME)
         .setLocations(TaskLocationUtils.horizontalLocation(taskCodes.toArray(new Long[0])))
         .setDescription("test-dag-description")
         .setTenantCode(tenantCode)
         .setTimeout("0")
-        .setExecutionType(WrokflowDefineParam.EXECUTION_TYPE_PARALLEL)
+        .setExecutionType(WorkflowDefineParam.EXECUTION_TYPE_PARALLEL)
         .setTaskDefinitionJson(Arrays.asList(hiveTaskDefinition,shellTaskDefinition, httpTaskDefinition))
         .setTaskRelationJson(TaskRelationUtils.oneLineRelation(taskCodes.toArray(new Long[0])))
         .setGlobalParams(null);
@@ -86,7 +86,7 @@ public class WorkflowTest extends BaseTest {
 
   @Test
   public void testPage() {
-    List<WrokflowDefineResp> page =
+    List<WorkflowDefineResp> page =
         getClient().opsForWorkflow().page(projectCode, null, null, WORKFLOW_NAME);
     int expectedWorkflowNumber = 1;
     Assert.assertEquals(expectedWorkflowNumber, page.size());
@@ -94,14 +94,14 @@ public class WorkflowTest extends BaseTest {
 
   @Test
   public void testOnlineWorkflow() {
-    List<WrokflowDefineResp> page =
+    List<WorkflowDefineResp> page =
         getClient().opsForWorkflow().page(projectCode, null, null, WORKFLOW_NAME);
     Assert.assertTrue(getClient().opsForWorkflow().online(projectCode, page.get(0).getCode()));
   }
 
   @Test
   public void testOfflineWorkflow() {
-    List<WrokflowDefineResp> page =
+    List<WorkflowDefineResp> page =
         getClient().opsForWorkflow().page(projectCode, null, null, WORKFLOW_NAME);
     Assert.assertTrue(getClient().opsForWorkflow().offline(projectCode, page.get(0).getCode()));
   }
@@ -109,14 +109,15 @@ public class WorkflowTest extends BaseTest {
   /** the workflow must in offline state */
   @Test
   public void testDeleteWorkflow() {
-    List<WrokflowDefineResp> page =
+    List<WorkflowDefineResp> page =
         getClient().opsForWorkflow().page(projectCode, null, null, WORKFLOW_NAME);
     Assert.assertTrue(getClient().opsForWorkflow().delete(projectCode, page.get(0).getCode()));
   }
 
   @Test
   public void testGetWorkflowInstance() {
-    WorkflowInstanceQueryResp workflowInstanceStatus = getClient().opsForWorkflowInst().getWorkflowInstanceStatus(projectCode, 486L);
+    String workflowInstanceStatus = getClient().opsForWorkflowInst().getWorkflowInstanceStatus(projectCode, 486L);
+//    WorkflowInstanceRepository workflowInstanceRepository = new WorkflowInstanceRepository();
     System.out.println(workflowInstanceStatus);
   }
 }

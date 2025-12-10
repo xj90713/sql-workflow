@@ -145,13 +145,13 @@ public class TaskTest extends BaseTest {
     TaskLocation tl3 = new TaskLocation(successTaskCode, 800, 240);
     TaskLocation tl4 = new TaskLocation(failTaskCode, 800, 440);
 
-    WrokflowDefineParam pcr = new WrokflowDefineParam();
+    WorkflowDefineParam pcr = new WorkflowDefineParam();
     pcr.setName("condition-dag")
         .setLocations(Arrays.asList(tl1, tl2, tl3, tl4))
         .setDescription("test for use condition dag")
         .setTenantCode(tenantCode)
         .setTimeout("0")
-        .setExecutionType(WrokflowDefineParam.EXECUTION_TYPE_PARALLEL)
+        .setExecutionType(WorkflowDefineParam.EXECUTION_TYPE_PARALLEL)
         .setTaskDefinitionJson(
             Arrays.asList(
                 shellTaskDefinition,
@@ -161,25 +161,25 @@ public class TaskTest extends BaseTest {
         .setTaskRelationJson(Arrays.asList(r1, r2, r3, r4))
         .setGlobalParams(null);
 
-    WrokflowDefineResp resp = getClient().opsForWorkflow().create(projectCode, pcr);
+    WorkflowDefineResp resp = getClient().opsForWorkflow().create(projectCode, pcr);
     System.out.println(resp);
     Assert.assertEquals("condition-dag", resp.getName());
   }
 
   private void submit(
       Long taskCode, TaskDefinition taskDefinition, String workflowName, String description) {
-    WrokflowDefineParam pcr = new WrokflowDefineParam();
+    WorkflowDefineParam pcr = new WorkflowDefineParam();
     pcr.setName(workflowName)
         .setLocations(TaskLocationUtils.verticalLocation(taskCode))
         .setDescription(description)
         .setTenantCode(tenantCode)
         .setTimeout("0")
-        .setExecutionType(WrokflowDefineParam.EXECUTION_TYPE_PARALLEL)
+        .setExecutionType(WorkflowDefineParam.EXECUTION_TYPE_PARALLEL)
         .setTaskDefinitionJson(Collections.singletonList(taskDefinition))
         .setTaskRelationJson(TaskRelationUtils.oneLineRelation(taskCode))
         .setGlobalParams(null);
 
-    WrokflowDefineResp resp = getClient().opsForWorkflow().create(projectCode, pcr);
+    WorkflowDefineResp resp = getClient().opsForWorkflow().create(projectCode, pcr);
     System.out.println(resp);
     Assert.assertEquals(workflowName, resp.getName());
   }

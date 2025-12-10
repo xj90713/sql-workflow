@@ -11,7 +11,7 @@ import java.util.Map;
 /** define workflow response,copied from org.apache.dolphinscheduler.dao.entity.workflowDefinition */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WrokflowDefineResp {
+public class WorkflowDefineResp {
 
   /** id */
   private int id;

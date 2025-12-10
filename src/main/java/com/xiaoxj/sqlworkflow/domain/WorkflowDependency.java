@@ -3,13 +3,12 @@ package com.xiaoxj.sqlworkflow.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "task_dependencies")
+@Table(name = "workflow_dependencies")
 @Data
-public class TaskDependency {
+public class WorkflowDependency {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
