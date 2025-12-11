@@ -10,4 +10,6 @@ public interface WorkflowDeployRepository extends JpaRepository<WorkflowDeploy, 
     WorkflowDeploy findByTaskName(String taskName);
     WorkflowDeploy findTopByTaskNameOrderByUpdateTimeDesc(String taskName);
     WorkflowDeploy findByTargetTable(String targetTable);
+
+    WorkflowDeploy findByWorkflowCode(Long workflowCode);
 }

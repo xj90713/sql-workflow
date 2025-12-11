@@ -2,12 +2,18 @@ package com.xiaoxj.sqlworkflow.service;
 
 import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
+import com.xiaoxj.sqlworkflow.scheduler.WorkflowOrchestrator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class WorkflowQueueService {
+
+    private static final Logger log = LoggerFactory.getLogger(WorkflowQueueService.class);
+
     private final WorkflowDeployRepository repo;
     private final IngestInfoService ingestInfoService;
     public WorkflowQueueService(WorkflowDeployRepository repo, IngestInfoService ingestInfoService) { this.repo = repo;
@@ -42,6 +48,10 @@ public class WorkflowQueueService {
     }
     public String getTargetWorkflowName() {
         List<WorkflowDeploy> pendings = repo.findByStatus("N");
+        if (pendings.isEmpty()) {
+            log.info("No pending workflow found, all workflows have finished");
+            return "finished";
+        }
         Set<String> ready = buildReadyQueue();
         for (WorkflowDeploy wd : pendings) {
             String tgt = wd.getTargetTable();

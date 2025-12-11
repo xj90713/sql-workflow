@@ -24,6 +24,9 @@ public class WorkflowInstanceTest extends BaseTest {
     public void testStartWorkflow() {
         Long workflowCode = 159572138550880L;
         HttpRestResult<JsonNode> jsonNodeHttpRestResult = dolphinSchedulerService.startWorkflow(projectCode, workflowCode);
+        System.out.println("workflowCode:" + jsonNodeHttpRestResult.getData().get("workflowCode"));
+        System.out.println("workflowInstanceId:" + jsonNodeHttpRestResult.getData().get("workflowInstanceId"));
+
         System.out.println(jsonNodeHttpRestResult);
     }
 

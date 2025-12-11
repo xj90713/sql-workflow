@@ -16,9 +16,6 @@ import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
 import com.xiaoxj.sqlworkflow.remote.HttpMethod;
 import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
-import com.xiaoxj.sqlworkflow.repo.WorkflowDependencyRepository;
-import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
-import com.xiaoxj.sqlworkflow.repo.TaskStatusRepository;
 import com.xiaoxj.sqlworkflow.util.TaskDefinitionUtils;
 import com.xiaoxj.sqlworkflow.util.TaskLocationUtils;
 import com.xiaoxj.sqlworkflow.util.TaskRelationUtils;
@@ -36,9 +33,6 @@ import java.util.Map;
 public class DolphinSchedulerService {
     private final DolphinClient dolphinClient;
 
-    private final TaskStatusRepository statusRepo;
-    private final WorkflowDependencyRepository depRepo;
-    private final WorkflowDeployRepository deployRepo;
 
     @Value("dolphin.token")
     private String token;
@@ -52,11 +46,8 @@ public class DolphinSchedulerService {
     @Value("${dolphin.max.parallelism}")
     private int maxParallelism;
 
-    public DolphinSchedulerService(DolphinClient dolphinClient, TaskStatusRepository statusRepo, WorkflowDependencyRepository depRepo, WorkflowDeployRepository deployRepo) {
+    public DolphinSchedulerService(DolphinClient dolphinClient) {
         this.dolphinClient = dolphinClient;
-        this.statusRepo = statusRepo;
-        this.depRepo = depRepo;
-        this.deployRepo = deployRepo;
     }
 
     public List<Long> generateTaskCodes(Long projectCode, int count) {
@@ -208,24 +199,5 @@ public class DolphinSchedulerService {
 
     public String getWorkflowInstanceStatus(Long projectCode, Long workflowInstanceId) {
         return dolphinClient.opsForWorkflowInst().getWorkflowInstanceStatus(projectCode, workflowInstanceId);
-    }
-
-    public void triggerPending(long projectCode, String startWorkflows) {
-        List<TaskStatus> pending = statusRepo.findByCurrentStatus(TaskStatus.Status.PENDING);
-        int runningCount = statusRepo.findByCurrentStatus(TaskStatus.Status.RUNNING).size();
-        int slots = Math.max(0, maxParallelism - runningCount);
-        for (TaskStatus t : pending) {
-            if (slots <= 0) break;
-            WorkflowDeploy deploy = deployRepo.findByTaskName(t.getTaskName());
-            if (deploy == null) continue;
-//            boolean started = startWorkflows(projectCode, startWorkflows);
-            boolean started = true;
-            if (started) {
-                t.setCurrentStatus(TaskStatus.Status.RUNNING);
-                t.setUpdatedAt(LocalDateTime.now());
-                statusRepo.save(t);
-                slots--;
-            }
-        }
     }
 }

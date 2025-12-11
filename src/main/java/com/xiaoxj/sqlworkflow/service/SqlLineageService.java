@@ -22,12 +22,10 @@ import java.time.LocalDateTime;
 @Service
 public class SqlLineageService {
     private final WorkflowDeployRepository deployRepo;
-    private final WorkflowDependencyRepository depRepo;
     private final WorkflowInstanceRepository workflowInstanceRepo;
 
-    public SqlLineageService(WorkflowDeployRepository deployRepo, WorkflowDependencyRepository depRepo, WorkflowInstanceRepository workflowInstanceRepo) {
+    public SqlLineageService(WorkflowDeployRepository deployRepo, WorkflowInstanceRepository workflowInstanceRepo) {
         this.deployRepo = deployRepo;
-        this.depRepo = depRepo;
         this.workflowInstanceRepo = workflowInstanceRepo;
     }
 
@@ -69,14 +67,6 @@ public class SqlLineageService {
         deploy.setWorkflowCode(workflowCode);
         deploy.setProjectCode(projectCode);
         deployRepo.save(deploy);
-
-        WorkflowDependency dep = new WorkflowDependency();
-        dep.setTaskCode(taskName);
-        dep.setTaskName(taskName);
-        dep.setSourceTables(sourceTableStrings);
-        dep.setTargetTable(targetTable);
-        dep.setStatus("PARSED");
-        depRepo.save(dep);
         return deploy;
     }
 
@@ -131,7 +121,7 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public WorkflowInstance addWorkflowInstance(String name, String fileName, String sqlContent, int state, long workflowCode, long projectCode, String taskCodes) {
+    public WorkflowInstance addWorkflowInstance(String name, String fileName, String sqlContent, char state, long workflowCode, long projectCode, String taskCodes) {
         WorkflowInstance workflowInstance = new WorkflowInstance();
         workflowInstance.setName(name);
         workflowInstance.setWorkflowCode(workflowCode);
@@ -142,7 +132,7 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public WorkflowInstance updateWorkflowInstance(WorkflowInstance workflowInstance, int state) {
+    public WorkflowInstance updateWorkflowInstance(WorkflowInstance workflowInstance, char state) {
         workflowInstance.setState(state);
         return workflowInstanceRepo.save(workflowInstance);
     }
