@@ -1,10 +1,8 @@
 package com.xiaoxj.sqlworkflow.service;
 
 import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
-import com.xiaoxj.sqlworkflow.domain.WorkflowDependency;
 import com.xiaoxj.sqlworkflow.domain.WorkflowInstance;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
-import com.xiaoxj.sqlworkflow.repo.WorkflowDependencyRepository;
 import com.xiaoxj.sqlworkflow.repo.WorkflowInstanceRepository;
 import io.github.reata.sqllineage4j.common.model.Table;
 import io.github.reata.sqllineage4j.core.LineageRunner;
