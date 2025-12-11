@@ -1,8 +1,8 @@
 package com.xiaoxj.sqlworkflow.controller;
 
-import com.xiaoxj.sqlworkflow.domain.WorkflowDependency;
 import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
+import com.xiaoxj.sqlworkflow.scheduler.WorkflowOrchestrator;
 import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import com.xiaoxj.sqlworkflow.service.SqlLineageService;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
@@ -26,7 +26,7 @@ public class DependencyController {
     @Autowired
     private DolphinSchedulerService dolphinSchedulerService;
 
-    @Value("${dolphin.project.code}")
+    @Value("#{${dolphin.project.code}}")
     private Long projectCode;
 
     @Value("${dolphin.tenant.code}")
@@ -35,9 +35,9 @@ public class DependencyController {
     @Autowired
     private WorkflowDeployRepository deployRepo;
     @Autowired
-    private com.xiaoxj.sqlworkflow.service.WorkflowOrchestrator orchestrator;
+    private WorkflowOrchestrator orchestrator;
     @PostMapping(value = "/addTask", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public WorkflowDependency addTask(@RequestBody Map<String, String> payload) {
+    public WorkflowDeploy addTask(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
         String taskName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
@@ -56,8 +56,7 @@ public class DependencyController {
         // 创建任务流之后 需要上线该任务
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         long projectCode = workflowDefineResp.getProjectCode();
-        lineageService.addTask(taskName, filePath, fileName, sqlContent, user, projectCode, workflowCode, taskCodesString);
-
+        lineageService.addTask(taskName, filePath, fileName, sqlContent, user,workflowCode, projectCode, taskCodesString);
         return null;
     }
 
@@ -70,7 +69,7 @@ public class DependencyController {
     // 触发执行，需要调用dolphinScheduler接口，记需要找到workflowcode和taskcode为执行的状态对联，通过接口提交执行任务；
     //
     @PostMapping(value = "/updateTask", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public WorkflowDependency updateTask(@RequestBody Map<String, String> payload) {
+    public WorkflowDeploy updateTask(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
         String taskName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
@@ -93,12 +92,5 @@ public class DependencyController {
         // 更新工作流之后，在上线工作流
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         return lineageService.updateTask(taskName, filePath, fileName, sqlContent, user, taskCodesString, workflowCode, projectCode);
-    }
-
-    @PostMapping("/ready")
-    public Map<String, Object> markReady(@RequestBody Map<String, String> payload) {
-        String table = payload.get("table_name");
-        orchestrator.markReady(table);
-        return java.util.Map.of("table_name", table, "status", "SUCCESS");
     }
 }

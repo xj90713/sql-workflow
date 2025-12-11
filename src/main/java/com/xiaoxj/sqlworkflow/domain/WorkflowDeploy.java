@@ -22,6 +22,9 @@ public class WorkflowDeploy {
     @Column(columnDefinition = "LONGTEXT")
     private String fileContent;
     private String fileMd5;
+    private String sourceTables;
+    private String targetTable;
+    private String status;
     private String commitUser;
     @Column(nullable = false, columnDefinition = "DATETIME")
     private LocalDateTime createTime = LocalDateTime.now();

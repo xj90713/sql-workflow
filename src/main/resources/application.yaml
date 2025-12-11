@@ -19,9 +19,9 @@ dolphin:
   baseUrl: https://ds.gp51.com/dolphinscheduler
   authToken: 28459a89b01e79187adeb206334d0abd
   project:
-    code: 1231231231
+    code: 159198460609120L
   tenant:
-    code: 1231231231
+    code: admin
   max:
     Parallelism: 4
   triggerIntervalSeconds: 300

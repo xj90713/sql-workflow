@@ -15,7 +15,7 @@ public class WorkflowInstance {
     private String taskName;
     @Column(columnDefinition = "JSON")
     private String dependentTables;
-    @Enumerated(EnumType.STRING)
+
     private int state;
 
     private String workflowInstanceId;

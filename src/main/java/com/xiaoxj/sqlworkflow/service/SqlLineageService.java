@@ -32,7 +32,7 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public WorkflowDependency addTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
+    public WorkflowDeploy addTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
 
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
@@ -60,6 +60,8 @@ public class SqlLineageService {
         deploy.setTaskName(taskName);
         deploy.setFilePath(filePath);
         deploy.setFileName(fileName);
+        deploy.setSourceTables(sourceTableStrings);
+        deploy.setTargetTable(targetTable);
         deploy.setFileContent(sqlContent);
         deploy.setFileMd5(md5(sqlContent));
         deploy.setCommitUser(commitUser);
@@ -75,13 +77,11 @@ public class SqlLineageService {
         dep.setTargetTable(targetTable);
         dep.setStatus("PARSED");
         depRepo.save(dep);
-
-
-        return dep;
+        return deploy;
     }
 
     @Transactional
-    public WorkflowDependency updateTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes, long workflowCode, long projectCode) {
+    public WorkflowDeploy updateTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes, long workflowCode, long projectCode) {
         WorkflowDeploy latest = deployRepo.findTopByTaskNameOrderByUpdateTimeDesc(taskName);
         if (latest == null) {
             return addTask(taskName, filePath, fileName, sqlContent, commitUser, workflowCode, projectCode, taskCodes);
@@ -104,28 +104,30 @@ public class SqlLineageService {
         String targetTable = targetTables.stream().findFirst().orElseGet(() -> inferTargetFromFilename(fileName));
         String sourceTableStrings = sourceTables.stream().map(t -> t.replace("..", ".")).collect(Collectors.joining(","));
 
-        if (Objects.equals(latest.getFileMd5(), newMd5)) {
-            List<WorkflowDependency> deps = depRepo.findByTaskName(taskName);
-            return (deps != null && !deps.isEmpty()) ? deps.get(deps.size() - 1) : null;
-        }
+//        if (Objects.equals(latest.getFileMd5(), newMd5)) {
+//            List<WorkflowDependency> deps = depRepo.findByTaskName(taskName);
+//            return (deps != null && !deps.isEmpty()) ? deps.get(deps.size() - 1) : null;
+//        }
 
         latest.setFilePath(filePath);
         latest.setFileName(fileName);
         latest.setFileContent(sqlContent);
         latest.setFileMd5(newMd5);
         latest.setCommitUser(commitUser);
+        latest.setSourceTables(sourceTableStrings);
+        latest.setTargetTable(targetTable);
         latest.setUpdateTime(LocalDateTime.now());
         latest.setTaskCodes(taskCodes);
         deployRepo.save(latest);
 
-        List<WorkflowDependency> deps = depRepo.findByTaskName(taskName);
-        WorkflowDependency dep = (deps != null && !deps.isEmpty()) ? deps.get(deps.size() - 1) : new WorkflowDependency();
-        dep.setTaskCode(taskName);
-        dep.setTaskName(taskName);
-        dep.setSourceTables(sourceTableStrings);
-        dep.setTargetTable(targetTable);
-        dep.setStatus("UPDATED");
-        return depRepo.save(dep);
+//        List<WorkflowDependency> deps = depRepo.findByTaskName(taskName);
+//        WorkflowDependency dep = (deps != null && !deps.isEmpty()) ? deps.get(deps.size() - 1) : new WorkflowDependency();
+//        dep.setTaskCode(taskName);
+//        dep.setTaskName(taskName);
+//        dep.setSourceTables(sourceTableStrings);
+//        dep.setTargetTable(targetTable);
+//        dep.setStatus("UPDATED");
+        return latest;
     }
 
     @Transactional

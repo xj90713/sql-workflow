@@ -1,13 +1,17 @@
-package com.xiaoxj.sqlworkflow.service;
+package com.xiaoxj.sqlworkflow.scheduler;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xiaoxj.sqlworkflow.domain.WorkflowDependency;
 import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.domain.TaskStatus;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryResp;
+import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDependencyRepository;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.repo.TaskStatusRepository;
+import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
+import com.xiaoxj.sqlworkflow.service.WorkflowQueueService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,7 @@ public class WorkflowOrchestrator {
     private final WorkflowDependencyRepository depRepo;
     private final WorkflowDeployRepository deployRepo;
     private final DolphinSchedulerService dolphinService;
+    private final WorkflowQueueService queueService;
     private final ObjectMapper mapper = new ObjectMapper();
     @Value("${workflow.maxParallelism:4}")
     private int maxParallelism;
@@ -29,11 +34,13 @@ public class WorkflowOrchestrator {
     public WorkflowOrchestrator(TaskStatusRepository statusRepo,
                                 WorkflowDependencyRepository depRepo,
                                 WorkflowDeployRepository deployRepo,
-                                DolphinSchedulerService dolphinService) {
+                                DolphinSchedulerService dolphinService,
+                                WorkflowQueueService queueService) {
         this.statusRepo = statusRepo;
         this.depRepo = depRepo;
         this.deployRepo = deployRepo;
         this.dolphinService = dolphinService;
+        this.queueService = queueService;
     }
 
     private List<String> parseSources(String s) {
@@ -74,21 +81,27 @@ public class WorkflowOrchestrator {
     @Scheduled(fixedDelayString = "${workflow.triggerIntervalSeconds:60}000")
     @Transactional
     public void triggerPending() {
-        List<TaskStatus> pending = statusRepo.findByCurrentStatus(TaskStatus.Status.PENDING);
-        int runningCount = statusRepo.findByCurrentStatus(TaskStatus.Status.RUNNING).size();
+        int runningCount = deployRepo.findByStatus("N").size();
         int slots = Math.max(0, maxParallelism - runningCount);
-        for (TaskStatus t : pending) {
-            if (slots <= 0) break;
-            WorkflowDeploy deploy = deployRepo.findByTaskName(t.getTaskName());
-            if (deploy == null) continue;
-//            boolean started = dolphinService.startWorkflow(deploy.getProjectCode(), deploy.getWorkflowCode());
-            boolean started = true;
-            if (started) {
-                t.setCurrentStatus(TaskStatus.Status.RUNNING);
-                t.setUpdatedAt(LocalDateTime.now());
-                statusRepo.save(t);
-                slots--;
-            }
+        if (slots <= 0) return;
+        String target = queueService.getTargetWorkflowName();
+        if (target == null || target.isBlank()) return;
+        WorkflowDeploy deploy = deployRepo.findByTargetTable(target);
+        if (deploy == null) return;
+        TaskStatus existing = statusRepo.findTopByTaskNameOrderByUpdatedAtDesc(deploy.getTaskName());
+        if (existing != null && (existing.getCurrentStatus() == TaskStatus.Status.RUNNING || existing.getCurrentStatus() == TaskStatus.Status.SUCCESS)) {
+            return;
+        }
+        HttpRestResult<JsonNode> result = dolphinService.startWorkflow(deploy.getProjectCode(), deploy.getWorkflowCode());
+        if (result != null && result.getSuccess()) {
+            TaskStatus ts = Optional.ofNullable(existing).orElse(new TaskStatus());
+            ts.setTaskName(deploy.getTaskName());
+            ts.setCurrentStatus(TaskStatus.Status.RUNNING);
+            ts.setUpdatedAt(LocalDateTime.now());
+            statusRepo.save(ts);
+            deploy.setStatus("R");
+            deploy.setUpdateTime(LocalDateTime.now());
+            deployRepo.save(deploy);
         }
     }
 
@@ -113,6 +126,8 @@ public class WorkflowOrchestrator {
                         markReady(targetTable);
                     }
                 }
+                WorkflowDeploy d = deployRepo.findByTaskName(t.getTaskName());
+                if (d != null) { d.setStatus("Y"); d.setUpdateTime(LocalDateTime.now()); deployRepo.save(d); }
             } else if ("FAIL".equalsIgnoreCase(state) || "FAILED".equalsIgnoreCase(state)) {
                 t.setCurrentStatus(TaskStatus.Status.FAILED);
                 t.setUpdatedAt(LocalDateTime.now());
