@@ -1,7 +1,5 @@
 package com.xiaoxj.sqlworkflow.remote.request;
 
-
-
 import com.xiaoxj.sqlworkflow.remote.RequestHttpEntity;
 import com.xiaoxj.sqlworkflow.remote.response.HttpClientResponse;
 

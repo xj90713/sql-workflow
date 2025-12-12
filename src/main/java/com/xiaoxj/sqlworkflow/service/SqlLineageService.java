@@ -28,7 +28,7 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public WorkflowDeploy addTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
+    public WorkflowDeploy addWorkflow(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
 
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
@@ -52,8 +52,8 @@ public class SqlLineageService {
                 .collect(Collectors.joining(","));
 
         WorkflowDeploy deploy = new WorkflowDeploy();
-        deploy.setTaskId(taskName);
-        deploy.setTaskName(taskName);
+        deploy.setWorkflowId(workflowName);
+        deploy.setWorkflowName(workflowName);
         deploy.setFilePath(filePath);
         deploy.setFileName(fileName);
         deploy.setSourceTables(sourceTableStrings);
@@ -69,10 +69,10 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public WorkflowDeploy updateTask(String taskName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes, long workflowCode, long projectCode) {
-        WorkflowDeploy latest = deployRepo.findTopByTaskNameOrderByUpdateTimeDesc(taskName);
+    public WorkflowDeploy updateWorkflow(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes, long workflowCode, long projectCode) {
+        WorkflowDeploy latest = deployRepo.findTopByWorkflowNameOrderByUpdateTimeDesc(workflowName);
         if (latest == null) {
-            return addTask(taskName, filePath, fileName, sqlContent, commitUser, workflowCode, projectCode, taskCodes);
+            return addWorkflow(workflowName, filePath, fileName, sqlContent, commitUser, workflowCode, projectCode, taskCodes);
         }
 
         String newMd5 = md5(sqlContent);
@@ -92,11 +92,6 @@ public class SqlLineageService {
         String targetTable = targetTables.stream().findFirst().orElseGet(() -> inferTargetFromFilename(fileName));
         String sourceTableStrings = sourceTables.stream().map(t -> t.replace("..", ".")).collect(Collectors.joining(","));
 
-//        if (Objects.equals(latest.getFileMd5(), newMd5)) {
-//            List<WorkflowDependency> deps = depRepo.findByTaskName(taskName);
-//            return (deps != null && !deps.isEmpty()) ? deps.get(deps.size() - 1) : null;
-//        }
-
         latest.setFilePath(filePath);
         latest.setFileName(fileName);
         latest.setFileContent(sqlContent);
@@ -107,14 +102,6 @@ public class SqlLineageService {
         latest.setUpdateTime(LocalDateTime.now());
         latest.setTaskCodes(taskCodes);
         deployRepo.save(latest);
-
-//        List<WorkflowDependency> deps = depRepo.findByTaskName(taskName);
-//        WorkflowDependency dep = (deps != null && !deps.isEmpty()) ? deps.get(deps.size() - 1) : new WorkflowDependency();
-//        dep.setTaskCode(taskName);
-//        dep.setTaskName(taskName);
-//        dep.setSourceTables(sourceTableStrings);
-//        dep.setTargetTable(targetTable);
-//        dep.setStatus("UPDATED");
         return latest;
     }
 
@@ -124,14 +111,14 @@ public class SqlLineageService {
         workflowInstance.setName(name);
         workflowInstance.setWorkflowCode(workflowCode);
         workflowInstance.setProjectCode(projectCode);
-        workflowInstance.setState(state);
+        workflowInstance.setStatus(state);
         workflowInstance.setRunTimes(1);
         return workflowInstanceRepo.save(workflowInstance);
     }
 
     @Transactional
     public WorkflowInstance updateWorkflowInstance(WorkflowInstance workflowInstance, char state) {
-        workflowInstance.setState(state);
+        workflowInstance.setStatus(state);
         return workflowInstanceRepo.save(workflowInstance);
     }
 
@@ -175,7 +162,7 @@ public class SqlLineageService {
     }
 
 
-    public List<Map<String, String>> taskTriples(String sql) {
+    public List<Map<String, String>> workflowTriples(String sql, String workflowName) {
         ArrayList<Integer> sepStarts = new ArrayList<>();
         ArrayList<Integer> sepEnds = new ArrayList<>();
         ArrayList<String> types = new ArrayList<>();
@@ -189,8 +176,8 @@ public class SqlLineageService {
         List<Map<String, String>> res = new ArrayList<>();
         if (types.isEmpty()) {
             Map<String, String> t = new LinkedHashMap<>();
-            t.put("task_name", "task_1");
-            t.put("task_type", "default");
+            t.put("task_name", workflowName);
+            t.put("task_type", "hive");
             t.put("task_content", sql.trim());
             res.add(t);
             return res;
@@ -200,8 +187,8 @@ public class SqlLineageService {
             int contentEnd = (i + 1 < sepStarts.size()) ? sepStarts.get(i + 1) : sql.length();
             String content = sql.substring(contentStart, contentEnd).trim();
             Map<String, String> t = new LinkedHashMap<>();
-            t.put("task_name", "task_" + (i + 1));
-            t.put("task_type", types.get(i) == null ? "default" : types.get(i).toLowerCase());
+            t.put("task_name", workflowName + (i + 1));
+            t.put("task_type", types.get(i) == null ? "hive" : types.get(i).toLowerCase());
             t.put("task_content", content);
             res.add(t);
         }

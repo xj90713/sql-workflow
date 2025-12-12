@@ -2,7 +2,6 @@ package com.xiaoxj.sqlworkflow.service;
 
 import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
-import com.xiaoxj.sqlworkflow.scheduler.WorkflowOrchestrator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,21 +19,13 @@ public class WorkflowQueueService {
         this.ingestInfoService = ingestInfoService;
     }
 
-    public List<String> combinedPairsForPending() {
-        List<WorkflowDeploy> pendings = repo.findByStatus("N");
-        List<String> res = new ArrayList<>();
-        for (WorkflowDeploy wd : pendings) {
-            res.add((wd.getSourceTables() == null ? "" : wd.getSourceTables()) + "-->" + wd.getTargetTable());
-        }
-        return res;
-    }
 
     public Set<String> buildReadyQueue() {
         String dbs = getDbsAndTables().split("-->")[0];
         String tables = getDbsAndTables().split("-->")[1];
         List<String> ingestTables = ingestInfoService.findIngestTables(dbs, tables);
         Set<String> queue = new LinkedHashSet<>();
-        for (WorkflowDeploy wd : repo.findByStatus("Y")) {
+        for (WorkflowDeploy wd : repo.findByStatus('Y')) {
             String tgt = wd.getTargetTable();
             if (tgt != null && !tgt.isBlank()) queue.add(tgt.trim());
         }
@@ -47,7 +38,7 @@ public class WorkflowQueueService {
         return queue;
     }
     public String getTargetWorkflowName() {
-        List<WorkflowDeploy> pendings = repo.findByStatus("N");
+        List<WorkflowDeploy> pendings = repo.findByStatus('N');
         if (pendings.isEmpty()) {
             log.info("No pending workflow found, all workflows have finished");
             return "finished";
@@ -71,7 +62,7 @@ public class WorkflowQueueService {
     public String getDbsAndTables() {
         Set<String> dbs = new LinkedHashSet<>();
         Set<String> tables = new LinkedHashSet<>();
-        for (WorkflowDeploy wd : repo.findByStatus("N")) {
+        for (WorkflowDeploy wd : repo.findByStatus('N')) {
             String src = wd.getSourceTables();
             if (src == null || src.isBlank()) continue;
             for (String s : src.split(",")) {

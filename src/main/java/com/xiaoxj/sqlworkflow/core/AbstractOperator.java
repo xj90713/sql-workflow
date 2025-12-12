@@ -5,11 +5,8 @@ import com.xiaoxj.sqlworkflow.remote.DolphinsRestTemplate;
 import com.xiaoxj.sqlworkflow.remote.Header;
 
 public abstract class AbstractOperator {
-
   protected final String dolphinAddress;
-
   private final String token;
-
   protected final DolphinsRestTemplate dolphinsRestTemplate;
 
   public AbstractOperator(

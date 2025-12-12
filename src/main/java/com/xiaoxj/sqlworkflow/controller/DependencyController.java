@@ -34,12 +34,10 @@ public class DependencyController {
 
     @Autowired
     private WorkflowDeployRepository deployRepo;
-    @Autowired
-    private WorkflowOrchestrator orchestrator;
-    @PostMapping(value = "/addTask", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public WorkflowDeploy addTask(@RequestBody Map<String, String> payload) {
+    @PostMapping(value = "/addWorkflow", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public WorkflowDeploy addWorkflow(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
-        String taskName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
+        String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String content = payload.get("content");
         byte[] decodedBytes = Base64.getDecoder().decode(content);
@@ -47,16 +45,16 @@ public class DependencyController {
         sqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
                 .replace("${imp_pt_date}", "'2025-01-01'");
         String user = payload.getOrDefault("commit_user", "system");
-        List<Map<String, String>> taskTriples = lineageService.taskTriples(sqlContent);
+        List<Map<String, String>> taskTriples = lineageService.workflowTriples(sqlContent,workflowName);
         String describe = lineageService.extractComments(sqlContent);
-        WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, taskName,describe);
+        WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, workflowName,describe);
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);
         String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
         long workflowCode = workflowDefineResp.getCode();
         // 创建任务流之后 需要上线该任务
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         long projectCode = workflowDefineResp.getProjectCode();
-        lineageService.addTask(taskName, filePath, fileName, sqlContent, user,workflowCode, projectCode, taskCodesString);
+        lineageService.addWorkflow(workflowName, filePath, fileName, sqlContent, user,workflowCode, projectCode, taskCodesString);
         return null;
     }
 
@@ -68,10 +66,10 @@ public class DependencyController {
     // 如果是修改脚本文件内容，则需要修改taskdeploy和taskdependency表 以及关联dolphinScheduler里面对应的 workflow 和 task信息；
     // 触发执行，需要调用dolphinScheduler接口，记需要找到workflowcode和taskcode为执行的状态对联，通过接口提交执行任务；
     //
-    @PostMapping(value = "/updateTask", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public WorkflowDeploy updateTask(@RequestBody Map<String, String> payload) {
+    @PostMapping(value = "/updateWorkflow", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public WorkflowDeploy updateWorkflow(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
-        String taskName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
+        String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String content = payload.get("content");
         byte[] decodedBytes = Base64.getDecoder().decode(content);
@@ -79,18 +77,18 @@ public class DependencyController {
         sqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
                 .replace("${imp_pt_date}", "'2025-01-01'");
         String user = payload.getOrDefault("commit_user", "system");
-        WorkflowDeploy workflowDeploy = deployRepo.findByTaskName(taskName);
+        WorkflowDeploy workflowDeploy = deployRepo.findByWorkflowName(workflowName);
         long workflowCode = workflowDeploy.getWorkflowCode();
         long projectCode = workflowDeploy.getProjectCode();
         String describe = lineageService.extractComments(sqlContent);
         // 更新工作流之前，必须要下线改任务
         dolphinSchedulerService.offlineWorkflow(projectCode, workflowCode);
-        List<Map<String, String>> taskTriples = lineageService.taskTriples(sqlContent);
-        WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, taskName, describe);
+        List<Map<String, String>> taskTriples = lineageService.workflowTriples(sqlContent, workflowName);
+        WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, workflowName, describe);
         String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.updateWorkflow(projectCode, workflowCode, workDefinition);
         // 更新工作流之后，在上线工作流
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
-        return lineageService.updateTask(taskName, filePath, fileName, sqlContent, user, taskCodesString, workflowCode, projectCode);
+        return lineageService.updateWorkflow(workflowName, filePath, fileName, sqlContent, user, taskCodesString, workflowCode, projectCode);
     }
 }

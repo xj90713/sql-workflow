@@ -10,25 +10,17 @@ import java.time.LocalDateTime;
 public class WorkflowInstance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
     private String name;
-
-    private char state;
-
+    private char status;
     private String workflowName;
-
     private Long workflowInstanceId;
-
     private Long workflowCode;
-
     private Long projectCode;
-
     private int runTimes;
-
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
+    private LocalDateTime startTime = LocalDateTime.now();
     @Column
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime finishTime = LocalDateTime.now();
 }
 

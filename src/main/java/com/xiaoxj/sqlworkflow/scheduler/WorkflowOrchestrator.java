@@ -8,17 +8,21 @@ import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.repo.WorkflowInstanceRepository;
 import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import com.xiaoxj.sqlworkflow.service.WorkflowQueueService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Service
+@Component
+@RequiredArgsConstructor
 public class WorkflowOrchestrator {
 
     private static final Logger log = LoggerFactory.getLogger(WorkflowOrchestrator.class);
@@ -28,18 +32,10 @@ public class WorkflowOrchestrator {
     private final DolphinSchedulerService dolphinService;
     private final WorkflowQueueService queueService;
 
-    @Value("${workflow.maxParallelism:4}")
+    @Value("${workflow.maxParallelism:16}")
     private int maxParallelism;
 
-    public WorkflowOrchestrator(WorkflowInstanceRepository instanceRepo,
-                                WorkflowDeployRepository deployRepo,
-                                DolphinSchedulerService dolphinService,
-                                WorkflowQueueService queueService) {
-        this.instanceRepo = instanceRepo;
-        this.deployRepo = deployRepo;
-        this.dolphinService = dolphinService;
-        this.queueService = queueService;
-    }
+
 
     private List<String> parseSources(String s) {
         if (s == null || s.isBlank()) return List.of();
@@ -50,10 +46,10 @@ public class WorkflowOrchestrator {
     }
 
 
-    @Scheduled(fixedDelayString = "${workflow.triggerIntervalSeconds:60}000")
-    @Transactional
+    @Scheduled(cron = "${workflow.schedule.triggerPending}")
+    @Async("taskExecutor")
     public void triggerPending() {
-        int runningCount = deployRepo.findByStatus("R").size();
+        int runningCount = deployRepo.findByStatus('R').size();
         int slots = Math.max(0, maxParallelism - runningCount);
         if (slots <= 0) {
             log.info("Maximum number of tasks executed has been reached.");
@@ -77,18 +73,18 @@ public class WorkflowOrchestrator {
             instance.setWorkflowCode(workflowCode);
             instance.setProjectCode(deploy.getProjectCode());
             instance.setWorkflowInstanceId(workflowInstanceId);
-            instance.setState('R');
+            instance.setStatus('R');
             instance.setWorkflowName(target);
             instance.setName(target);
+            instance.setStartTime(LocalDateTime.now());
             instanceRepo.save(instance);
-            deploy.setStatus("R");
+            deploy.setStatus('R');
             deploy.setUpdateTime(LocalDateTime.now());
             deployRepo.save(deploy);
         }
     }
-
-    @Scheduled(fixedDelayString = "${workflow.checkIntervalSeconds:30}000")
-    @Transactional
+    @Scheduled(cron = "${workflow.schedule.checkRunning}")
+    @Async("taskExecutor")
     public void checkRunning() {
         List<WorkflowInstance> running = instanceRepo.findByStatus('R');
         if (running.isEmpty()) {
@@ -101,11 +97,27 @@ public class WorkflowOrchestrator {
             String status = dolphinService.getWorkflowInstanceStatus(instance.getProjectCode(), workflowInstanceId);
             if (Objects.equals(status, "SUCCESS")) {
                 WorkflowDeploy workflowDeploy = deployRepo.findByWorkflowCode(workflowCode);
-                workflowDeploy.setStatus("Y");
-                instance.setState('Y');
+                workflowDeploy.setStatus('Y');
+                workflowDeploy.setUpdateTime(LocalDateTime.now());
+                instance.setStatus('Y');
+                instance.setFinishTime(LocalDateTime.now());
+                instanceRepo.save(instance);
+                deployRepo.save(workflowDeploy);
+            } else if (Objects.equals(status, "FAIL")) {
+                WorkflowDeploy workflowDeploy = deployRepo.findByWorkflowCode(workflowCode);
+                workflowDeploy.setStatus('E');
+                workflowDeploy.setUpdateTime(LocalDateTime.now());
+                instance.setStatus('E');
+                instance.setFinishTime(LocalDateTime.now());
                 instanceRepo.save(instance);
                 deployRepo.save(workflowDeploy);
             }
         });
+    }
+    @Scheduled(cron = "${workflow.schedule.initialize}")
+    @Async("taskExecutor")
+    public void initializeStatus() {
+        int n = deployRepo.initializeAllStatusToN();
+        log.info("Initialized {} workflow status to N.", n);
     }
 }

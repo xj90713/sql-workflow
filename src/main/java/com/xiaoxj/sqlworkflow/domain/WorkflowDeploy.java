@@ -12,8 +12,8 @@ public class WorkflowDeploy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String taskId;
-    private String taskName;
+    private String workflowId;
+    private String workflowName;
     private String taskCodes;
     private long workflowCode;
     private long projectCode;
@@ -24,7 +24,7 @@ public class WorkflowDeploy {
     private String fileMd5;
     private String sourceTables;
     private String targetTable;
-    private String status;
+    private char status;
     private String commitUser;
     @Column(nullable = false, columnDefinition = "DATETIME")
     private LocalDateTime createTime = LocalDateTime.now();

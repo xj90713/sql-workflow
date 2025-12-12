@@ -1,35 +1,33 @@
-CREATE TABLE `task_deploy` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `task_id` varchar(255) DEFAULT NULL,
-  `task_name` varchar(255) DEFAULT NULL,
-  `file_path` varchar(255) DEFAULT NULL,
-  `file_name` varchar(255) DEFAULT NULL,
-  `file_content` longtext,
-  `file_md5` varchar(255) DEFAULT NULL,
-  `commit_user` varchar(255) DEFAULT NULL,
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE workflow_deploy (
+                                 id INT NOT NULL AUTO_INCREMENT,
+                                 workflow_id VARCHAR(255),
+                                 workflow_name VARCHAR(255),
+                                 task_codes VARCHAR(255),
+                                 workflow_code BIGINT,
+                                 project_code BIGINT,
+                                 file_path VARCHAR(255),
+                                 file_name VARCHAR(255),
+                                 file_content LONGTEXT,
+                                 file_md5 VARCHAR(255),
+                                 source_tables VARCHAR(255),
+                                 target_table VARCHAR(255),
+                                 status CHAR(1),
+                                 commit_user VARCHAR(255),
+                                 create_time DATETIME NOT NULL,
+                                 update_time DATETIME NOT NULL,
+                                 PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='工作流部署表';
 
-CREATE TABLE IF NOT EXISTS task_dependencies (
-  id INT AUTO_INCREMENT,
-  task_id VARCHAR(64),
-  task_name VARCHAR(255),
-  source_tables VARCHAR(255),
-  target_table VARCHAR(64),
-  status VARCHAR(16),
-  `create_time` datetime NOT NULL,
-  update_time datetime NOT NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS task_status (
-  id INT AUTO_INCREMENT,
-  task_name VARCHAR(64),
-  dependent_tables VARCHAR(255),
-  current_status ENUM('PENDING','RUNNING','SUCCESS','FAILED'),
-  start_time datetime NOT NULL,
-  end_time datetime NOT NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE workflow_instance (
+                                   id INT NOT NULL AUTO_INCREMENT,
+                                   name VARCHAR(255),
+                                   status CHAR(1),
+                                   workflow_name VARCHAR(255),
+                                   workflow_instance_id BIGINT,
+                                   workflow_code BIGINT,
+                                   project_code BIGINT,
+                                   run_times INT,
+                                   start_time DATETIME NOT NULL,
+                                   finish_time DATETIME,
+                                   PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='工作流实例表';

@@ -45,3 +45,9 @@ postgres:
   url: jdbc:postgresql://127.0.0.1:5432/addax_admin
   username: addax
   password: addax@123
+
+workflow:
+  schedule:
+    triggerPending: "0/15 * 17-23,0-7 * * ?"
+    checkRunning: "0/15 * 17-23,0-7 * * ?"
+    initialize: "0 0 17 * * ?"

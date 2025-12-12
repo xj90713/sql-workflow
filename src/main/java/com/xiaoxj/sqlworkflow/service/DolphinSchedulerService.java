@@ -7,8 +7,6 @@ import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HttpTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ShellTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
-import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
-import com.xiaoxj.sqlworkflow.domain.TaskStatus;
 import com.xiaoxj.sqlworkflow.enums.*;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParams;
@@ -23,7 +21,7 @@ import com.xiaoxj.sqlworkflow.util.TaskUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,17 +32,9 @@ public class DolphinSchedulerService {
     private final DolphinClient dolphinClient;
 
 
-    @Value("dolphin.token")
-    private String token;
-
-    @Value("#{${dolphin.project.code}}")
-    private Long projectCode;
-
     @Value("${dolphin.tenant.code}")
     private String tenantCode;
 
-    @Value("${dolphin.max.parallelism}")
-    private int maxParallelism;
 
     public DolphinSchedulerService(DolphinClient dolphinClient) {
         this.dolphinClient = dolphinClient;
@@ -141,11 +131,11 @@ public class DolphinSchedulerService {
     }
 
     public WorkflowDefineParam createWorkDefinition(List<Map<String, String>> tasks, Long projectCode, String workflowName, String describe) {
-        java.util.List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, tasks.size());
-        java.util.List<TaskDefinition> defs = new java.util.ArrayList<>();
+        List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, tasks.size());
+        List<TaskDefinition> defs = new ArrayList<>();
         for (int i = 0; i < tasks.size(); i++) {
-            java.util.Map<String, String> t = tasks.get(i);
-            String type = String.valueOf(t.getOrDefault("task_type", "default")).toLowerCase();
+            Map<String, String> t = tasks.get(i);
+            String type = String.valueOf(t.getOrDefault("task_type", "hive")).toLowerCase();
             String content = String.valueOf(t.getOrDefault("task_content", ""));
             if ("hive".equals(type)) {
                 HivecliTask hive = new HivecliTask();
