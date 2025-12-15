@@ -15,7 +15,7 @@ public interface WorkflowDeployRepository extends JpaRepository<WorkflowDeploy, 
     WorkflowDeploy findByWorkflowCode(Long workflowCode);
 
     // 初始化整个表：将所有记录的status更新为N
-    @Modifying
-    @Query("UPDATE WorkflowDeploy w SET w.status = 'N', w.updateTime = CURRENT_TIMESTAMP")
-    int initializeAllStatusToN();
+//    @Modifying
+//    @Query("UPDATE WorkflowDeploy w SET w.status = 'N', w.updateTime = CURRENT_TIMESTAMP")
+//    int initializeAllStatusToN();
 }

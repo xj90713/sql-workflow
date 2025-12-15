@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/sql_workflow?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
-#    password: xiao@duan712
+    password: xiao@duan712
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,7 +17,7 @@ server:
 
 dolphin:
   baseUrl: https://ds.gp51.com/dolphinscheduler
-  authToken: 28459a89b01e79187adeb206334d0abd
+  authToken: 9fffbf2afa33e37eed7588f7e2918826
   project:
     code: 159198460609120L
   tenant:

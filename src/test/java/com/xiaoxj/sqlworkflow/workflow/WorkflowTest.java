@@ -24,7 +24,7 @@ import java.util.List;
 /** the test for workflow */
 public class WorkflowTest extends BaseTest {
 
-  public static final String WORKFLOW_NAME = "test-dag1-3";
+  public static final String WORKFLOW_NAME = "test-dag1-4";
 
   /**
    * create simple workflow like: shellTask -> httpTask

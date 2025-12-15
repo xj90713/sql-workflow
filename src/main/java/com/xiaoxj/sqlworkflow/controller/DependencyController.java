@@ -46,6 +46,7 @@ public class DependencyController {
                 .replace("${imp_pt_date}", "'2025-01-01'");
         String user = payload.getOrDefault("commit_user", "system");
         List<Map<String, String>> taskTriples = lineageService.workflowTriples(sqlContent,workflowName);
+        System.out.println("taskTriples:" + taskTriples);
         String describe = lineageService.extractComments(sqlContent);
         WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, workflowName,describe);
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);

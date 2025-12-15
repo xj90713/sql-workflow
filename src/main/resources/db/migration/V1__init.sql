@@ -21,11 +21,11 @@ CREATE TABLE workflow_deploy (
 CREATE TABLE workflow_instance (
                                    id INT NOT NULL AUTO_INCREMENT,
                                    name VARCHAR(255),
-                                   status CHAR(1),
                                    workflow_name VARCHAR(255),
                                    workflow_instance_id BIGINT,
                                    workflow_code BIGINT,
                                    project_code BIGINT,
+                                   status CHAR(1),
                                    run_times INT,
                                    start_time DATETIME NOT NULL,
                                    finish_time DATETIME,

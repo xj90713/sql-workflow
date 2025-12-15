@@ -185,11 +185,13 @@ public class WorkflowOperator extends AbstractOperator {
    */
   public List<Long> generateTaskCode(Long projectCode, int codeNumber) {
     String url = dolphinAddress + "/projects/" + projectCode + "/task-definition/gen-task-codes";
+    log.info("generate task code, url:{}, param:{}", url, codeNumber);
     Query query = new Query();
     query.addParam("genNum", String.valueOf(codeNumber));
     try {
       HttpRestResult<List> restResult =
           dolphinsRestTemplate.get(url, getHeader(), query, List.class);
+      log.info("generate task code response:{}", restResult);
       return (List<Long>) restResult.getData();
     } catch (Exception e) {
       throw new DolphinException("generate task code fail", e);

@@ -117,7 +117,7 @@ public class WorkflowOrchestrator {
     @Scheduled(cron = "${workflow.schedule.initialize}")
     @Async("taskExecutor")
     public void initializeStatus() {
-        int n = deployRepo.initializeAllStatusToN();
-        log.info("Initialized {} workflow status to N.", n);
+//        int n = deployRepo.initializeAllStatusToN();
+//        log.info("Initialized {} workflow status to N.", n);
     }
 }
