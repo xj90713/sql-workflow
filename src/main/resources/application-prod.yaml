@@ -13,7 +13,7 @@ server:
   port: 8080
 
 dolphin:
-  baseUrl: https://ds.gp51.com/dolphinscheduler
+  baseUrl: http://ds-api.ds.svc.cluster.local:12345/dolphinscheduler
   authToken: 9fffbf2afa33e37eed7588f7e2918826
   project:
     code: 159198460609120L
