@@ -65,7 +65,6 @@ public class WorkflowInstanceOperator extends AbstractOperator {
    */
   public Boolean batchStart(Long projectCode, WorkflowInstanceCreateParams workflowInstanceCreateParams) {
     String url = dolphinAddress + "/projects/" + projectCode + "/executors/batch-start-workflow-instance";
-    System.out.println("workflowInstanceCreateParams" + workflowInstanceCreateParams);
     log.info("batch start workflow instances ,url:{}", url);
     try {
       HttpRestResult<JsonNode> restResult =

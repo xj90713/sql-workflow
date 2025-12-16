@@ -80,8 +80,6 @@ public class WorkflowQueueService {
         }
         String dbCsv = String.join(",", dbs);
         String tableCsv = String.join(",", tables);
-        System.out.println("dbs:" + dbCsv);
-        System.out.println("tables:" + tableCsv);
         return dbCsv + "-->" + tableCsv;
     }
 }

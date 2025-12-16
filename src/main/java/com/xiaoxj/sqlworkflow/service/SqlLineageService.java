@@ -34,7 +34,9 @@ public class SqlLineageService {
         Set<String> targetTables = new LinkedHashSet<>();
 
         try {
-            LineageRunner runner = LineageRunner.builder(sqlContent).build();
+            String fixSqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
+                .replace("${imp_pt_date}", "'2025-01-01'");
+            LineageRunner runner = LineageRunner.builder(fixSqlContent).build();
             List<Table> sources = runner.sourceTables();
             List<Table> targets = runner.targetTables();
 
@@ -81,7 +83,9 @@ public class SqlLineageService {
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
         try {
-            LineageRunner runner = LineageRunner.builder(sqlContent).build();
+            String fixSqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
+                    .replace("${imp_pt_date}", "'2025-01-01'");
+            LineageRunner runner = LineageRunner.builder(fixSqlContent).build();
             List<Table> sources = runner.sourceTables();
             List<Table> targets = runner.targetTables();
             sources.forEach(table -> sourceTables.add(table.toString().replace("..", ".")));

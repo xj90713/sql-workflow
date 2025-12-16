@@ -138,7 +138,7 @@ public class DolphinSchedulerService {
             describe = describe.substring(0, 250);
         }
         List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, tasks.size());
-        System.out.println("taskCodes:" + taskCodes);
+//        System.out.println("taskCodes:" + taskCodes);
         List<TaskDefinition> defs = new ArrayList<>();
         for (int i = 0; i < tasks.size(); i++) {
             Map<String, String> t = tasks.get(i);
