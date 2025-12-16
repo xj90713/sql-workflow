@@ -23,7 +23,7 @@
     <junit.version>4.13</junit.version>
     <postgresql.version>42.7.3</postgresql.version>
     <mysql.version>8.0.33</mysql.version>
-    <logback.version>7.4</logback.version>
+<!--    <logback.version>7.4</logback.version>-->
     <sqllineage4j.version>1.0.0</sqllineage4j.version>
     <antlr4.version>4.7.1</antlr4.version>
   </properties>
@@ -52,11 +52,11 @@
       <artifactId>postgresql</artifactId>
       <version>${postgresql.version}</version>
     </dependency>
-    <dependency>
-      <groupId>net.logstash.logback</groupId>
-      <artifactId>logstash-logback-encoder</artifactId>
-      <version>${logback.version}</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>net.logstash.logback</groupId>-->
+<!--      <artifactId>logstash-logback-encoder</artifactId>-->
+<!--      <version>7.4</version>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>io.github.reata</groupId>
       <artifactId>sqllineage4j</artifactId>
