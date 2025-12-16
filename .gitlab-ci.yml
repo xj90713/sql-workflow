@@ -1,4 +1,3 @@
-image: nexus.gp51.com/library/maven:3.8.5-openjdk-17
 include:
   project: 'grp-arch/sp-push'
   ref: main
