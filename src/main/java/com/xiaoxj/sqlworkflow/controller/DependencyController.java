@@ -7,6 +7,7 @@ import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import com.xiaoxj.sqlworkflow.service.SqlLineageService;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/dependencies")
+@Slf4j
 public class DependencyController {
     @Autowired
     private SqlLineageService lineageService;
@@ -52,8 +54,8 @@ public class DependencyController {
         // 创建任务流之后 需要上线该任务
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         long projectCode = workflowDefineResp.getProjectCode();
-        lineageService.addWorkflow(workflowName, filePath, fileName, sqlContent, user,workflowCode, projectCode, taskCodesString);
-        return null;
+        WorkflowDeploy workflowDeploy = lineageService.addWorkflow(workflowName, filePath, fileName, sqlContent, user, workflowCode, projectCode, taskCodesString);
+        return workflowDeploy;
     }
 
 
@@ -68,7 +70,8 @@ public class DependencyController {
         String user = payload.getOrDefault("commit_user", "system");
         WorkflowDeploy workflowDeploy = deployRepo.findByWorkflowName(workflowName);
         if (workflowDeploy == null) {
-            addWorkflow(payload);
+            log.info("工作流不存在，创建工作流");
+            return addWorkflow(payload);
         }
         long workflowCode = workflowDeploy.getWorkflowCode();
         long projectCode = workflowDeploy.getProjectCode();
