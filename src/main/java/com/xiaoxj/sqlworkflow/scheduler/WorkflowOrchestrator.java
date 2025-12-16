@@ -67,8 +67,8 @@ public class WorkflowOrchestrator {
         WorkflowDeploy deploy = deployRepo.findByTargetTable(target);
         HttpRestResult<JsonNode> result = dolphinService.startWorkflow(deploy.getProjectCode(), deploy.getWorkflowCode());
         if (result != null && result.getSuccess()) {
-            Long workflowInstanceId = Long.parseLong(result.getData().get("workflowInstanceId").textValue());
-            Long workflowCode = Long.parseLong(result.getData().get("workflowCode").textValue());
+            Long workflowInstanceId = Long.parseLong(result.getData().get("workflowInstanceId").toString());
+            Long workflowCode = Long.parseLong(result.getData().get("workflowCode").toString());
             WorkflowInstance instance = new WorkflowInstance();
             instance.setWorkflowCode(workflowCode);
             instance.setProjectCode(deploy.getProjectCode());

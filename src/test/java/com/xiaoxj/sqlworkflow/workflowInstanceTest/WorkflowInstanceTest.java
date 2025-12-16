@@ -22,11 +22,15 @@ public class WorkflowInstanceTest extends BaseTest {
     private DolphinSchedulerService dolphinSchedulerService;
     @Test
     public void testStartWorkflow() {
-        Long workflowCode = 159572138550880L;
+        Long workflowCode = 160197424339552L;
         HttpRestResult<JsonNode> jsonNodeHttpRestResult = dolphinSchedulerService.startWorkflow(projectCode, workflowCode);
         System.out.println("workflowCode:" + jsonNodeHttpRestResult.getData().get("workflowCode"));
-        System.out.println("workflowInstanceId:" + jsonNodeHttpRestResult.getData().get("workflowInstanceId"));
+        System.out.println("workflowInstanceId:" + jsonNodeHttpRestResult.getData().get("workflowInstanceId").asLong());
 
+        Long workflowInstanceId = Long.parseLong(jsonNodeHttpRestResult.getData().get("workflowInstanceId").toString());
+        Long workflowCodetest = Long.parseLong(jsonNodeHttpRestResult.getData().get("workflowCode").toString());
+        System.out.println("workflowCodetest:" + workflowCodetest);
+        System.out.println("workflowInstanceId:" + workflowInstanceId);
         System.out.println(jsonNodeHttpRestResult);
     }
 

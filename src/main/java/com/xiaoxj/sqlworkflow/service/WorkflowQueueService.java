@@ -19,8 +19,12 @@ public class WorkflowQueueService {
         this.ingestInfoService = ingestInfoService;
     }
 
-
     public Set<String> buildReadyQueue() {
+        String dbsAndTables = getDbsAndTables();
+        if (dbsAndTables == null || dbsAndTables.isBlank()) {
+            log.info("No pending workflows found, ready queue is empty");
+            return Collections.emptySet();
+        }
         String dbs = getDbsAndTables().split("-->")[0];
         String tables = getDbsAndTables().split("-->")[1];
         List<String> ingestTables = ingestInfoService.findIngestTables(dbs, tables);
@@ -39,11 +43,11 @@ public class WorkflowQueueService {
     }
     public String getTargetWorkflowName() {
         List<WorkflowDeploy> pendings = repo.findByStatus('N');
-        if (pendings.isEmpty()) {
+        Set<String> ready = buildReadyQueue();
+        if (pendings.isEmpty() || ready.isEmpty()) {
             log.info("No pending workflow found, all workflows have finished");
             return "finished";
         }
-        Set<String> ready = buildReadyQueue();
         for (WorkflowDeploy wd : pendings) {
             String tgt = wd.getTargetTable();
             String src = wd.getSourceTables();
@@ -80,6 +84,9 @@ public class WorkflowQueueService {
         }
         String dbCsv = String.join(",", dbs);
         String tableCsv = String.join(",", tables);
+        if (dbCsv.isEmpty() || tableCsv.isEmpty()) {
+            return null;
+        }
         return dbCsv + "-->" + tableCsv;
     }
 }
