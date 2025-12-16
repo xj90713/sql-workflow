@@ -2,7 +2,6 @@ package com.xiaoxj.sqlworkflow.controller;
 
 import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
-import com.xiaoxj.sqlworkflow.scheduler.WorkflowOrchestrator;
 import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import com.xiaoxj.sqlworkflow.service.SqlLineageService;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
@@ -30,9 +29,6 @@ public class DependencyController {
 
     @Value("#{${dolphin.project.code}}")
     private Long projectCode;
-
-    @Value("${dolphin.tenant.code}")
-    private String tenantCode;
 
     @Autowired
     private WorkflowDeployRepository deployRepo;

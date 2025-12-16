@@ -1,6 +1,7 @@
 package com.xiaoxj.sqlworkflow.controller;
 
 import com.xiaoxj.sqlworkflow.service.OpenmetadataService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,8 @@ import java.util.Base64;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class OpenmetadataController {
-
-    private static final Logger log = LoggerFactory.getLogger(OpenmetadataController.class);
 
     @Autowired
     private OpenmetadataService openmetadataService;
