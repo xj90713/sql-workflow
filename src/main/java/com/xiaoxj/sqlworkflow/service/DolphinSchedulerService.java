@@ -18,6 +18,7 @@ import com.xiaoxj.sqlworkflow.util.TaskDefinitionUtils;
 import com.xiaoxj.sqlworkflow.util.TaskLocationUtils;
 import com.xiaoxj.sqlworkflow.util.TaskRelationUtils;
 import com.xiaoxj.sqlworkflow.util.TaskUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class DolphinSchedulerService {
     private final DolphinClient dolphinClient;
@@ -131,6 +133,10 @@ public class DolphinSchedulerService {
     }
 
     public WorkflowDefineParam createWorkDefinition(List<Map<String, String>> tasks, Long projectCode, String workflowName, String describe) {
+        if (checkDescriptionLength(describe)) {
+            log.warn("Parameter description is too long.");
+            describe = describe.substring(0, 250);
+        }
         List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, tasks.size());
         System.out.println("taskCodes:" + taskCodes);
         List<TaskDefinition> defs = new ArrayList<>();
@@ -191,4 +197,10 @@ public class DolphinSchedulerService {
     public String getWorkflowInstanceStatus(Long projectCode, Long workflowInstanceId) {
         return dolphinClient.opsForWorkflowInst().getWorkflowInstanceStatus(projectCode, workflowInstanceId);
     }
+
+    public boolean checkDescriptionLength(String description) {
+        log.info("checkDescriptionLength description length:{}", description.length());
+        return description.codePointCount(0, description.length()) > 255;
+    }
+
 }
