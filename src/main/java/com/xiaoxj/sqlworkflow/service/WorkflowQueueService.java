@@ -59,6 +59,7 @@ public class WorkflowQueueService {
         return null;
     }
 
+    // 获取数据库和表
     public String getDbsAndTables() {
         Set<String> dbs = new LinkedHashSet<>();
         Set<String> tables = new LinkedHashSet<>();
@@ -71,14 +72,16 @@ public class WorkflowQueueService {
                 String lower = t.toLowerCase();
                 if (!lower.startsWith("ods.")) continue;
                 String[] parts = t.split("\\.");
-                if (parts.length >= 3) {
-                    dbs.add(parts[1]);
-                    tables.add(parts[2]);
+                if (parts.length >= 2) {
+                    dbs.add(parts[0]);
+                    tables.add(parts[1]);
                 }
             }
         }
         String dbCsv = String.join(",", dbs);
         String tableCsv = String.join(",", tables);
+        System.out.println("dbs:" + dbCsv);
+        System.out.println("tables:" + tableCsv);
         return dbCsv + "-->" + tableCsv;
     }
 }

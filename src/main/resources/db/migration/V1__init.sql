@@ -9,7 +9,7 @@ CREATE TABLE workflow_deploy (
                                  file_name VARCHAR(255),
                                  file_content LONGTEXT,
                                  file_md5 VARCHAR(255),
-                                 source_tables VARCHAR(255),
+                                 source_tables VARCHAR(1000),
                                  target_table VARCHAR(255),
                                  status CHAR(1),
                                  commit_user VARCHAR(255),

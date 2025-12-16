@@ -64,6 +64,7 @@ public class SqlLineageService {
         deploy.setTaskCodes(taskCodes);
         deploy.setWorkflowCode(workflowCode);
         deploy.setProjectCode(projectCode);
+        deploy.setStatus('N');
         deployRepo.save(deploy);
         return deploy;
     }

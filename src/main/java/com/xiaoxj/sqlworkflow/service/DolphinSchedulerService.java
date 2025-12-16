@@ -141,11 +141,11 @@ public class DolphinSchedulerService {
             if ("hive".equals(type)) {
                 HivecliTask hive = new HivecliTask();
                 hive.setHiveSqlScript(content);
-                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(taskCodes.get(i), hive));
+                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(t.get("task_name"),taskCodes.get(i), hive));
             } else if ("shell".equals(type)) {
                 ShellTask sh = new ShellTask();
                 sh.setRawScript(content);
-                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(taskCodes.get(i), sh));
+                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(t.get("task_name"),taskCodes.get(i), sh));
             } else if ("http".equals(type)) {
                 HttpTask http = new HttpTask();
                 http
@@ -154,11 +154,11 @@ public class DolphinSchedulerService {
                         .setHttpCheckCondition(HttpCheckCondition.STATUS_CODE_DEFAULT.toString())
                         .setCondition("")
                         .setConditionResult(TaskUtils.createEmptyConditionResult());
-                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(taskCodes.get(i), http));
+                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(t.get("task_name"), taskCodes.get(i), http));
             } else {
                 ShellTask sh = new ShellTask();
                 sh.setRawScript(content);
-                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(taskCodes.get(i), sh));
+                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(t.get("task_name"), taskCodes.get(i), sh));
             }
         }
         WorkflowDefineParam pcr = new WorkflowDefineParam();
