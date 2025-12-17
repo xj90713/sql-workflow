@@ -1,0 +1,55 @@
+spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: sql-workflow
+  profiles:
+    active: "local"
+    group:
+      "self": "local"
+      "prod": "prod"
+
+---
+# 开发环境配置（本机）
+spring:
+  config:
+    activate:
+      on-profile: "local"
+  cloud:
+    nacos:
+      discovery:
+        server-addr: testnacos.gp51.com:48848
+        group: gushi-local
+        namespace: gushi-local
+        username: nacos
+        password: nacos
+      config:
+        server-addr: testnacos.gp51.com:48848
+        file-extension: yaml
+        group: gushi-local
+        namespace: gushi-local
+        username: nacos
+        password: nacos
+---
+# 生产环境配置（k8s）
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+  main:
+    allow-circular-references: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos-headless.nacos.svc.cluster.local:8848
+        group: gushi-prod
+        namespace: gushi-prod
+        username: nacos
+        password: Toh0auwa
+      config:
+        server-addr: nacos-headless.nacos.svc.cluster.local:8848
+        file-extension: yaml
+        group: gushi-prod
+        namespace: gushi-prod
+        username: nacos
+        password: Toh0auwa

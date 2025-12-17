@@ -35,6 +35,8 @@ public class WorkflowOrchestrator {
     @Value("${workflow.maxParallelism:16}")
     private int maxParallelism;
 
+    @Value("${workflow.schedule.enabled}")
+    private boolean scheduleEnabled;
 
 
     private List<String> parseSources(String s) {
@@ -49,6 +51,10 @@ public class WorkflowOrchestrator {
     @Scheduled(cron = "${workflow.schedule.triggerPending}")
     @Async("taskExecutor")
     public void triggerPending() {
+        if (!scheduleEnabled) {
+            log.warn("close workflow orchestrator schedule.");
+            return;
+        }
         int runningCount = deployRepo.findByStatus('R').size();
         int slots = Math.max(0, maxParallelism - runningCount);
         if (slots <= 0) {
@@ -86,6 +92,10 @@ public class WorkflowOrchestrator {
     @Scheduled(cron = "${workflow.schedule.checkRunning}")
     @Async("taskExecutor")
     public void checkRunning() {
+        if (!scheduleEnabled) {
+            log.warn("close workflow orchestrator schedule.");
+            return;
+        }
         List<WorkflowInstance> running = instanceRepo.findByStatus('R');
         if (running.isEmpty()) {
             log.info("No running workflow found.");
@@ -117,6 +127,10 @@ public class WorkflowOrchestrator {
     @Scheduled(cron = "${workflow.schedule.initialize}")
     @Async("taskExecutor")
     public void initializeStatus() {
+        if (!scheduleEnabled) {
+            log.warn("close workflow orchestrator schedule.");
+            return;
+        }
 //        int n = deployRepo.initializeAllStatusToN();
 //        log.info("Initialized {} workflow status to N.", n);
     }
