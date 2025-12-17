@@ -127,11 +127,11 @@ public class WorkflowOrchestrator {
     @Scheduled(cron = "${workflow.schedule.initialize}")
     @Async("taskExecutor")
     public void initializeStatus() {
-        if (!scheduleEnabled) {
-            log.warn("close workflow orchestrator schedule.");
-            return;
-        }
-//        int n = deployRepo.initializeAllStatusToN();
-//        log.info("Initialized {} workflow status to N.", n);
+//        if (!scheduleEnabled) {
+//            log.warn("close workflow orchestrator schedule.");
+//            return;
+//        }
+        int n = deployRepo.initializeAllStatusToN();
+        log.info("Initialized {} workflow status to N.", n);
     }
 }

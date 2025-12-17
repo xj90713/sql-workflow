@@ -1,5 +1,8 @@
 package com.xiaoxj.sqlworkflow.dolphinscheduler.workflow;
 
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskDefinition;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskLocation;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskRelation;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

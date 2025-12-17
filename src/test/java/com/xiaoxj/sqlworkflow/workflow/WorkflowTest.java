@@ -2,7 +2,7 @@ package com.xiaoxj.sqlworkflow.workflow;
 
 
 import com.xiaoxj.sqlworkflow.BaseTest;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskDefinition;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
 import com.xiaoxj.sqlworkflow.enums.HttpCheckCondition;
@@ -10,7 +10,6 @@ import com.xiaoxj.sqlworkflow.remote.HttpMethod;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HttpTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ShellTask;
-import com.xiaoxj.sqlworkflow.repo.WorkflowInstanceRepository;
 import com.xiaoxj.sqlworkflow.util.TaskDefinitionUtils;
 import com.xiaoxj.sqlworkflow.util.TaskLocationUtils;
 import com.xiaoxj.sqlworkflow.util.TaskRelationUtils;

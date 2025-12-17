@@ -162,7 +162,6 @@ public class SqlLineageService {
                 comments.append(comment).append("\n");
             }
         }
-
         return comments.toString().trim();
     }
 
@@ -198,5 +197,12 @@ public class SqlLineageService {
             res.add(t);
         }
         return res;
+    }
+
+    public String replaceSqlContent(String sqlContent) {
+
+        sqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
+                .replace("${imp_pt_day}", "'2025-01-01'");
+        return sqlContent;
     }
 }

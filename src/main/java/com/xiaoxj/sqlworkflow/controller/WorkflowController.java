@@ -20,7 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/dependencies")
 @Slf4j
-public class DependencyController {
+public class WorkflowController {
     @Autowired
     private SqlLineageService lineageService;
 

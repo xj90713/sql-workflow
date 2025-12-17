@@ -20,7 +20,7 @@ package com.xiaoxj.sqlworkflow.dolphinscheduler.instance;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskDefinition;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

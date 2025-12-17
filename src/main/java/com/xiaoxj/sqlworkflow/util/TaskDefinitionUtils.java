@@ -2,7 +2,7 @@ package com.xiaoxj.sqlworkflow.util;
 
 
 import com.google.common.base.Strings;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskDefinition;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.AbstractTask;
 
 import java.util.Optional;

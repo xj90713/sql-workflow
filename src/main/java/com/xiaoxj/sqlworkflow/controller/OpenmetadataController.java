@@ -33,6 +33,6 @@ public class OpenmetadataController {
         String resp = openmetadataService.getSqlLineage(fileName, sqlContent);
         long cost = System.currentTimeMillis() - start;
         log.info("file_name={}, duration_ms={}", fileName, cost);
-        return java.util.Map.of("duration_ms", cost, "file_name", fileName, "data", resp);
+        return Map.of("duration_ms", cost, "file_name", fileName, "data", resp);
     }
 }

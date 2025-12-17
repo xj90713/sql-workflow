@@ -6,7 +6,7 @@ import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryRes
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HttpTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ShellTask;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.TaskDefinition;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskDefinition;
 import com.xiaoxj.sqlworkflow.enums.*;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParams;
