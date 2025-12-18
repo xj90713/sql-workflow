@@ -1,6 +1,7 @@
 package com.xiaoxj.sqlworkflow.core;
 
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceOperator;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleOperator;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowOperator;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.project.ProjectOperator;
 import com.xiaoxj.sqlworkflow.remote.DolphinsRestTemplate;
@@ -16,6 +17,8 @@ public class DolphinClient {
     private WorkflowInstanceOperator workflowInstanceOperator;
     private TaskInstanceOperator taskInstanceOperator;
     private ProjectOperator projectOperator;
+
+    private ScheduleOperator scheduleOperator;
 
 
     public DolphinClient(
@@ -35,6 +38,8 @@ public class DolphinClient {
                 new ProjectOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
         this.taskInstanceOperator =
                 new TaskInstanceOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
+        this.scheduleOperator =
+                new ScheduleOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
     }
 
 
@@ -53,4 +58,9 @@ public class DolphinClient {
     public ProjectOperator opsForProject() {
         return this.projectOperator;
     }
+
+    public ScheduleOperator opsForSchedule() {
+        return this.scheduleOperator;
+    }
+
 }

@@ -3,6 +3,8 @@ package com.xiaoxj.sqlworkflow.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.xiaoxj.sqlworkflow.core.DolphinClient;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryResp;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleDefineParam;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleInfoResp;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HttpTask;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ShellTask;
@@ -73,6 +75,7 @@ public class DolphinSchedulerService {
         WorkflowInstanceCreateParam workflowInstanceCreateParam = createWorkflowInstanceCreateParam(workflowCode);
         return dolphinClient.opsForWorkflowInst().start(projectCode, workflowInstanceCreateParam);
     }
+
 
     public List<HttpRestResult<JsonNode>> startWorkflows(Long projectCode, String workflowCodes) {
         List<Long> workflowDefinitionCodeList = Arrays.stream(workflowCodes.split(","))
@@ -204,4 +207,29 @@ public class DolphinSchedulerService {
         return description.codePointCount(0, description.length()) > 255;
     }
 
+    public boolean onlineSchedule(Long projectCode, Long scheduleId) {
+        return dolphinClient.opsForSchedule().online(projectCode, scheduleId);
+    }
+
+    public boolean offlineSchedule(Long projectCode, Long scheduleId) {
+        return dolphinClient.opsForSchedule().offline(projectCode, scheduleId);
+    }
+
+    public ScheduleInfoResp createSchedule(Long projectCode, ScheduleDefineParam scheduleDefineParam) {
+        return dolphinClient.opsForSchedule().create(projectCode, scheduleDefineParam);
+    }
+
+    public ScheduleDefineParam createScheduleDefineParam(Long projectCode,Long workflowCode, String schedule) {
+        List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, 2);
+        ScheduleDefineParam scheduleDefineParam = new ScheduleDefineParam();
+        scheduleDefineParam
+                .setWorkflowDefinitionCode(workflowCode)
+                .setTenantCode(tenantCode)
+                .setSchedule(
+                        new ScheduleDefineParam.Schedule()
+                                .setStartTime("2023-10-27 00:00:00")
+                                .setEndTime("2024-09-20 00:00:00")
+                                .setCrontab(schedule));
+        return scheduleDefineParam;
+    }
 }
