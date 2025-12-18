@@ -62,6 +62,7 @@ public class WorkflowOrchestrator {
             return;
         }
         String target = queueService.getTargetWorkflowName();
+        log.info("Triggering workflow: {}", target);
         if (Objects.equals(target, "finished")) {
             log.info("All workflows have finished.");
             return;
@@ -105,6 +106,7 @@ public class WorkflowOrchestrator {
             Long workflowInstanceId = instance.getWorkflowInstanceId();
             Long workflowCode = instance.getWorkflowCode();
             String status = dolphinService.getWorkflowInstanceStatus(instance.getProjectCode(), workflowInstanceId);
+            System.out.println("status: " + status);
             if (Objects.equals(status, "SUCCESS")) {
                 WorkflowDeploy workflowDeploy = deployRepo.findByWorkflowCode(workflowCode);
                 workflowDeploy.setStatus('Y');
@@ -113,7 +115,7 @@ public class WorkflowOrchestrator {
                 instance.setFinishTime(LocalDateTime.now());
                 instanceRepo.save(instance);
                 deployRepo.save(workflowDeploy);
-            } else if (Objects.equals(status, "FAIL")) {
+            } else if (Objects.equals(status, "FAILURE")) {
                 WorkflowDeploy workflowDeploy = deployRepo.findByWorkflowCode(workflowCode);
                 workflowDeploy.setStatus('E');
                 workflowDeploy.setUpdateTime(LocalDateTime.now());

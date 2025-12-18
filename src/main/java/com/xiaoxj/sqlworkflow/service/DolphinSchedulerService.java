@@ -105,6 +105,7 @@ public class DolphinSchedulerService {
                 .setWorkflowInstancePriority(Priority.MEDIUM.toString())
                 .setWorkerGroup("default")
                 .setEnvironmentCode("")
+                .setTenantCode(tenantCode)
                 .setStartParams("")
                 .setExpectedParallelismNumber("")
                 .setDryRun(0);

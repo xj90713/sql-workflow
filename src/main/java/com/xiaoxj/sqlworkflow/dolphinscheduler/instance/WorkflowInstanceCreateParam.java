@@ -27,6 +27,9 @@ public class WorkflowInstanceCreateParam {
   /** env code */
   private String environmentCode;
 
+  private String tenantCode;
+
+
   private String execType;
 
   private String expectedParallelismNumber;

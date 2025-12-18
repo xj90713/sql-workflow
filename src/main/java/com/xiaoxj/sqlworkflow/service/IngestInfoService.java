@@ -21,30 +21,40 @@ public class IngestInfoService {
     @Value("${postgres.password}")
     private String pgPass;
 
+
     public List<String> findIngestTables(String sourceDbs, String sourceTables) {
-        sourceDbs = Arrays.stream(sourceDbs.split(","))
+        if (pgUrl == null || pgUrl.isBlank()) return List.of();
+
+        List<String> dbList = Arrays.stream((sourceDbs == null ? "" : sourceDbs).split(","))
                 .map(String::trim)
-                .map(table -> "'" + table + "'")
-                .collect(Collectors.joining(","));
-        sourceTables = Arrays.stream(sourceTables.split(","))
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+        List<String> tableList = Arrays.stream((sourceTables == null ? "" : sourceTables).split(","))
                 .map(String::trim)
-                .map(table -> "'" + table + "'")
-                .collect(Collectors.joining(","));
-        if (pgUrl == null || pgUrl.isEmpty()) return List.of();
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException ignored) {}
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        if (dbList.isEmpty() || tableList.isEmpty()) return List.of();
+
+        String dbPlaceholders = dbList.stream().map(d -> "?").collect(Collectors.joining(","));
+        String tablePlaceholders = tableList.stream().map(t -> "?").collect(Collectors.joining(","));
+
+        String sql = "SELECT concat(target_db,'.',target_table) FROM vw_etl_table_with_source vie " +
+                "WHERE vie.status='Y' AND vie.target_db IN (" + dbPlaceholders + ") AND vie.target_table IN (" + tablePlaceholders + ")";
+
         List<String> res = new ArrayList<>();
-        String sql = "SELECT concat(target_db,'.',target_table)  FROM vw_etl_table_with_source  vie " +
-                "where vie.status='Y' and vie.target_db in (?) and vie.target_table in (?)";
         try (Connection conn = DriverManager.getConnection(pgUrl, pgUser, pgPass);
-             PreparedStatement ps = conn.prepareStatement(sql);) {
-            ps.setString(1, sourceDbs);
-            ps.setString(2, sourceTables);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            int idx = 1;
+            for (String db : dbList) ps.setString(idx++, db);
+            for (String tbl : tableList) ps.setString(idx++, tbl);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) res.add(rs.getString(1));
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return List.of();
         }
         return res;

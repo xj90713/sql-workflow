@@ -41,6 +41,7 @@ public class WorkflowQueueService {
     }
     public String getTargetWorkflowName() {
         List<WorkflowDeploy> pendings = repo.findByStatus('N');
+        System.out.println("Pending workflows: " + pendings.size());
         Set<String> ready = buildReadyQueue();
         if (pendings.isEmpty() || ready.isEmpty()) {
             log.info("No pending workflow found, all workflows have finished");
@@ -63,6 +64,7 @@ public class WorkflowQueueService {
 
     // 获取数据库和表
     public String getDbsAndTables() {
+        System.out.println("Getting databases and tables...");
         Set<String> dbs = new LinkedHashSet<>();
         Set<String> tables = new LinkedHashSet<>();
         for (WorkflowDeploy wd : repo.findByStatus('N')) {
