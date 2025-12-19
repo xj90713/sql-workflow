@@ -5,10 +5,7 @@ import com.xiaoxj.sqlworkflow.core.DolphinClient;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryResp;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleInfoResp;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HivecliTask;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.task.HttpTask;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ShellTask;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskDefinition;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.*;
 import com.xiaoxj.sqlworkflow.enums.*;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParams;
@@ -25,23 +22,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
+import javax.sql.DataSource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class DolphinSchedulerService {
     private final DolphinClient dolphinClient;
+    private final DataSource dataSource;
 
 
     @Value("${dolphin.tenant.code}")
     private String tenantCode;
 
 
-    public DolphinSchedulerService(DolphinClient dolphinClient) {
+    public DolphinSchedulerService(DolphinClient dolphinClient, DataSource dataSource) {
         this.dolphinClient = dolphinClient;
+        this.dataSource = dataSource;
     }
 
     public List<Long> generateTaskCodes(Long projectCode, int count) {
@@ -142,7 +145,6 @@ public class DolphinSchedulerService {
             describe = describe.substring(0, 250);
         }
         List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, tasks.size());
-//        System.out.println("taskCodes:" + taskCodes);
         List<TaskDefinition> defs = new ArrayList<>();
         for (int i = 0; i < tasks.size(); i++) {
             Map<String, String> t = tasks.get(i);
@@ -185,6 +187,61 @@ public class DolphinSchedulerService {
         return pcr;
     }
 
+    public WorkflowDefineParam createAlertWorkDefinition(Long projectCode, String workflowName, String sqlContent,  String dnName, String token) {
+
+        List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, 2);
+        List<TaskDefinition> defs = new ArrayList<>();
+        SqlTask sqlTask = new SqlTask();
+        sqlTask
+                .setType("MYSQL")
+                .setDatasource(1)
+                .setSql(sqlContent)
+                .setSqlType("0")
+                .setSendEmail(false)
+                .setDisplayRows(10)
+                .setTitle("")
+                .setGroupId(null)
+                .setConnParams("")
+                .setConditionResult(TaskUtils.createEmptyConditionResult());
+
+        ShellTask sh = new ShellTask();
+
+
+        String shellTemplate = """
+        #!/bin/bash
+        set -ex
+        if [ -n "$message" ]; then
+            # 组装 Markdown 消息内容
+            msg="<font color='red'>**【%s：\\n $message】**</font>\\n "
+            
+            # 发送企业微信 Webhook
+            curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s' \\
+                 -H 'Content-Type: application/json' \\
+                 -d "{
+                    \\"msgtype\\": \\"markdown\\",
+                    \\"markdown\\": {
+                        \\"content\\": \\"${msg}\\"
+                    }
+                 }"
+            exit 0
+        fi
+        """;
+        String finalScript = String.format(shellTemplate, workflowName, token);
+        sh.setRawScript(finalScript);
+        defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(workflowName,taskCodes.get(0), sh));
+        WorkflowDefineParam pcr = new WorkflowDefineParam();
+        pcr.setName(workflowName)
+                .setLocations(TaskLocationUtils.horizontalLocation(taskCodes.toArray(new Long[0])))
+                .setDescription(workflowName)
+                .setTenantCode(tenantCode)
+                .setTimeout("0")
+                .setExecutionType(WorkflowDefineParam.EXECUTION_TYPE_PARALLEL)
+                .setTaskDefinitionJson(defs)
+                .setTaskRelationJson(TaskRelationUtils.oneLineRelation(taskCodes.toArray(new Long[0])))
+                .setGlobalParams(null);
+        return pcr;
+    }
+
     public String getTaskCodesString(WorkflowDefineParam param) {
         if (param == null || param.getTaskDefinitionJson() == null) return "";
         StringBuilder sb = new StringBuilder();
@@ -221,15 +278,32 @@ public class DolphinSchedulerService {
 
     public ScheduleDefineParam createScheduleDefineParam(Long projectCode,Long workflowCode, String schedule) {
         List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, 2);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         ScheduleDefineParam scheduleDefineParam = new ScheduleDefineParam();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime end = now.plusYears(100);
+
         scheduleDefineParam
                 .setWorkflowDefinitionCode(workflowCode)
                 .setTenantCode(tenantCode)
                 .setSchedule(
                         new ScheduleDefineParam.Schedule()
-                                .setStartTime("2023-10-27 00:00:00")
-                                .setEndTime("2024-09-20 00:00:00")
+                                .setStartTime(now.format(formatter))
+                                .setEndTime(end.format(formatter))
                                 .setCrontab(schedule));
         return scheduleDefineParam;
+    }
+    public List<String> parseFirstLine(String input) {
+        if (input == null || input.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // 1. 获取第一行内容
+        String firstLine = input.split("\n")[0];
+
+        // 2. 根据 "|" 分隔符拆分，并对每个元素进行去空格处理
+        return Arrays.stream(firstLine.split("\\|"))
+                .map(String::trim)
+                .collect(Collectors.toList());
     }
 }

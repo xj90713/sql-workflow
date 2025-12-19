@@ -1,5 +1,7 @@
 package com.xiaoxj.sqlworkflow.controller;
 
+import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleDefineParam;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleInfoResp;
 import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
@@ -81,5 +83,30 @@ public class WorkflowController {
         // 更新工作流之后，在上线工作流
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         return lineageService.updateWorkflow(workflowName, filePath, fileName, sqlContent, user, taskCodesString, workflowCode, projectCode);
+    }
+
+    @PostMapping("/addWorkflowAndScheduler")
+    public Map<String, Object> addWorkflowScheduler(@RequestBody Map<String, String> payload) {
+        String filelName = payload.get("file_name");
+        String content = payload.get("content");
+        byte[] decodedBytes = Base64.getDecoder().decode(content);
+        String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
+        String user = payload.getOrDefault("commit_user", "system");
+        List<String> strings = dolphinSchedulerService.parseFirstLine(sqlContent);
+        String dbName = strings.get(0);
+        String scheduleTime = strings.get(1);
+        String token = strings.get(2);
+        String describe = strings.get(3);
+        List<Map<String, String>> taskTriples = lineageService.workflowTriples(sqlContent, filelName);
+        WorkflowDefineParam workDefinition = dolphinSchedulerService.createAlertWorkDefinition(projectCode, filelName,sqlContent, dbName, token);
+        WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);
+        long workflowCode = workflowDefineResp.getCode();
+
+        ScheduleDefineParam scheduleDefineParam = dolphinSchedulerService.createScheduleDefineParam(projectCode, workflowCode, scheduleTime);
+        ScheduleInfoResp schedule = dolphinSchedulerService.createSchedule(projectCode, scheduleDefineParam);
+
+        dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
+        dolphinSchedulerService.onlineSchedule(projectCode, (long) schedule.getId());
+        return null;
     }
 }

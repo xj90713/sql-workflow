@@ -1,4 +1,4 @@
-----hz|token|crontab|告警内容
+----hz|e363807e-4b18-4e6d-886d-320d66c3953a|0 0 * * * ? *|告警内容
 select
     distinct
     os.customer_cid
@@ -11,7 +11,7 @@ where
   and os.create_time > '2025-01-01 00:00:00'
   and os.offline_order_id is not null
   and os.order_amount <= 300000
-  and sce.\`10090\` in
+  and sce.`10090` in
       (
        10148,
        10147,
