@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -305,5 +307,33 @@ public class DolphinSchedulerService {
         return Arrays.stream(firstLine.split("\\|"))
                 .map(String::trim)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 解析 Shell 文本中的 target_tables 列表
+     * @param shellContent 完整的 Shell 脚本内容
+     * @return 提取到的表名列表
+     */
+    public  List<String> extractTargetTables(String shellContent) {
+        List<String> tables = new ArrayList<>();
+        String marker = "##target_tables##";
+        int index = shellContent.indexOf(marker);
+
+        if (index == -1) {
+            return tables;
+        }
+
+        // 2. 截取标识符之后的内容
+        String subContent = shellContent.substring(index + marker.length());
+
+        // 3. 使用正则匹配 # 后面紧跟的表名
+        // ^#\\s*(\\w+) 匹配行首的 #，忽略可能的空格，捕获单词字符
+        Pattern pattern = Pattern.compile("^#\\s*([a-zA-Z0-9_]+)", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(subContent);
+
+        while (matcher.find()) {
+            tables.add(matcher.group(1));
+        }
+        return tables;
     }
 }
