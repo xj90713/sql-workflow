@@ -39,10 +39,31 @@ public class DataSourceOperator extends AbstractOperator {
     try {
       HttpRestResult<JsonNode> stringHttpRestResult =
           dolphinsRestTemplate.get(url, getHeader(), query, JsonNode.class);
+      System.out.println(stringHttpRestResult.getData().get("totalList"));
       return JacksonUtils.parseObject(
               stringHttpRestResult.getData().toString(),
               new TypeReference<PageInfo<DataSourceQueryResp>>() {})
           .getTotalList();
+    } catch (Exception e) {
+      throw new DolphinException("list dolphin scheduler datasource fail", e);
+    }
+  }
+
+  public DataSourceQueryResp getDatasource(String dsName) {
+    String url = dolphinAddress + "/datasources";
+    Query query =
+            new Query()
+                    .addParam("pageNo", "1")
+                    .addParam("pageSize", "10")
+                    .addParam("searchVal", dsName)
+                    .build();
+    try {
+      HttpRestResult<JsonNode> stringHttpRestResult =
+              dolphinsRestTemplate.get(url, getHeader(), query, JsonNode.class);
+      return JacksonUtils.parseObject(
+                      stringHttpRestResult.getData().toString(),
+                      new TypeReference<PageInfo<DataSourceQueryResp>>() {})
+              .getTotalList().get(0);
     } catch (Exception e) {
       throw new DolphinException("list dolphin scheduler datasource fail", e);
     }

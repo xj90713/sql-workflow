@@ -31,3 +31,23 @@ CREATE TABLE workflow_instance (
                                    finish_time DATETIME,
                                    PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='工作流实例表';
+
+CREATE TABLE alert_workflow_deploy (
+                                 id INT NOT NULL AUTO_INCREMENT,
+                                 workflow_id VARCHAR(255),
+                                 workflow_name VARCHAR(255),
+                                 schedule_id BIGINT,
+                                 task_codes VARCHAR(255),
+                                 workflow_code BIGINT,
+                                 project_code BIGINT,
+                                 file_path VARCHAR(255),
+                                 file_name VARCHAR(255),
+                                 file_content LONGTEXT,
+                                 file_md5 VARCHAR(255),
+                                 crontab VARCHAR(1000),
+                                 status CHAR(1),
+                                 commit_user VARCHAR(255),
+                                 create_time DATETIME NOT NULL,
+                                 update_time DATETIME NOT NULL,
+                                 PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='告警工作流部署表';

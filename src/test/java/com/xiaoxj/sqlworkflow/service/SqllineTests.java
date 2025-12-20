@@ -169,7 +169,8 @@ public class SqllineTests {
                      ) p4
                      on p1.hp_stat_date = p4.hp_stat_date;
                 """;
-        LineageRunner runner = LineageRunner.builder(sqlContent).build();
+        String sqlContent1 = "insert into test values(1);";
+        LineageRunner runner = LineageRunner.builder(sqlContent1).build();
         List<Table> sources = runner.sourceTables();
         List<Table> targets = runner.targetTables();
         System.out.println( "sources:" + sources);

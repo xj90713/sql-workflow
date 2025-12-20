@@ -1,8 +1,12 @@
 package com.xiaoxj.sqlworkflow.controller;
 
+import com.xiaoxj.sqlworkflow.common.BaseResult;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleInfoResp;
+import com.xiaoxj.sqlworkflow.domain.AlertWorkflowDeploy;
 import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
+import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
+import com.xiaoxj.sqlworkflow.repo.AlertWorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import com.xiaoxj.sqlworkflow.service.SqlLineageService;
@@ -34,8 +38,12 @@ public class WorkflowController {
 
     @Autowired
     private WorkflowDeployRepository deployRepo;
+
+    @Autowired
+    private AlertWorkflowDeployRepository alertDeployRepo;
+
     @PostMapping(value = "/addWorkflow", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public WorkflowDeploy addWorkflow(@RequestBody Map<String, String> payload) {
+    public BaseResult<WorkflowDeploy> addWorkflow(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
@@ -52,13 +60,19 @@ public class WorkflowController {
         // 创建任务流之后 需要上线该任务
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         long projectCode = workflowDefineResp.getProjectCode();
-        WorkflowDeploy workflowDeploy = lineageService.addWorkflow(workflowName, filePath, fileName, sqlContent, user, workflowCode, projectCode, taskCodesString);
-        return workflowDeploy;
+        List<String> targetTables = dolphinSchedulerService.extractTargetTables(sqlContent);
+        if (!targetTables.isEmpty()) {
+            targetTables.forEach(targetTable ->
+                    lineageService.addWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, workflowCode, projectCode, taskCodesString));
+
+        }
+        WorkflowDeploy workflowDeploy = lineageService.addWorkflowDeploy(workflowName, filePath, fileName, sqlContent, user, workflowCode, projectCode, taskCodesString);
+        return BaseResult.success(workflowDeploy);
     }
 
 
     @PostMapping(value = "/updateWorkflow", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public WorkflowDeploy updateWorkflow(@RequestBody Map<String, String> payload) {
+    public BaseResult<WorkflowDeploy> updateWorkflow(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
@@ -82,31 +96,65 @@ public class WorkflowController {
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.updateWorkflow(projectCode, workflowCode, workDefinition);
         // 更新工作流之后，在上线工作流
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
-        return lineageService.updateWorkflow(workflowName, filePath, fileName, sqlContent, user, taskCodesString, workflowCode, projectCode);
+        WorkflowDeploy updateWorkflowDeploy = lineageService.updateWorkflowDeploy(workflowName, filePath, fileName, sqlContent, user, taskCodesString, workflowCode, projectCode);
+        return BaseResult.success(updateWorkflowDeploy);
     }
 
     @PostMapping("/addWorkflowAndScheduler")
-    public Map<String, Object> addWorkflowScheduler(@RequestBody Map<String, String> payload) {
+    public BaseResult<ScheduleInfoResp>  addWorkflowScheduler(@RequestBody Map<String, String> payload) {
         String filelName = payload.get("file_name");
         String content = payload.get("content");
+        String filePath = payload.get("file_path");
+        String user = payload.getOrDefault("commit_user", "system");
+        String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
+        String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         byte[] decodedBytes = Base64.getDecoder().decode(content);
         String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
-        String user = payload.getOrDefault("commit_user", "system");
         List<String> strings = dolphinSchedulerService.parseFirstLine(sqlContent);
         String dbName = strings.get(0);
         String scheduleTime = strings.get(1);
         String token = strings.get(2);
-        String describe = strings.get(3);
-        List<Map<String, String>> taskTriples = lineageService.workflowTriples(sqlContent, filelName);
         WorkflowDefineParam workDefinition = dolphinSchedulerService.createAlertWorkDefinition(projectCode, filelName,sqlContent, dbName, token);
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);
+        String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
         long workflowCode = workflowDefineResp.getCode();
-
+        dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         ScheduleDefineParam scheduleDefineParam = dolphinSchedulerService.createScheduleDefineParam(projectCode, workflowCode, scheduleTime);
         ScheduleInfoResp schedule = dolphinSchedulerService.createSchedule(projectCode, scheduleDefineParam);
+        dolphinSchedulerService.onlineSchedule(projectCode, schedule.getId());
+        lineageService.addAlertWorkflowDeploy(filelName, filePath, fileName, sqlContent, user, taskCodesString, schedule.getId(), workflowCode, projectCode);
+        return BaseResult.success(schedule);
+    }
 
+    @PostMapping("/updateWorkflowAndScheduler")
+    public BaseResult<ScheduleInfoResp>  updateWorkflowScheduler(@RequestBody Map<String, String> payload) {
+        String filelName = payload.get("file_name");
+        String content = payload.get("content");
+        byte[] decodedBytes = Base64.getDecoder().decode(content);
+        String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
+        List<String> strings = dolphinSchedulerService.parseFirstLine(sqlContent);
+        String dbName = strings.get(0);
+        String scheduleTime = strings.get(1);
+        String token = strings.get(2);
+
+        AlertWorkflowDeploy alertWorkflowDeploy = alertDeployRepo.findByWorkflowName(filelName);
+        if (alertWorkflowDeploy == null) {
+            log.info("工作流不存在，创建工作流");
+            return addWorkflowScheduler(payload);
+        }
+        long workflowCode = alertWorkflowDeploy.getWorkflowCode();
+        long projectCode = alertWorkflowDeploy.getProjectCode();
+        // 更新工作流之前，必须要下线改任务
+        dolphinSchedulerService.offlineWorkflow(projectCode, workflowCode);
+        dolphinSchedulerService.offlineSchedule(projectCode, alertWorkflowDeploy.getSchedulerId());
+
+        WorkflowDefineParam workDefinition = dolphinSchedulerService.createAlertWorkDefinition(projectCode, filelName,sqlContent, dbName, token);
+        ScheduleDefineParam scheduleDefineParam = dolphinSchedulerService.createScheduleDefineParam(projectCode, workflowCode, scheduleTime);
+        ScheduleInfoResp schedule = dolphinSchedulerService.createSchedule(projectCode, scheduleDefineParam);
+        dolphinSchedulerService.onlineSchedule(projectCode, schedule.getId());
+        dolphinSchedulerService.updateSchedule(projectCode, workflowCode,scheduleDefineParam);
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
-        dolphinSchedulerService.onlineSchedule(projectCode, (long) schedule.getId());
-        return null;
+        lineageService.updateAlertWorkflowDeploy(filelName, null, null, sqlContent, null, null, schedule.getId(), workflowCode, projectCode);
+        return BaseResult.success(schedule);
     }
 }

@@ -1,7 +1,9 @@
 package com.xiaoxj.sqlworkflow.service;
 
+import com.xiaoxj.sqlworkflow.domain.AlertWorkflowDeploy;
 import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.domain.WorkflowInstance;
+import com.xiaoxj.sqlworkflow.repo.AlertWorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.repo.WorkflowInstanceRepository;
 import io.github.reata.sqllineage4j.common.model.Table;
@@ -22,13 +24,16 @@ public class SqlLineageService {
     private final WorkflowDeployRepository deployRepo;
     private final WorkflowInstanceRepository workflowInstanceRepo;
 
-    public SqlLineageService(WorkflowDeployRepository deployRepo, WorkflowInstanceRepository workflowInstanceRepo) {
+    private final AlertWorkflowDeployRepository alertDeployRepo;
+
+    public SqlLineageService(WorkflowDeployRepository deployRepo, WorkflowInstanceRepository workflowInstanceRepo, AlertWorkflowDeployRepository alertDeployRepo) {
         this.deployRepo = deployRepo;
         this.workflowInstanceRepo = workflowInstanceRepo;
+        this.alertDeployRepo = alertDeployRepo;
     }
 
     @Transactional
-    public WorkflowDeploy addWorkflow(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
+    public WorkflowDeploy addWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
 
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
@@ -72,10 +77,10 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public WorkflowDeploy updateWorkflow(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes, long workflowCode, long projectCode) {
+    public WorkflowDeploy updateWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes, long workflowCode, long projectCode) {
         WorkflowDeploy latest = deployRepo.findTopByWorkflowNameOrderByUpdateTimeDesc(workflowName);
         if (latest == null) {
-            return addWorkflow(workflowName, filePath, fileName, sqlContent, commitUser, workflowCode, projectCode, taskCodes);
+            return addWorkflowDeploy(workflowName, filePath, fileName, sqlContent, commitUser, workflowCode, projectCode, taskCodes);
         }
 
         String newMd5 = md5(sqlContent);
@@ -122,6 +127,50 @@ public class SqlLineageService {
     }
 
     @Transactional
+    public AlertWorkflowDeploy addAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long schedulerId, long workflowCode, long projectCode) {
+        AlertWorkflowDeploy deploy = new AlertWorkflowDeploy();
+        deploy.setWorkflowId(workflowName);
+        deploy.setWorkflowName(workflowName);
+        deploy.setFilePath(filePath);
+        deploy.setFileName(fileName);
+        deploy.setSchedulerId(schedulerId);
+        deploy.setFileContent(sqlContent);
+        deploy.setFileMd5(md5(sqlContent));
+        deploy.setCommitUser(commitUser);
+        deploy.setTaskCodes(taskCodes);
+        deploy.setWorkflowCode(workflowCode);
+        deploy.setProjectCode(projectCode);
+        deploy.setStatus('N');
+        alertDeployRepo.save(deploy);
+        return deploy;
+    }
+
+    @Transactional
+    public AlertWorkflowDeploy updateAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long schedulerId,long workflowCode, long projectCode) {
+        AlertWorkflowDeploy latest = alertDeployRepo.findTopByWorkflowNameOrderByUpdateTimeDesc(workflowName);
+        if (latest == null) {
+            return addAlertWorkflowDeploy(workflowName, filePath, fileName, sqlContent, commitUser,taskCodes,schedulerId, workflowCode, projectCode);
+        }
+
+        String newMd5 = md5(sqlContent);
+        AlertWorkflowDeploy deploy = new AlertWorkflowDeploy();
+        deploy.setWorkflowId(workflowName);
+        deploy.setWorkflowName(workflowName);
+        deploy.setFilePath(filePath);
+        deploy.setFileName(fileName);
+        deploy.setSchedulerId(schedulerId);
+        deploy.setFileContent(sqlContent);
+        deploy.setFileMd5(md5(sqlContent));
+        deploy.setCommitUser(commitUser);
+        deploy.setTaskCodes(taskCodes);
+        deploy.setFileMd5(newMd5);
+        deploy.setWorkflowCode(workflowCode);
+        deploy.setProjectCode(projectCode);
+        deploy.setStatus('N');
+        alertDeployRepo.save(deploy);
+        return deploy;
+    }
+    @Transactional
     public WorkflowInstance updateWorkflowInstance(WorkflowInstance workflowInstance, char state) {
         workflowInstance.setStatus(state);
         return workflowInstanceRepo.save(workflowInstance);
@@ -144,20 +193,15 @@ public class SqlLineageService {
     public String extractComments(String sql) {
         String[] lines = sql.split("\n");
         StringBuilder comments = new StringBuilder();
-        // 只处理开头部分的注释行
         boolean startExtracting = false;
         for (String line : lines) {
-            // 当遇到第一个 -- 注释行，开始提取
             if (line.trim().startsWith("--")) {
                 startExtracting = true;
             }
-            // 一旦遇到非注释行，停止提取
             if (startExtracting && !line.trim().startsWith("--")) {
                 break;
             }
-            // 提取注释
             if (startExtracting && line.trim().startsWith("--")) {
-                // 去掉 -- 和 # 后的内容
                 String comment = line.replaceAll("^--", "").replaceAll("#", "").trim();
                 comments.append(comment).append("\n");
             }

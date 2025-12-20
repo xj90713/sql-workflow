@@ -1,5 +1,6 @@
 package com.xiaoxj.sqlworkflow.core;
 
+import com.xiaoxj.sqlworkflow.dolphinscheduler.datasource.DataSourceOperator;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceOperator;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleOperator;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowOperator;
@@ -19,6 +20,8 @@ public class DolphinClient {
     private ProjectOperator projectOperator;
 
     private ScheduleOperator scheduleOperator;
+
+    private DataSourceOperator dataSourceOperator;
 
 
     public DolphinClient(
@@ -40,6 +43,8 @@ public class DolphinClient {
                 new TaskInstanceOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
         this.scheduleOperator =
                 new ScheduleOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
+        this.dataSourceOperator =
+                new DataSourceOperator(this.dolphinAddress, this.token, this.dolphinsRestTemplate);
     }
 
 
@@ -61,6 +66,10 @@ public class DolphinClient {
 
     public ScheduleOperator opsForSchedule() {
         return this.scheduleOperator;
+    }
+
+    public DataSourceOperator opsForDataSource() {
+        return this.dataSourceOperator;
     }
 
 }

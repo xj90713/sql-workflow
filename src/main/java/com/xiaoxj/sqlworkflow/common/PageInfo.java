@@ -1,5 +1,8 @@
 package com.xiaoxj.sqlworkflow.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+
 import java.util.List;
 
 /**
@@ -7,6 +10,8 @@ import java.util.List;
  *
  * @param <T>
  */
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PageInfo<T> {
 
   /** totalList */

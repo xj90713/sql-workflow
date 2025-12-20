@@ -60,7 +60,7 @@ public class TaskTest extends BaseTest {
     SqlTask sqlTask = new SqlTask();
     sqlTask
         .setType("MYSQL")
-        .setDatasource(1)
+        .setDatasource(1L)
         .setSql("select 1")
         .setSqlType("0")
         .setSendEmail(false)

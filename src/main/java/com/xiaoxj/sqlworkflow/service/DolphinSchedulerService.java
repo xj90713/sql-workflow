@@ -192,11 +192,12 @@ public class DolphinSchedulerService {
     public WorkflowDefineParam createAlertWorkDefinition(Long projectCode, String workflowName, String sqlContent,  String dnName, String token) {
 
         List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, 2);
+        Long datasourceId = dolphinClient.opsForDataSource().getDatasource(dnName).getId();
         List<TaskDefinition> defs = new ArrayList<>();
         SqlTask sqlTask = new SqlTask();
         sqlTask
                 .setType("MYSQL")
-                .setDatasource(1)
+                .setDatasource(datasourceId)
                 .setSql(sqlContent)
                 .setSqlType("0")
                 .setSendEmail(false)
@@ -276,6 +277,10 @@ public class DolphinSchedulerService {
 
     public ScheduleInfoResp createSchedule(Long projectCode, ScheduleDefineParam scheduleDefineParam) {
         return dolphinClient.opsForSchedule().create(projectCode, scheduleDefineParam);
+    }
+
+    public ScheduleInfoResp updateSchedule(Long projectCode,Long scheduleId, ScheduleDefineParam scheduleDefineParam) {
+        return dolphinClient.opsForSchedule().update(projectCode,scheduleId, scheduleDefineParam);
     }
 
     public ScheduleDefineParam createScheduleDefineParam(Long projectCode,Long workflowCode, String schedule) {

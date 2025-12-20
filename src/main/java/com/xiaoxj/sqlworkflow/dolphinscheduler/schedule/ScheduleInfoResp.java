@@ -13,7 +13,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ScheduleInfoResp {
 
-  private int id;
+  private long id;
 
   /** process definition code */
   private long processDefinitionCode;
