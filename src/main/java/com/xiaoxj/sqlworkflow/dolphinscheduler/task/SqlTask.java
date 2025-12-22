@@ -16,7 +16,7 @@ public class SqlTask extends AbstractTask {
   private String type;
 
   /** datasource id */
-  private Long datasource;
+  private Integer datasource;
 
   /** sql */
   private String sql;

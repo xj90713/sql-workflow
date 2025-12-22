@@ -51,7 +51,7 @@ public class WorkflowController {
         byte[] decodedBytes = Base64.getDecoder().decode(content);
         String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
         String user = payload.getOrDefault("commit_user", "system");
-        List<Map<String, String>> taskTriples = lineageService.workflowTriples(sqlContent,workflowName);
+        List<Map<String, String>> taskTriples = lineageService.workflowTriples(sqlContent,workflowName, filePath);
         String describe = lineageService.extractComments(sqlContent);
         WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, workflowName,describe);
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);
@@ -64,6 +64,8 @@ public class WorkflowController {
         if (!targetTables.isEmpty()) {
             targetTables.forEach(targetTable ->
                     lineageService.addWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, workflowCode, projectCode, taskCodesString));
+            WorkflowDeploy workflowDeploy = lineageService.addWorkflowDeploy(workflowName, filePath, fileName, sqlContent, user, workflowCode, projectCode, taskCodesString);
+            return BaseResult.success(workflowDeploy);
 
         }
         WorkflowDeploy workflowDeploy = lineageService.addWorkflowDeploy(workflowName, filePath, fileName, sqlContent, user, workflowCode, projectCode, taskCodesString);
@@ -90,7 +92,7 @@ public class WorkflowController {
         String describe = lineageService.extractComments(sqlContent);
         // 更新工作流之前，必须要下线改任务
         dolphinSchedulerService.offlineWorkflow(projectCode, workflowCode);
-        List<Map<String, String>> taskTriples = lineageService.workflowTriples(sqlContent, workflowName);
+        List<Map<String, String>> taskTriples = lineageService.workflowTriples(sqlContent, workflowName, filePath);
         WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, workflowName, describe);
         String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.updateWorkflow(projectCode, workflowCode, workDefinition);

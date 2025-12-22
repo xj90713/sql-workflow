@@ -160,7 +160,21 @@ public class DolphinSchedulerService {
                 ShellTask sh = new ShellTask();
                 sh.setRawScript(content);
                 defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(t.get("task_name"),taskCodes.get(i), sh));
-            } else if ("http".equals(type)) {
+            } else if ("sql".equals(type)) {
+                SqlTask sqlTask = new SqlTask();
+                sqlTask
+                        .setType("MYSQL")
+                        .setDatasource(4)
+                        .setSql(content)
+                        .setSqlType("0")
+                        .setSendEmail(false)
+                        .setDisplayRows(10)
+                        .setTitle("")
+                        .setGroupId(null)
+                        .setConnParams("")
+                        .setConditionResult(TaskUtils.createEmptyConditionResult());
+                defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(t.get("task_name"),taskCodes.get(i), sqlTask));
+            }else if ("http".equals(type)) {
                 HttpTask http = new HttpTask();
                 http
                         .setUrl(content)
@@ -192,7 +206,7 @@ public class DolphinSchedulerService {
     public WorkflowDefineParam createAlertWorkDefinition(Long projectCode, String workflowName, String sqlContent,  String dnName, String token) {
 
         List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, 2);
-        Long datasourceId = dolphinClient.opsForDataSource().getDatasource(dnName).getId();
+        Integer datasourceId = dolphinClient.opsForDataSource().getDatasource(dnName).getId();
         List<TaskDefinition> defs = new ArrayList<>();
         SqlTask sqlTask = new SqlTask();
         sqlTask
@@ -319,26 +333,31 @@ public class DolphinSchedulerService {
      * @param shellContent 完整的 Shell 脚本内容
      * @return 提取到的表名列表
      */
-    public  List<String> extractTargetTables(String shellContent) {
+    public List<String> extractTargetTables(String shellContent) {
         List<String> tables = new ArrayList<>();
+        if (shellContent == null || shellContent.isEmpty()) {
+            return tables;
+        }
+
         String marker = "##target_tables##";
         int index = shellContent.indexOf(marker);
-
         if (index == -1) {
             return tables;
         }
 
-        // 2. 截取标识符之后的内容
         String subContent = shellContent.substring(index + marker.length());
 
-        // 3. 使用正则匹配 # 后面紧跟的表名
-        // ^#\\s*(\\w+) 匹配行首的 #，忽略可能的空格，捕获单词字符
-        Pattern pattern = Pattern.compile("^#\\s*([a-zA-Z0-9_]+)", Pattern.MULTILINE);
+        // 匹配以 # 开头，后面跟表名（允许字母、数字、下划线和点），整行可有前后空格
+        Pattern pattern = Pattern.compile("(?m)^#\\s*([A-Za-z0-9_.]+)\\s*$");
         Matcher matcher = pattern.matcher(subContent);
 
         while (matcher.find()) {
-            tables.add(matcher.group(1));
+            String table = matcher.group(1).trim();
+            if (!table.isEmpty() && !tables.contains(table)) {
+                tables.add(table);
+            }
         }
         return tables;
     }
+
 }

@@ -8,6 +8,7 @@ import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.repo.WorkflowInstanceRepository;
 import io.github.reata.sqllineage4j.common.model.Table;
 import io.github.reata.sqllineage4j.core.LineageRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,9 @@ import java.time.LocalDateTime;
 
 @Service
 public class SqlLineageService {
+
+    @Autowired
+    private DolphinSchedulerService dolphinSchedulerService;
     private final WorkflowDeployRepository deployRepo;
     private final WorkflowInstanceRepository workflowInstanceRepo;
 
@@ -71,6 +75,9 @@ public class SqlLineageService {
         deploy.setTaskCodes(taskCodes);
         deploy.setWorkflowCode(workflowCode);
         deploy.setProjectCode(projectCode);
+        if (filePath.contains("shell") || filePath.contains("sh")) {
+            deploy.setIsDependency(0);
+        }
         deploy.setStatus('N');
         deployRepo.save(deploy);
         return deploy;
@@ -210,12 +217,12 @@ public class SqlLineageService {
     }
 
 
-    public List<Map<String, String>> workflowTriples(String sql, String workflowName) {
+    public List<Map<String, String>> workflowTriples(String scriptContent, String workflowName, String filePath) {
         ArrayList<Integer> sepStarts = new ArrayList<>();
         ArrayList<Integer> sepEnds = new ArrayList<>();
         ArrayList<String> types = new ArrayList<>();
         Pattern p = Pattern.compile("(?m)^\\s*---\\s*([a-zA-Z0-9_]+)\\s*---\\s*$");
-        Matcher m = p.matcher(sql);
+        Matcher m = p.matcher(scriptContent);
         while (m.find()) {
             sepStarts.add(m.start());
             sepEnds.add(m.end());
@@ -225,15 +232,34 @@ public class SqlLineageService {
         if (types.isEmpty()) {
             Map<String, String> t = new LinkedHashMap<>();
             t.put("task_name", workflowName);
-            t.put("task_type", "hive");
-            t.put("task_content", sql.trim());
+            if (filePath.contains("shell") || filePath.contains("sh")) {
+                t.put("task_type", "shell");
+            } else {
+                t.put("task_type", "hive");
+            }
+            t.put("task_content", scriptContent.trim());
             res.add(t);
+
+            if (scriptContent.contains("target_tables")) {
+                List<String> targetTableList = dolphinSchedulerService.extractTargetTables(scriptContent);
+                System.out.println("targetTableList:" + targetTableList);
+                String targetTables = targetTableList.stream()
+                        .map( table -> "'" + table.replace("'", "''") + "'")
+                        .collect(Collectors.joining(","));
+                System.out.println("targetTables:" + targetTables);
+                Map<String, String> task = new LinkedHashMap<>();
+                task.put("task_name", workflowName + "-callback");
+                task.put("task_type", "sql");
+                task.put("task_content", "update workflow_deploy set status = 'Y' where workflow_name in (" + targetTables + ")");
+                res.add(task);
+            }
+
             return res;
         }
         for (int i = 0; i < types.size(); i++) {
             int contentStart = sepEnds.get(i);
-            int contentEnd = (i + 1 < sepStarts.size()) ? sepStarts.get(i + 1) : sql.length();
-            String content = sql.substring(contentStart, contentEnd).trim();
+            int contentEnd = (i + 1 < sepStarts.size()) ? sepStarts.get(i + 1) : scriptContent.length();
+            String content = scriptContent.substring(contentStart, contentEnd).trim();
             Map<String, String> t = new LinkedHashMap<>();
             t.put("task_name", workflowName + (i + 1));
             t.put("task_type", types.get(i) == null ? "hive" : types.get(i).toLowerCase());

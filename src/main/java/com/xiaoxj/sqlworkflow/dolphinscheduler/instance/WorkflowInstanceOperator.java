@@ -122,7 +122,9 @@ public class WorkflowInstanceOperator extends AbstractOperator {
     try {
       HttpRestResult<JsonNode> restResult =
               dolphinsRestTemplate.get(url, getHeader(), null, JsonNode.class);
+      System.out.println("url: " + url);
       JsonNode state = restResult.getData().get("state");
+      System.out.println("state:" + JacksonUtils.parseObject(restResult.getData().toString(), WorkflowInstanceQueryResp.class));
 //      return JacksonUtils.parseObject(restResult.getData().toString(), WorkflowInstanceQueryResp.class);
       return state.textValue();
     } catch (Exception e) {

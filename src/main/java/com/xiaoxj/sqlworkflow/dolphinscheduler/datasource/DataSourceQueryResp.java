@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 public class DataSourceQueryResp {
 
-  private Long id;
+  private Integer id;
 
   /** user id */
   private int userId;

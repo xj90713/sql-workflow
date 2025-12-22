@@ -56,6 +56,7 @@ public class WorkflowOrchestrator {
             return;
         }
         int runningCount = deployRepo.findByStatus('R').size();
+        log.info("Running tasks: {}", runningCount);
         int slots = Math.max(0, maxParallelism - runningCount);
         if (slots <= 0) {
             log.info("Maximum number of tasks executed has been reached.");
@@ -105,6 +106,8 @@ public class WorkflowOrchestrator {
         running.forEach(instance -> {
             Long workflowInstanceId = instance.getWorkflowInstanceId();
             Long workflowCode = instance.getWorkflowCode();
+            System.out.println("workflowInstanceId: " + workflowInstanceId);
+            System.out.println("workflowCode: " + workflowCode);
             String status = dolphinService.getWorkflowInstanceStatus(instance.getProjectCode(), workflowInstanceId);
             System.out.println("status: " + status);
             if (Objects.equals(status, "SUCCESS")) {
@@ -126,14 +129,14 @@ public class WorkflowOrchestrator {
             }
         });
     }
-    @Scheduled(cron = "${workflow.schedule.initialize}")
-    @Async("taskExecutor")
-    public void initializeStatus() {
+//    @Scheduled(cron = "${workflow.schedule.initialize}")
+//    @Async("taskExecutor")
+//    public void initializeStatus() {
 //        if (!scheduleEnabled) {
 //            log.warn("close workflow orchestrator schedule.");
 //            return;
 //        }
-        int n = deployRepo.initializeAllStatusToN();
-        log.info("Initialized {} workflow status to N.", n);
-    }
+//        int n = deployRepo.initializeAllStatusToN();
+//        log.info("Initialized {} workflow status to N.", n);
+//    }
 }

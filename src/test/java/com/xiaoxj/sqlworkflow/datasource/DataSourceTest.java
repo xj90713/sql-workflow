@@ -22,7 +22,7 @@ public class DataSourceTest extends BaseTest {
 
   @Test
   public void getDataSource() {
-    Long id = getClient().opsForDataSource().getDatasource("采集元数据库-oracle").getId();
+    Integer id = getClient().opsForDataSource().getDatasource("采集元数据库-oracle").getId();
     System.out.println( id);
     System.out.println(getClient().opsForDataSource().getDatasource("采集元数据库-oracle"));
   }

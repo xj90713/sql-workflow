@@ -9,7 +9,6 @@ public interface AlertWorkflowDeployRepository extends JpaRepository<AlertWorkfl
     List<AlertWorkflowDeploy> findByStatus(char status);
     AlertWorkflowDeploy findByWorkflowName(String workflowName);
     AlertWorkflowDeploy findTopByWorkflowNameOrderByUpdateTimeDesc(String workflowName);
-    AlertWorkflowDeploy findByTargetTable(String targetTable);
     AlertWorkflowDeploy findByWorkflowCode(Long workflowCode);
 
 }
