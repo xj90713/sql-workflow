@@ -107,7 +107,9 @@ public class SqlLineageService {
         }
 
         String targetTable = targetTables.stream().findFirst().orElseGet(() -> inferTargetFromFilename(fileName));
-        String sourceTableStrings = sourceTables.stream().map(t -> t.replace("..", ".")).collect(Collectors.joining(","));
+        String sourceTableStrings = sourceTables.stream()
+                .filter(t -> !t.contains(targetTable))
+                .map(t -> t.replace("..", ".")).collect(Collectors.joining(","));
 
         latest.setFilePath(filePath);
         latest.setFileName(fileName);

@@ -63,7 +63,7 @@ public class DataSourceOperator extends AbstractOperator {
       return JacksonUtils.parseObject(
                       stringHttpRestResult.getData().toString(),
                       new TypeReference<PageInfo<DataSourceQueryResp>>() {})
-              .getTotalList().get(0);
+              .getTotalList().getFirst();
     } catch (Exception e) {
       throw new DolphinException("list dolphin scheduler datasource fail", e);
     }

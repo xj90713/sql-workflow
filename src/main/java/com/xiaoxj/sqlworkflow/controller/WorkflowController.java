@@ -156,7 +156,7 @@ public class WorkflowController {
         dolphinSchedulerService.onlineSchedule(projectCode, schedule.getId());
         dolphinSchedulerService.updateSchedule(projectCode, workflowCode,scheduleDefineParam);
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
-        lineageService.updateAlertWorkflowDeploy(filelName, null, null, sqlContent, null, null, schedule.getId(), workflowCode, projectCode);
+        lineageService.updateAlertWorkflowDeploy(filelName, null, filelName, sqlContent, sqlContent, null, schedule.getId(), workflowCode, projectCode);
         return BaseResult.success(schedule);
     }
 }
