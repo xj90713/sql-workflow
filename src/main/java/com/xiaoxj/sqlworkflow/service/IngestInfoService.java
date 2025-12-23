@@ -1,5 +1,7 @@
 package com.xiaoxj.sqlworkflow.service;
 
+import com.xiaoxj.sqlworkflow.repo.NoSchedulerTableRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class IngestInfoService {
     @Value("${postgres.password}")
     private String pgPass;
 
+    private NoSchedulerTableRepository noSchedulerTableRepository;
 
     public List<String> findIngestTables(String sourceDbs, String sourceTables) {
         if (pgUrl == null || pgUrl.isBlank()) return List.of();
@@ -57,6 +60,9 @@ public class IngestInfoService {
             e.printStackTrace();
             return List.of();
         }
+        noSchedulerTableRepository.findTableNamesByDeleteStatusNative(0).forEach(t -> {
+            if (!res.contains(t)) res.add(t);
+        });
         return res;
     }
 }
