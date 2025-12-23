@@ -54,3 +54,12 @@ CREATE TABLE alert_workflow_deploy (
                                  is_deleted TINYINT(1) DEFAULT 0 COMMENT '是否删除,0:未删除,1:已删除',
                                  PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='告警工作流部署表';
+
+CREATE TABLE no_scheduler_table (
+                                       id INT NOT NULL AUTO_INCREMENT,
+                                       table_name VARCHAR(255),
+                                       create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                       update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                       is_deleted TINYINT(1) DEFAULT 0 COMMENT '是否删除,0:未删除,1:已删除',
+                                       PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='无需调度表';
