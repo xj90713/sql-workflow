@@ -4,8 +4,8 @@ import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -41,7 +41,7 @@ public class WorkflowQueueService {
     }
     public String getTargetWorkflowName() {
         List<WorkflowDeploy> readyWrokflowList = repo.findByStatus('N');
-        System.out.println("Pending workflows: " + readyWrokflowList.size());
+        log.info("Pending workflows: " + readyWrokflowList.size());
         Set<String> ready = buildReadyQueue();
         if (readyWrokflowList.isEmpty() || ready.isEmpty()) {
             log.info("No pending workflow found, all workflows have finished");
@@ -64,7 +64,6 @@ public class WorkflowQueueService {
 
     // 获取数据库和表
     public String getDbsAndTables() {
-        System.out.println("Getting databases and tables...");
         Set<String> dbs = new LinkedHashSet<>();
         Set<String> tables = new LinkedHashSet<>();
         for (WorkflowDeploy wd : repo.findByStatus('N')) {
@@ -89,4 +88,49 @@ public class WorkflowQueueService {
         }
         return dbCsv + "-->" + tableCsv;
     }
+
+    public String filterTables(String targetTable, String sourceTables) {
+        if (sourceTables == null || sourceTables.trim().isEmpty()) {
+            return "";
+        }
+        if (targetTable == null) {
+            targetTable = "";
+        }
+        String[] tables = sourceTables.split(",");
+        String finalTargetTable = targetTable;
+        String result = Arrays.stream(tables)
+                .map(String::trim)
+                .filter(table -> !table.equals(finalTargetTable.trim()))
+                .filter(table -> !table.isEmpty())
+                .collect(Collectors.joining(","));
+        return result;
+    }
+
+    public static List<String> getAffectedTables(String changedTable,
+                                                 Map<String, String[]> dependencies) {
+        List<String> result = new ArrayList<>();
+        Set<String> visited = new HashSet<>();
+
+        find(changedTable, dependencies, result, visited);
+        return result;
+    }
+
+    private static void find(String currentTable,
+                             Map<String, String[]> deps,
+                             List<String> result,
+                             Set<String> visited) {
+        if (visited.contains(currentTable)) return;
+        visited.add(currentTable);
+
+        for (Map.Entry<String, String[]> entry : deps.entrySet()) {
+            String target = entry.getKey();
+            for (String source : entry.getValue()) {
+                if (source.equals(currentTable)) {
+                    result.add(target);
+                    find(target, deps, result, visited);
+                }
+            }
+        }
+    }
+
 }
