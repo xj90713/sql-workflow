@@ -40,14 +40,14 @@ public class WorkflowQueueService {
         return queue;
     }
     public String getTargetWorkflowName() {
-        List<WorkflowDeploy> pendings = repo.findByStatus('N');
-        System.out.println("Pending workflows: " + pendings.size());
+        List<WorkflowDeploy> readyWrokflowList = repo.findByStatus('N');
+        System.out.println("Pending workflows: " + readyWrokflowList.size());
         Set<String> ready = buildReadyQueue();
-        if (pendings.isEmpty() || ready.isEmpty()) {
+        if (readyWrokflowList.isEmpty() || ready.isEmpty()) {
             log.info("No pending workflow found, all workflows have finished");
             return "finished";
         }
-        for (WorkflowDeploy wd : pendings) {
+        for (WorkflowDeploy wd : readyWrokflowList) {
             String tgt = wd.getTargetTable();
             String src = wd.getSourceTables();
             boolean allReady = true;
