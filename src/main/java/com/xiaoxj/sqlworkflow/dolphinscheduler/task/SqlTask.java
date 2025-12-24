@@ -1,10 +1,12 @@
 package com.xiaoxj.sqlworkflow.dolphinscheduler.task;
 
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.Parameter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /** copied from org.apache.dolphinscheduler.plugin.task.api.parameters.SqlParameters */
@@ -15,6 +17,10 @@ public class SqlTask extends AbstractTask {
 
   /** data source type，eg MYSQL, POSTGRES, HIVE ... */
   private String type;
+
+  /** local params */
+  private List<Parameter> localParams = Collections.emptyList();
+
 
   /** datasource id */
   private Integer datasource;
