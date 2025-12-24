@@ -176,7 +176,7 @@ public class DolphinSchedulerService {
                         .setDisplayRows(10)
                         .setTitle("")
                         .setGroupId(null)
-                        .setConnParams("")
+                        .setConnParams("null")
                         .setConditionResult(TaskUtils.createEmptyConditionResult());
                 defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(t.get("task_name"),taskCodes.get(i), sqlTask));
             }else if ("http".equals(type)) {
