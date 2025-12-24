@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** copied from org.apache.dolphinscheduler.plugin.task.api.parameters.SqlParameters */
@@ -37,10 +38,10 @@ public class SqlTask extends AbstractTask {
   private String connParams;
 
   /** Pre Statements */
-  private List<String> preStatements;
+  private List<String> preStatements = new ArrayList<>();
 
   /** Post Statements */
-  private List<String> postStatements;
+  private List<String> postStatements = new ArrayList<>();
 
   /** groupId */
   private Integer groupId;

@@ -60,14 +60,14 @@ public class TaskTest extends BaseTest {
     SqlTask sqlTask = new SqlTask();
     sqlTask
         .setType("MYSQL")
-        .setDatasource(1)
+        .setDatasource(4)
         .setSql("select 1")
         .setSqlType("0")
         .setSendEmail(false)
         .setDisplayRows(10)
         .setTitle("")
         .setGroupId(null)
-        .setConnParams("")
+        .setConnParams("null")
         .setConditionResult(TaskUtils.createEmptyConditionResult());
 
     // use utils to create task definition with default config
