@@ -97,11 +97,11 @@
       <artifactId>httpmime</artifactId>
       <version>${httpclient.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.github.jsqlparser</groupId>
-      <artifactId>jsqlparser</artifactId>
-      <version>5.2</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.github.jsqlparser</groupId>-->
+<!--      <artifactId>jsqlparser</artifactId>-->
+<!--      <version>5.2</version>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

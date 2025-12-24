@@ -160,13 +160,18 @@ public class DolphinSchedulerService {
                 ShellTask sh = new ShellTask();
                 sh.setRawScript(content);
                 defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(t.get("task_name"),taskCodes.get(i), sh));
-            } else if ("sql".equals(type)) {
+            } else if ("sql".equals(type) || "doris".equals(type)) {
                 SqlTask sqlTask = new SqlTask();
+                if ("doris".equals(type)) {
+                    sqlTask.setType("DORIS");
+                    sqlTask.setDatasource(9);
+                } else {
+                    sqlTask.setType("MYSQL");
+                    sqlTask.setDatasource(4);
+                }
                 sqlTask
-                        .setType("MYSQL")
-                        .setDatasource(4)
                         .setSql(content)
-                        .setSqlType("0")
+                        .setSqlType("1")
                         .setSendEmail(false)
                         .setDisplayRows(10)
                         .setTitle("")

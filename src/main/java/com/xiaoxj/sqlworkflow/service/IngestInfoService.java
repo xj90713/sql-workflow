@@ -23,7 +23,11 @@ public class IngestInfoService {
     @Value("${postgres.password}")
     private String pgPass;
 
-    private NoSchedulerTableRepository noSchedulerTableRepository;
+    private final NoSchedulerTableRepository noSchedulerTableRepository;
+
+    public IngestInfoService(NoSchedulerTableRepository noSchedulerTableRepository) {
+        this.noSchedulerTableRepository = noSchedulerTableRepository;
+    }
 
     public List<String> findIngestTables(String sourceDbs, String sourceTables) {
         if (pgUrl == null || pgUrl.isBlank()) return List.of();
@@ -60,7 +64,7 @@ public class IngestInfoService {
             e.printStackTrace();
             return List.of();
         }
-        noSchedulerTableRepository.findTableNamesByDeleteStatusNative(0).forEach(t -> {
+        noSchedulerTableRepository.findTableNamesByDeleteStatusNative().forEach(t -> {
             if (!res.contains(t)) res.add(t);
         });
         return res;

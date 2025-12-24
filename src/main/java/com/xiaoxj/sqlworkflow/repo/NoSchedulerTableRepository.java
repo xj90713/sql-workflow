@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface NoSchedulerTableRepository extends JpaRepository<NoSchedulerTable, Integer> {
-    @Query(value = "SELECT table_name FROM no_scheduler_table WHERE is_delete = :status", nativeQuery = true)
-    List<String> findTableNamesByDeleteStatusNative(@Param("status") int status);
+    @Query(value = "SELECT table_name FROM no_scheduler_table WHERE is_delete = 0", nativeQuery = true)
+    List<String> findTableNamesByDeleteStatusNative();
 }

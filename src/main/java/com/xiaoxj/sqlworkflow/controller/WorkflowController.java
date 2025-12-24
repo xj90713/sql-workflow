@@ -57,7 +57,7 @@ public class WorkflowController {
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);
         String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
         long workflowCode = workflowDefineResp.getCode();
-        // 创建任务流之后 需要上线该任务
+        // 创建任务流之后 需要上线该任务W
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         long projectCode = workflowDefineResp.getProjectCode();
         List<String> targetTables = dolphinSchedulerService.extractTargetTables(sqlContent);
