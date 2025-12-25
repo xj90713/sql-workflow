@@ -32,7 +32,7 @@ public class WorkflowOrchestrator {
     private final DolphinSchedulerService dolphinService;
     private final WorkflowQueueService queueService;
 
-    @Value("${workflow.maxParallelism:16}")
+    @Value("${workflow.schedule.maxParallelism:16}")
     private int maxParallelism;
 
     @Value("${workflow.schedule.enabled}")
@@ -72,7 +72,16 @@ public class WorkflowOrchestrator {
             log.info("No pending workflow found.");
             return;
         };
-        WorkflowDeploy deploy = deployRepo.findByTargetTable(target);
+        WorkflowDeploy deploy;
+        List<WorkflowDeploy> deployList = deployRepo.findByTargetTable(target);
+        if (deployList.size() > 1) {
+            log.warn("More than one workflow found for target table: {}", target);
+            List<WorkflowDeploy> list = deployList.stream().filter(x -> !x.getSourceTables().
+                    contains(x.getTargetTable())).toList();
+            deploy = list.getFirst();
+        } else  {
+            deploy = deployList.getFirst();
+        }
         HttpRestResult<JsonNode> result = dolphinService.startWorkflow(deploy.getProjectCode(), deploy.getWorkflowCode());
         if (result != null && result.getSuccess()) {
             Long workflowInstanceId = Long.parseLong(result.getData().get("workflowInstanceId").toString());
