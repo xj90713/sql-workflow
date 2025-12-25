@@ -39,36 +39,13 @@ public class SqlLineageService {
     @Transactional
     public WorkflowDeploy addWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
 
-        Set<String> sourceTables = new LinkedHashSet<>();
-        Set<String> targetTables = new LinkedHashSet<>();
-
-        try {
-            String fixSqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
-                .replace("${imp_pt_day}", "'2025-01-01'");
-            LineageRunner runner = LineageRunner.builder(fixSqlContent).build();
-            List<Table> sources = runner.sourceTables();
-            List<Table> targets = runner.targetTables();
-
-            sources.forEach(table -> sourceTables.add(table.toString().replace("..", ".")));
-            targets.forEach(table -> targetTables.add(table.toString().replace("..", ".")));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("解析 SQL 失败: " + fileName, e);
-        }
-
-        String targetTable = targetTables.stream()
-                .findFirst()
-                .orElseGet(() -> inferTargetFromFilename(fileName));
-        String sourceTableStrings = sourceTables.stream()
-                .map(table -> table.replace("..", "."))
-                .collect(Collectors.joining(","));
-
         WorkflowDeploy deploy = new WorkflowDeploy();
         deploy.setWorkflowId(workflowName);
         deploy.setWorkflowName(workflowName);
         deploy.setFilePath(filePath);
         deploy.setFileName(fileName);
-        deploy.setSourceTables(sourceTableStrings);
-        deploy.setTargetTable(targetTable);
+        deploy.setSourceTables(getTargetAndSourceTables(sqlContent, fileName).get("sourceTables"));
+        deploy.setTargetTable(getTargetAndSourceTables(sqlContent, fileName).get("targetTable"));
         deploy.setFileContent(sqlContent);
         deploy.setFileMd5(md5(sqlContent));
         deploy.setCommitUser(commitUser);
@@ -91,37 +68,47 @@ public class SqlLineageService {
         }
 
         String newMd5 = md5(sqlContent);
+        latest.setFilePath(filePath);
+        latest.setFileName(fileName);
+        latest.setFileContent(sqlContent);
+        latest.setFileMd5(newMd5);
+        latest.setCommitUser(commitUser);
+        latest.setSourceTables(getTargetAndSourceTables(sqlContent, fileName).get("sourceTables"));
+        latest.setTargetTable(getTargetAndSourceTables(sqlContent, fileName).get("targetTable"));
+        latest.setUpdateTime(LocalDateTime.now());
+        latest.setTaskCodes(taskCodes);
+        deployRepo.save(latest);
+        return latest;
+    }
 
+    public  Map<String, String> getTargetAndSourceTables(String sqlContent, String fileName) {
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
+
         try {
             String fixSqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
                     .replace("${imp_pt_day}", "'2025-01-01'");
             LineageRunner runner = LineageRunner.builder(fixSqlContent).build();
             List<Table> sources = runner.sourceTables();
             List<Table> targets = runner.targetTables();
+
             sources.forEach(table -> sourceTables.add(table.toString().replace("..", ".")));
             targets.forEach(table -> targetTables.add(table.toString().replace("..", ".")));
         } catch (Exception e) {
             throw new IllegalArgumentException("解析 SQL 失败: " + fileName, e);
         }
 
-        String targetTable = targetTables.stream().findFirst().orElseGet(() -> inferTargetFromFilename(fileName));
+        String targetTable = targetTables.stream()
+                .map(table -> table.replace("..", "."))
+                .map(table -> table.replaceFirst("^hive\\.", ""))
+                .findFirst()
+                .orElseGet(() -> inferTargetFromFilename(fileName));
         String sourceTableStrings = sourceTables.stream()
+                .map(table -> table.replace("..", "."))
+                .map(table -> table.replaceFirst("^hive\\.", ""))
                 .filter(t -> !t.contains(targetTable))
-                .map(t -> t.replace("..", ".")).collect(Collectors.joining(","));
-
-        latest.setFilePath(filePath);
-        latest.setFileName(fileName);
-        latest.setFileContent(sqlContent);
-        latest.setFileMd5(newMd5);
-        latest.setCommitUser(commitUser);
-        latest.setSourceTables(sourceTableStrings);
-        latest.setTargetTable(targetTable);
-        latest.setUpdateTime(LocalDateTime.now());
-        latest.setTaskCodes(taskCodes);
-        deployRepo.save(latest);
-        return latest;
+                .collect(Collectors.joining(","));
+        return Map.of("sourceTables", sourceTableStrings, "targetTable", targetTable);
     }
 
     @Transactional
