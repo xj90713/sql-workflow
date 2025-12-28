@@ -1,4 +1,4 @@
-----hz|e363807e-4b18-4e6d-886d-320d66c3953a|0 0 * * * ? *|告警内容
+----hz|e363807e-4b18-4e6d-886d-320d66c3953a|0 0 * * * ? *|客服{staff_name}，员工中心座机号码{office_phone}，股后台座机号码{landline_number}，请确认号码一致
 select
     distinct
     os.customer_cid

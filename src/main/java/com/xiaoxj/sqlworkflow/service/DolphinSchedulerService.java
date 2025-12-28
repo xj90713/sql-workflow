@@ -226,6 +226,7 @@ public class DolphinSchedulerService {
                 .setConnParams("")
                 .setConditionResult(TaskUtils.createEmptyConditionResult());
 
+        defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(workflowName, taskCodes.get(0), sqlTask));
         ShellTask sh = new ShellTask();
 
 
@@ -250,7 +251,8 @@ public class DolphinSchedulerService {
         """;
         String finalScript = String.format(shellTemplate, workflowName, token);
         sh.setRawScript(finalScript);
-        defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(workflowName,taskCodes.get(0), sh));
+        defs.add(TaskDefinitionUtils.createDefaultTaskDefinition("发送告警通知",taskCodes.get(1), sh));
+        log.info("workflowName: {}" , workflowName);
         WorkflowDefineParam pcr = new WorkflowDefineParam();
         pcr.setName(workflowName)
                 .setLocations(TaskLocationUtils.horizontalLocation(taskCodes.toArray(new Long[0])))
@@ -325,7 +327,8 @@ public class DolphinSchedulerService {
         }
 
         // 1. 获取第一行内容
-        String firstLine = input.split("\n")[0];
+
+        String firstLine = input.replace("-","").split("\n")[0];
 
         // 2. 根据 "|" 分隔符拆分，并对每个元素进行去空格处理
         return Arrays.stream(firstLine.split("\\|"))

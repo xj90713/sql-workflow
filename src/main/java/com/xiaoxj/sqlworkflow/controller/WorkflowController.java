@@ -36,6 +36,9 @@ public class WorkflowController {
     @Value("#{${dolphin.project.code}}")
     private Long projectCode;
 
+    @Value("#{${dolphin.alertProject.code}}")
+    private Long alertProjectCode;
+
     @Autowired
     private WorkflowDeployRepository deployRepo;
 
@@ -109,22 +112,27 @@ public class WorkflowController {
         String filePath = payload.get("file_path");
         String user = payload.getOrDefault("commit_user", "system");
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
+        log.info("fileName={}, content={}, workflowName={}", filelName, content, workflowName);
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         byte[] decodedBytes = Base64.getDecoder().decode(content);
         String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
         List<String> strings = dolphinSchedulerService.parseFirstLine(sqlContent);
         String dbName = strings.get(0);
-        String scheduleTime = strings.get(1);
-        String token = strings.get(2);
-        WorkflowDefineParam workDefinition = dolphinSchedulerService.createAlertWorkDefinition(projectCode, filelName,sqlContent, dbName, token);
-        WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);
+        String token = strings.get(1);
+        String scheduleTime = strings.get(2);
+        String alertTemplate = strings.get(3);
+        log.info("dbName={}, token={}, scheduleTime={}, alertTemplate={}", dbName, token,scheduleTime, alertTemplate);
+        WorkflowDefineParam workDefinition = dolphinSchedulerService.createAlertWorkDefinition(alertProjectCode, workflowName,sqlContent, dbName, token);
+        log.info("workDefinition={}", workDefinition);
+        WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(alertProjectCode, workDefinition);
+        log.info("workflowDefineResp={}", workflowDefineResp);
         String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
         long workflowCode = workflowDefineResp.getCode();
-        dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
-        ScheduleDefineParam scheduleDefineParam = dolphinSchedulerService.createScheduleDefineParam(projectCode, workflowCode, scheduleTime);
-        ScheduleInfoResp schedule = dolphinSchedulerService.createSchedule(projectCode, scheduleDefineParam);
-        dolphinSchedulerService.onlineSchedule(projectCode, schedule.getId());
-        lineageService.addAlertWorkflowDeploy(filelName, filePath, fileName, sqlContent, user, taskCodesString, schedule.getId(), workflowCode, projectCode);
+        dolphinSchedulerService.onlineWorkflow(alertProjectCode, workflowCode);
+        ScheduleDefineParam scheduleDefineParam = dolphinSchedulerService.createScheduleDefineParam(alertProjectCode, workflowCode, scheduleTime);
+        ScheduleInfoResp schedule = dolphinSchedulerService.createSchedule(alertProjectCode, scheduleDefineParam);
+        dolphinSchedulerService.onlineSchedule(alertProjectCode, schedule.getId());
+        lineageService.addAlertWorkflowDeploy(filelName, filePath, fileName, sqlContent, user, taskCodesString, schedule.getId(), workflowCode, alertProjectCode);
         return BaseResult.success(schedule);
     }
 

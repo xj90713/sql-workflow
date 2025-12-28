@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /** copied from org.apache.dolphinscheduler.plugin.task.api.parameters.SqlParameters */
 @EqualsAndHashCode(callSuper = true)
@@ -17,9 +18,6 @@ public class SqlTask extends AbstractTask {
 
   /** data source type，eg MYSQL, POSTGRES, HIVE ... */
   private String type;
-
-  /** local params */
-  private List<Parameter> localParams = Collections.emptyList();
 
 
   /** datasource id */
