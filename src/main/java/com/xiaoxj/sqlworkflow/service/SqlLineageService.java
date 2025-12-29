@@ -112,18 +112,7 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public WorkflowInstance addWorkflowInstance(String name, String fileName, String sqlContent, char state, long workflowCode, long projectCode, String taskCodes) {
-        WorkflowInstance workflowInstance = new WorkflowInstance();
-        workflowInstance.setName(name);
-        workflowInstance.setWorkflowCode(workflowCode);
-        workflowInstance.setProjectCode(projectCode);
-        workflowInstance.setStatus(state);
-        workflowInstance.setRunTimes(1);
-        return workflowInstanceRepo.save(workflowInstance);
-    }
-
-    @Transactional
-    public AlertWorkflowDeploy addAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long schedulerId, long workflowCode, long projectCode) {
+    public AlertWorkflowDeploy addAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long schedulerId, long workflowCode, long projectCode, String scheduleTime) {
         AlertWorkflowDeploy deploy = new AlertWorkflowDeploy();
         deploy.setWorkflowId(workflowName);
         deploy.setWorkflowName(workflowName);
@@ -137,15 +126,16 @@ public class SqlLineageService {
         deploy.setWorkflowCode(workflowCode);
         deploy.setProjectCode(projectCode);
         deploy.setStatus('N');
+        deploy.setCrontab(scheduleTime);
         alertDeployRepo.save(deploy);
         return deploy;
     }
 
     @Transactional
-    public AlertWorkflowDeploy updateAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long schedulerId,long workflowCode, long projectCode) {
+    public AlertWorkflowDeploy updateAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long schedulerId,long workflowCode, long projectCode, String scheduleTime) {
         AlertWorkflowDeploy latest = alertDeployRepo.findTopByWorkflowNameOrderByUpdateTimeDesc(workflowName);
         if (latest == null) {
-            return addAlertWorkflowDeploy(workflowName, filePath, fileName, sqlContent, commitUser,taskCodes,schedulerId, workflowCode, projectCode);
+            return addAlertWorkflowDeploy(workflowName, filePath, fileName, sqlContent, commitUser,taskCodes,schedulerId, workflowCode, projectCode, scheduleTime);
         }
 
         String newMd5 = md5(sqlContent);
@@ -163,6 +153,7 @@ public class SqlLineageService {
         deploy.setWorkflowCode(workflowCode);
         deploy.setProjectCode(projectCode);
         deploy.setStatus('N');
+        deploy.setCrontab(scheduleTime);
         alertDeployRepo.save(deploy);
         return deploy;
     }
