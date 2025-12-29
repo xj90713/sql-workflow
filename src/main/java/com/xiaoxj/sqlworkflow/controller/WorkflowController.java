@@ -116,11 +116,11 @@ public class WorkflowController {
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         byte[] decodedBytes = Base64.getDecoder().decode(content);
         String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
-        List<String> strings = dolphinSchedulerService.parseFirstLine(sqlContent);
-        String dbName = strings.get(0);
-        String token = strings.get(1);
-        String scheduleTime = strings.get(2);
-        String alertTemplate = strings.get(3);
+        List<String> alertScheduler = dolphinSchedulerService.parseFirstLine(sqlContent);
+        String dbName = alertScheduler.get(0);
+        String token = alertScheduler.get(1);
+        String scheduleTime = alertScheduler.get(2);
+        String alertTemplate = alertScheduler.get(3);
         log.info("dbName={}, token={}, scheduleTime={}, alertTemplate={}", dbName, token,scheduleTime, alertTemplate);
         WorkflowDefineParam workDefinition = dolphinSchedulerService.createAlertWorkDefinition(alertProjectCode, workflowName,sqlContent, dbName, token);
         log.info("workDefinition={}", workDefinition);

@@ -53,7 +53,7 @@ public class SqlLineageService {
         deploy.setWorkflowCode(workflowCode);
         deploy.setProjectCode(projectCode);
         if (filePath.contains("shell") || filePath.contains("sh")) {
-            deploy.setIsDependency(0);
+            deploy.setScheduleType(0);
         }
         deploy.setStatus('N');
         deployRepo.save(deploy);

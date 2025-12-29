@@ -1,4 +1,4 @@
-----hz|e363807e-4b18-4e6d-886d-320d66c3953a|0 0 * * * ? *|客服{staff_name}，员工中心座机号码{office_phone}，股后台座机号码{landline_number}，请确认号码一致
+----DC|222181b9-10ea-4046-b26e-23beff240c7c|0 0 * * * ? *|客服:${staff_name}，员工中心座机号码:${office_phone}，股后台座机号码:${landline_number}，请确认号码一致。
 select
     t1.staff_code,t1.staff_name,t1.office_phone,REPLACE(t2.landline_number,'-','') as landline_number
 from

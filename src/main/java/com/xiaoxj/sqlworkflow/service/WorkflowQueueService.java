@@ -27,7 +27,7 @@ public class WorkflowQueueService {
         String tables = getDbsAndTables().split("-->")[1];
         List<String> ingestTables = ingestInfoService.findIngestTables(dbs, tables);
         Set<String> queue = new LinkedHashSet<>();
-        for (WorkflowDeploy wd : repo.findByStatus('Y')) {
+        for (WorkflowDeploy wd : repo.findByStatusAndScheduleType('Y', 1)) {
             String tgt = wd.getTargetTable();
             if (tgt != null && !tgt.isBlank()) queue.add(tgt.trim());
         }
@@ -40,7 +40,7 @@ public class WorkflowQueueService {
         return queue;
     }
     public String getTargetWorkflowName() {
-        List<WorkflowDeploy> readyWrokflowList = repo.findByStatus('N');
+        List<WorkflowDeploy> readyWrokflowList = repo.findByStatusAndScheduleType('N',1);
         log.info("Pending workflows: " + readyWrokflowList.size());
         Set<String> ready = buildReadyQueue();
         if (readyWrokflowList.isEmpty() || ready.isEmpty()) {
@@ -66,7 +66,7 @@ public class WorkflowQueueService {
     public String getDbsAndTables() {
         Set<String> dbs = new LinkedHashSet<>();
         Set<String> tables = new LinkedHashSet<>();
-        for (WorkflowDeploy wd : repo.findByStatus('N')) {
+        for (WorkflowDeploy wd : repo.findByStatusAndScheduleType('N', 1)) {
             String src = wd.getSourceTables();
             if (src == null || src.isBlank()) continue;
             for (String s : src.split(",")) {

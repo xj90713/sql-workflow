@@ -12,13 +12,11 @@ CREATE TABLE workflow_deploy (
                                  source_tables VARCHAR(1000),
                                  target_table VARCHAR(255),
                                  status CHAR(1) DEFAULT 'N' comment 'N:未运行，R:运行中,Y:已发布，E:运行错误',
-                                 is_depedent TINYINT(1) DEFAULT 1 COMMENT '是否依赖,0:非依赖,1:依赖',
+                                 schedule_type tinyint(4) COMMENT '任务调度类型 0定时调度 1依赖调度',
                                  is_deleted TINYINT(1) DEFAULT 0 COMMENT '是否删除,0:未删除,1:已删除',
                                  commit_user VARCHAR(255),
                                  create_time DATETIME NOT NULL,
                                  update_time DATETIME NOT NULL,
-                                 schedule_type tinyint(4) Comment '任务调度类型 0定时调度 1依赖调度',
-                                 run_type VARCHAR(100) COMMENT '任务运行类型 hive,shell,sql',
                                  PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='工作流部署表';
 

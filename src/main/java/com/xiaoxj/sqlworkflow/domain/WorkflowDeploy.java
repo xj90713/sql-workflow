@@ -25,7 +25,7 @@ public class WorkflowDeploy {
     private String sourceTables;
     private String targetTable;
     private char status;
-    private int isDependency=1;
+    private int scheduleType=1;
     private int isDelete=0;
     private String commitUser;
     @Column(nullable = false, columnDefinition = "DATETIME")

@@ -6,6 +6,7 @@ import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryRes
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleInfoResp;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.*;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.Parameter;
 import com.xiaoxj.sqlworkflow.enums.*;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceCreateParams;
@@ -25,10 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -212,45 +210,47 @@ public class DolphinSchedulerService {
 
         List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, 2);
         Integer datasourceId = dolphinClient.opsForDataSource().getDatasource(dnName).getId();
+        List<String> strings = parseFirstLine(sqlContent);
+        String alertTemplate = strings.get(3);
+        String sql = removeDashLines(sqlContent);
+        List<String> alertParamsList = extractFromBraces(alertTemplate);
+        List<Parameter> outTaskParamList = new ArrayList<>();
+        List<Parameter> outLocalParams = new ArrayList<>();
+        List<Parameter> inTaskParamList = new ArrayList<>();
+        List<Parameter> inLocalParams = new ArrayList<>();
+        Map<String, String> TaskParamMap = new HashMap<>();
+        alertParamsList.forEach(param -> {
+            inTaskParamList.add(new Parameter(param, "", "IN", "LIST"));
+            inLocalParams.add(new Parameter(param, "", "IN", "LIST"));
+            outTaskParamList.add(new Parameter(param, "", "OUT", "LIST"));
+            outLocalParams.add(new Parameter(param, "", "OUT", "LIST"));
+            TaskParamMap.put(param, "");
+        });
         List<TaskDefinition> defs = new ArrayList<>();
         SqlTask sqlTask = new SqlTask();
         sqlTask
                 .setType("MYSQL")
                 .setDatasource(datasourceId)
-                .setSql(sqlContent)
+                .setSql(sql)
                 .setSqlType("0")
                 .setSendEmail(false)
                 .setDisplayRows(10)
                 .setTitle("")
                 .setGroupId(null)
                 .setConnParams("")
+                .setLocalParams(outLocalParams)
+                .setTaskParamList(outTaskParamList)
+                .setTaskParamMap(TaskParamMap)
                 .setConditionResult(TaskUtils.createEmptyConditionResult());
 
         defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(workflowName, taskCodes.get(0), sqlTask));
         ShellTask sh = new ShellTask();
 
-
-        String shellTemplate = """
-        #!/bin/bash
-        set -ex
-        if [ -n "$message" ]; then
-            # 组装 Markdown 消息内容
-            msg="<font color='red'>**【%s：\\n $message】**</font>\\n "
-            
-            # 发送企业微信 Webhook
-            curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s' \\
-                 -H 'Content-Type: application/json' \\
-                 -d "{
-                    \\"msgtype\\": \\"markdown\\",
-                    \\"markdown\\": {
-                        \\"content\\": \\"${msg}\\"
-                    }
-                 }"
-            exit 0
-        fi
-        """;
-        String finalScript = String.format(shellTemplate, workflowName, token);
+        String finalScript = getAlertShell(alertTemplate, token);
         sh.setRawScript(finalScript);
+        sh.setLocalParams(inLocalParams);
+        sh.setTaskParamList(inTaskParamList);
+        sh.setTaskParamMap(TaskParamMap);
         defs.add(TaskDefinitionUtils.createDefaultTaskDefinition("发送告警通知",taskCodes.get(1), sh));
         log.info("workflowName: {}" , workflowName);
         WorkflowDefineParam pcr = new WorkflowDefineParam();
@@ -328,12 +328,36 @@ public class DolphinSchedulerService {
 
         // 1. 获取第一行内容
 
-        String firstLine = input.replace("-","").split("\n")[0];
+        String firstLine = input.replace("--","").split("\n")[0];
 
         // 2. 根据 "|" 分隔符拆分，并对每个元素进行去空格处理
         return Arrays.stream(firstLine.split("\\|"))
                 .map(String::trim)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 提取字符串中花括号 {} 内的内容
+     * @param text 输入字符串
+     * @return 花括号内的内容列表
+     */
+    public static List<String> extractFromBraces(String text) {
+        List<String> result = new ArrayList<>();
+
+        if (text == null || text.isEmpty()) {
+            return result;
+        }
+        Pattern pattern = Pattern.compile("\\$\\{([^}]+)\\}");
+        Matcher matcher = pattern.matcher(text);
+
+        while (matcher.find()) {
+            String content = matcher.group(1);
+            if (content != null && !content.trim().isEmpty()) {
+                result.add(content.trim());
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -368,4 +392,36 @@ public class DolphinSchedulerService {
         return tables;
     }
 
+    public String getAlertShell(String alertTemplate, String token) {
+        List<String> strings = extractFromBraces(alertTemplate);
+        String first = strings.getFirst();
+        String shellTemplate = """
+        #!/bin/bash
+        set -ex
+        if [ -n "${%s}" ]; then
+            # 组装 Markdown 消息内容
+            msg="<font color='red'>**【%s】**</font>\\n "
+            # 发送企业微信 Webhook
+            curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s' \\
+                 -H 'Content-Type: application/json' \\
+                 -d "{
+                    \\"msgtype\\": \\"markdown\\",
+                    \\"markdown\\": {
+                        \\"content\\": \\"${msg}\\"
+                    }
+                 }"
+            exit 0
+        fi
+        """;
+        return String.format(shellTemplate, first, alertTemplate, token);
+    }
+
+    public static String removeDashLines(String text) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+
+        // 替换以 ---- 开头的行（包括换行符）
+        return text.replaceAll("(?m)^----.*\\r?\\n?", "");
+    }
 }

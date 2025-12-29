@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface WorkflowDeployRepository extends JpaRepository<WorkflowDeploy, Integer> {
-    List<WorkflowDeploy> findByStatus(char status);
+    List<WorkflowDeploy> findByStatusAndScheduleType(char status, int scheduleType);
     WorkflowDeploy findByWorkflowName(String workflowName);
     WorkflowDeploy findTopByWorkflowNameOrderByUpdateTimeDesc(String workflowName);
 
