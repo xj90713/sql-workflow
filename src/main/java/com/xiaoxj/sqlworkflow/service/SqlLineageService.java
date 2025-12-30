@@ -8,6 +8,7 @@ import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.repo.WorkflowInstanceRepository;
 import io.github.reata.sqllineage4j.common.model.Table;
 import io.github.reata.sqllineage4j.core.LineageRunner;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
 @Service
+@Slf4j
 public class SqlLineageService {
 
     @Autowired
@@ -134,33 +136,29 @@ public class SqlLineageService {
     @Transactional
     public AlertWorkflowDeploy updateAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long schedulerId,long workflowCode, long projectCode, String scheduleTime) {
         AlertWorkflowDeploy latest = alertDeployRepo.findTopByWorkflowNameOrderByUpdateTimeDesc(workflowName);
+
         if (latest == null) {
             return addAlertWorkflowDeploy(workflowName, filePath, fileName, sqlContent, commitUser,taskCodes,schedulerId, workflowCode, projectCode, scheduleTime);
         }
 
         String newMd5 = md5(sqlContent);
-        AlertWorkflowDeploy deploy = new AlertWorkflowDeploy();
-        deploy.setWorkflowId(workflowName);
-        deploy.setWorkflowName(workflowName);
-        deploy.setFilePath(filePath);
-        deploy.setFileName(fileName);
-        deploy.setSchedulerId(schedulerId);
-        deploy.setFileContent(sqlContent);
-        deploy.setFileMd5(md5(sqlContent));
-        deploy.setCommitUser(commitUser);
-        deploy.setTaskCodes(taskCodes);
-        deploy.setFileMd5(newMd5);
-        deploy.setWorkflowCode(workflowCode);
-        deploy.setProjectCode(projectCode);
-        deploy.setStatus('N');
-        deploy.setCrontab(scheduleTime);
-        alertDeployRepo.save(deploy);
-        return deploy;
-    }
-    @Transactional
-    public WorkflowInstance updateWorkflowInstance(WorkflowInstance workflowInstance, char state) {
-        workflowInstance.setStatus(state);
-        return workflowInstanceRepo.save(workflowInstance);
+        latest.setWorkflowId(workflowName);
+        latest.setWorkflowName(workflowName);
+        latest.setFilePath(filePath);
+        latest.setFileName(fileName);
+        latest.setSchedulerId(schedulerId);
+        latest.setFileContent(sqlContent);
+        latest.setFileMd5(md5(sqlContent));
+        latest.setCommitUser(commitUser);
+        latest.setTaskCodes(taskCodes);
+        latest.setFileMd5(newMd5);
+        latest.setUpdateTime(LocalDateTime.now());
+        latest.setWorkflowCode(workflowCode);
+        latest.setProjectCode(projectCode);
+        latest.setStatus('N');
+        latest.setCrontab(scheduleTime);
+        alertDeployRepo.save(latest);
+        return latest;
     }
 
     private String md5(String s) {

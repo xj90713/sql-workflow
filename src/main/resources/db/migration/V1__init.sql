@@ -44,7 +44,7 @@ CREATE TABLE alert_workflow_deploy (
                                  project_code BIGINT,
                                  file_path VARCHAR(255),
                                  file_name VARCHAR(255),
-                                 file_content LONGTEXT,
+                                 file_content MEDIUMTEXT,
                                  file_md5 VARCHAR(255),
                                  crontab VARCHAR(1000),
                                  status CHAR(1),

@@ -25,7 +25,7 @@ public class AlertWorkflowDeploy {
     private String fileMd5;
     private String crontab;
     private char status;
-    private int isDelete;
+    private int isDeleted;
     private String commitUser;
     @Column(nullable = false, columnDefinition = "DATETIME")
     private LocalDateTime createTime = LocalDateTime.now();

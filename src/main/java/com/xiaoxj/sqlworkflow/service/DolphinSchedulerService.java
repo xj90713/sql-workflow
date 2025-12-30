@@ -212,6 +212,7 @@ public class DolphinSchedulerService {
         Integer datasourceId = dolphinClient.opsForDataSource().getDatasource(dnName).getId();
         List<String> strings = parseFirstLine(sqlContent);
         String alertTemplate = strings.get(3);
+        String mentionedUsers = getMentionedUsers(strings.get(4));
         String sql = removeDashLines(sqlContent);
         List<String> alertParamsList = extractFromBraces(alertTemplate);
         List<Parameter> outTaskParamList = new ArrayList<>();
@@ -246,7 +247,7 @@ public class DolphinSchedulerService {
         defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(workflowName, taskCodes.get(0), sqlTask));
         ShellTask sh = new ShellTask();
 
-        String finalScript = getAlertShell(alertTemplate, token);
+        String finalScript = getAlertShell(alertTemplate, token, mentionedUsers);
         sh.setRawScript(finalScript);
         sh.setLocalParams(inLocalParams);
         sh.setTaskParamList(inTaskParamList);
@@ -392,30 +393,36 @@ public class DolphinSchedulerService {
         return tables;
     }
 
-    public String getAlertShell(String alertTemplate, String token) {
+    public String getAlertShell(String alertTemplate, String token, String mentionedUsers) {
         List<String> strings = extractFromBraces(alertTemplate);
         String first = strings.getFirst();
         String shellTemplate = """
         #!/bin/bash
         set -ex
         if [ -n "${%s}" ]; then
-            # 组装 Markdown 消息内容
-            msg="<font color='red'>**【%s】**</font>\\n "
             # 发送企业微信 Webhook
             curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s' \\
                  -H 'Content-Type: application/json' \\
                  -d "{
-                    \\"msgtype\\": \\"markdown\\",
-                    \\"markdown\\": {
-                        \\"content\\": \\"${msg}\\"
+                    \\"msgtype\\": \\"text\\",
+                    \\"text\\": {
+                        \\"content\\": \\"%s\\",
+                        \\"mentioned_list\\": [%s]
                     }
                  }"
             exit 0
         fi
         """;
-        return String.format(shellTemplate, first, alertTemplate, token);
+        return String.format(shellTemplate, first, token, alertTemplate, mentionedUsers);
     }
 
+    public String getMentionedUsers(String mentionedUsers) {
+        return Arrays.stream(mentionedUsers.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(s -> "\\\"" + s + "\\\"")
+                .collect(Collectors.joining(","));
+    }
     public static String removeDashLines(String text) {
         if (text == null || text.isEmpty()) {
             return text;

@@ -107,13 +107,12 @@ public class WorkflowController {
 
     @PostMapping("/addWorkflowAndScheduler")
     public BaseResult<ScheduleInfoResp>  addWorkflowScheduler(@RequestBody Map<String, String> payload) {
-        String filelName = payload.get("file_name");
         String content = payload.get("content");
         String filePath = payload.get("file_path");
+        String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String user = payload.getOrDefault("commit_user", "system");
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
-        log.info("fileName={}, content={}, workflowName={}", filelName, content, workflowName);
-        String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+        log.info("fileName={}, content={}, workflowName={}", fileName, content, workflowName);
         byte[] decodedBytes = Base64.getDecoder().decode(content);
         String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
         List<String> alertScheduler = dolphinSchedulerService.parseFirstLine(sqlContent);
@@ -151,6 +150,7 @@ public class WorkflowController {
         String scheduleTime = alertScheduler.get(2);
         String alertTemplate = alertScheduler.get(3);
         log.info("dbName={}, token={}, scheduleTime={}, alertTemplate={}", dbName, token,scheduleTime, alertTemplate);
+        log.info("workflowName={}", workflowName);
         AlertWorkflowDeploy alertWorkflowDeploy = alertDeployRepo.findByWorkflowName(workflowName);
         log.info("alertWorkflowDeploy={}", alertWorkflowDeploy);
         if (alertWorkflowDeploy == null) {
@@ -170,7 +170,7 @@ public class WorkflowController {
         dolphinSchedulerService.onlineWorkflow(alertProjectCode, workflowCode);
         ScheduleInfoResp schedule = dolphinSchedulerService.updateSchedule(alertProjectCode,schedulerId,scheduleDefineParam);
         String taskCodesString = dolphinSchedulerService.getTaskCodesString(workDefinition);
-//        dolphinSchedulerService.onlineSchedule(alertProjectCode, schedule.getId());
+        dolphinSchedulerService.onlineSchedule(alertProjectCode, schedule.getId());
         lineageService.updateAlertWorkflowDeploy(workflowName, filePath, filelName, sqlContent, user, taskCodesString, schedulerId, workflowCode, alertProjectCode, scheduleTime);
         return BaseResult.success(schedule);
     }

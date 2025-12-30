@@ -1,7 +1,7 @@
 package com.xiaoxj.sqlworkflow.service;
 
 import com.xiaoxj.sqlworkflow.repo.NoSchedulerTableRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class IngestInfoService {
     @Value("${postgres.url}")
     private String pgUrl;
@@ -65,7 +66,7 @@ public class IngestInfoService {
                 while (rs.next()) res.add(rs.getString(1));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("查询入库表信息时发生异常", e);
             return List.of();
         }
         noSchedulerTableRepository.findTableNamesByDeleteStatusNative().forEach(t -> {

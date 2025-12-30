@@ -17,5 +17,5 @@ public class NoSchedulerTable {
     private LocalDateTime createTime = LocalDateTime.now();
     @Column(nullable = false, columnDefinition = "DATETIME")
     private LocalDateTime updateTime = LocalDateTime.now();
-    private int isDelete=0;
+    private int isDeleted=0;
 }
