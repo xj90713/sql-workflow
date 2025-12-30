@@ -19,12 +19,15 @@ public class WorkflowQueueService {
 
     public Set<String> buildReadyQueue() {
         String dbsAndTables = getDbsAndTables();
-        if (dbsAndTables == null || dbsAndTables.isBlank()) {
-            log.info("No pending workflows found, ready queue is empty");
-            return Collections.emptySet();
+        String dbs;
+        String tables;
+        if (dbsAndTables != null) {
+            dbs = getDbsAndTables().split("-->")[0];
+            tables = getDbsAndTables().split("-->")[1];
+        } else {
+            dbs = null;
+            tables = null;
         }
-        String dbs = getDbsAndTables().split("-->")[0];
-        String tables = getDbsAndTables().split("-->")[1];
         List<String> ingestTables = ingestInfoService.findIngestTables(dbs, tables);
         Set<String> queue = new LinkedHashSet<>();
         for (WorkflowDeploy wd : repo.findByStatusAndScheduleType('Y', 1)) {
@@ -37,11 +40,12 @@ public class WorkflowQueueService {
                 queue.add(table.trim());
             }
         }
+        log.info("queue: {} ", queue);
         return queue;
     }
     public String getTargetWorkflowName() {
         List<WorkflowDeploy> readyWrokflowList = repo.findByStatusAndScheduleType('N',1);
-        log.info("Pending workflows: " + readyWrokflowList.size());
+        log.info("Pending workflows: {}" ,readyWrokflowList.size());
         Set<String> ready = buildReadyQueue();
         if (readyWrokflowList.isEmpty() || ready.isEmpty()) {
             log.info("No pending workflow found, all workflows have finished");
@@ -67,7 +71,9 @@ public class WorkflowQueueService {
         Set<String> dbs = new LinkedHashSet<>();
         Set<String> tables = new LinkedHashSet<>();
         for (WorkflowDeploy wd : repo.findByStatusAndScheduleType('N', 1)) {
+            log.info("Workflow:{} ", wd.getWorkflowName());
             String src = wd.getSourceTables();
+            log.info("Source tables:{} ", src);
             if (src == null || src.isBlank()) continue;
             for (String s : src.split(",")) {
                 String t = s.trim();
@@ -81,6 +87,8 @@ public class WorkflowQueueService {
                 }
             }
         }
+        log.info("Databases:{} ", dbs);
+        log.info("Tables:{} ", tables);
         String dbCsv = String.join(",", dbs);
         String tableCsv = String.join(",", tables);
         if (dbCsv.isEmpty() || tableCsv.isEmpty()) {

@@ -32,6 +32,8 @@ public class IngestInfoService {
     public List<String> findIngestTables(String sourceDbs, String sourceTables) {
         if (pgUrl == null || pgUrl.isBlank()) return List.of();
 
+        List<String> res = new ArrayList<>();
+
         List<String> dbList = Arrays.stream((sourceDbs == null ? "" : sourceDbs).split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
@@ -41,7 +43,10 @@ public class IngestInfoService {
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
 
-        if (dbList.isEmpty() || tableList.isEmpty()) return List.of();
+        if (dbList.isEmpty() || tableList.isEmpty()) {
+            res.addAll(noSchedulerTableRepository.findTableNamesByDeleteStatusNative());
+            return res;
+        }
 
         String dbPlaceholders = dbList.stream().map(d -> "?").collect(Collectors.joining(","));
         String tablePlaceholders = tableList.stream().map(t -> "?").collect(Collectors.joining(","));
@@ -49,7 +54,6 @@ public class IngestInfoService {
         String sql = "SELECT concat(target_db,'.',target_table) FROM vw_etl_table_with_source vie " +
                 "WHERE vie.status='Y' AND vie.target_db IN (" + dbPlaceholders + ") AND vie.target_table IN (" + tablePlaceholders + ")";
 
-        List<String> res = new ArrayList<>();
         try (Connection conn = DriverManager.getConnection(pgUrl, pgUser, pgPass);
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
