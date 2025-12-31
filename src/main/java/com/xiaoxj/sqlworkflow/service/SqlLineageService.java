@@ -7,6 +7,7 @@ import com.xiaoxj.sqlworkflow.repository.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.repository.WorkflowInstanceRepository;
 import io.github.reata.sqllineage4j.common.model.Table;
 import io.github.reata.sqllineage4j.core.LineageRunner;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,20 +23,15 @@ import java.time.LocalDateTime;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SqlLineageService {
 
     @Autowired
     private DolphinSchedulerService dolphinSchedulerService;
     private final WorkflowDeployRepository deployRepo;
-    private final WorkflowInstanceRepository workflowInstanceRepo;
 
     private final AlertWorkflowDeployRepository alertDeployRepo;
 
-    public SqlLineageService(WorkflowDeployRepository deployRepo, WorkflowInstanceRepository workflowInstanceRepo, AlertWorkflowDeployRepository alertDeployRepo) {
-        this.deployRepo = deployRepo;
-        this.workflowInstanceRepo = workflowInstanceRepo;
-        this.alertDeployRepo = alertDeployRepo;
-    }
 
     @Transactional
     public WorkflowDeploy addWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {

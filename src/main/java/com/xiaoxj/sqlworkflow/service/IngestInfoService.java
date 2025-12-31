@@ -1,6 +1,7 @@
 package com.xiaoxj.sqlworkflow.service;
 
 import com.xiaoxj.sqlworkflow.repository.NoSchedulerTableRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class IngestInfoService {
     @Value("${postgres.url}")
     private String pgUrl;
@@ -24,11 +26,7 @@ public class IngestInfoService {
     @Value("${postgres.password}")
     private String pgPass;
 
-    private final NoSchedulerTableRepository noSchedulerTableRepository;
-
-    public IngestInfoService(NoSchedulerTableRepository noSchedulerTableRepository) {
-        this.noSchedulerTableRepository = noSchedulerTableRepository;
-    }
+    NoSchedulerTableRepository noSchedulerTableRepository;
 
     public List<String> findIngestTables(String sourceDbs, String sourceTables) {
         if (pgUrl == null || pgUrl.isBlank()) return List.of();

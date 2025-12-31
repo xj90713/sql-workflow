@@ -18,6 +18,7 @@ import com.xiaoxj.sqlworkflow.common.utils.TaskDefinitionUtils;
 import com.xiaoxj.sqlworkflow.common.utils.TaskLocationUtils;
 import com.xiaoxj.sqlworkflow.common.utils.TaskRelationUtils;
 import com.xiaoxj.sqlworkflow.common.utils.TaskUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,27 +34,15 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DolphinSchedulerService {
+
     private final DolphinClient dolphinClient;
-    private final DataSource dataSource;
 
 
     @Value("${dolphin.tenant.code}")
     private String tenantCode;
 
-
-    public DolphinSchedulerService(DolphinClient dolphinClient, DataSource dataSource) {
-        this.dolphinClient = dolphinClient;
-        this.dataSource = dataSource;
-    }
-
-    public List<Long> generateTaskCodes(Long projectCode, int count) {
-        return dolphinClient.opsForWorkflow().generateTaskCode(projectCode, count);
-    }
-
-    public List<WorkflowDefineResp> listWorkflows(Long projectCode, Integer pageNo, Integer pageSize, String searchVal) {
-        return dolphinClient.opsForWorkflow().page(projectCode, pageNo, pageSize, searchVal);
-    }
 
     public WorkflowDefineResp createWorkflow(Long projectCode, WorkflowDefineParam param) {
         return dolphinClient.opsForWorkflow().create(projectCode, param);
@@ -63,9 +52,6 @@ public class DolphinSchedulerService {
         return dolphinClient.opsForWorkflow().update(projectCode, param, workflowCode);
     }
 
-    public boolean deleteWorkflow(Long projectCode, Long workflowCode) {
-        return dolphinClient.opsForWorkflow().delete(projectCode, workflowCode);
-    }
     public boolean onlineWorkflow(Long projectCode, Long workflowCode) {
         return dolphinClient.opsForWorkflow().online(projectCode, workflowCode);
     }
@@ -92,9 +78,6 @@ public class DolphinSchedulerService {
         return result;
     }
 
-    public List<WorkflowInstanceQueryResp> listWorkflowInstances(Long projectCode, Long workflowCode) {
-        return dolphinClient.opsForWorkflowInst().page(null, null, projectCode, workflowCode);
-    }
 
     public WorkflowInstanceCreateParam createWorkflowInstanceCreateParam(Long workflowCode) {
         WorkflowInstanceCreateParam startParam = new WorkflowInstanceCreateParam();
@@ -291,10 +274,6 @@ public class DolphinSchedulerService {
 
     public boolean onlineSchedule(Long projectCode, Long scheduleId) {
         return dolphinClient.opsForSchedule().online(projectCode, scheduleId);
-    }
-
-    public boolean offlineSchedule(Long projectCode, Long scheduleId) {
-        return dolphinClient.opsForSchedule().offline(projectCode, scheduleId);
     }
 
     public ScheduleInfoResp createSchedule(Long projectCode, ScheduleDefineParam scheduleDefineParam) {

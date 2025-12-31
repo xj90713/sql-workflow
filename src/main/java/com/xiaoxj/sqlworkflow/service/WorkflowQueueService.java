@@ -2,6 +2,7 @@ package com.xiaoxj.sqlworkflow.service;
 
 import com.xiaoxj.sqlworkflow.entity.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.repository.WorkflowDeployRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -9,13 +10,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class WorkflowQueueService {
 
     private final WorkflowDeployRepository repo;
     private final IngestInfoService ingestInfoService;
-    public WorkflowQueueService(WorkflowDeployRepository repo, IngestInfoService ingestInfoService) { this.repo = repo;
-        this.ingestInfoService = ingestInfoService;
-    }
 
     public Set<String> buildReadyQueue() {
         String dbsAndTables = getDbsAndTables();

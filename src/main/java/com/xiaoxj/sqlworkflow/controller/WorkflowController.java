@@ -12,6 +12,7 @@ import com.xiaoxj.sqlworkflow.service.SqlLineageService;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/dependencies")
+@RequiredArgsConstructor
 @Slf4j
 public class WorkflowController {
     @Autowired
