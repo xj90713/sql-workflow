@@ -8,7 +8,7 @@ import com.xiaoxj.sqlworkflow.remote.Header;
 import com.xiaoxj.sqlworkflow.remote.RequestHttpEntity;
 import com.xiaoxj.sqlworkflow.remote.response.DefaultHttpClientResponse;
 import com.xiaoxj.sqlworkflow.remote.response.HttpClientResponse;
-import com.xiaoxj.sqlworkflow.util.JacksonUtils;
+import com.xiaoxj.sqlworkflow.common.utils.JacksonUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.NameValuePair;

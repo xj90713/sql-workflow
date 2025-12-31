@@ -1,11 +1,10 @@
 package com.xiaoxj.sqlworkflow.service;
 
-import com.xiaoxj.sqlworkflow.domain.AlertWorkflowDeploy;
-import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
-import com.xiaoxj.sqlworkflow.domain.WorkflowInstance;
-import com.xiaoxj.sqlworkflow.repo.AlertWorkflowDeployRepository;
-import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
-import com.xiaoxj.sqlworkflow.repo.WorkflowInstanceRepository;
+import com.xiaoxj.sqlworkflow.entity.AlertWorkflowDeploy;
+import com.xiaoxj.sqlworkflow.entity.WorkflowDeploy;
+import com.xiaoxj.sqlworkflow.repository.AlertWorkflowDeployRepository;
+import com.xiaoxj.sqlworkflow.repository.WorkflowDeployRepository;
+import com.xiaoxj.sqlworkflow.repository.WorkflowInstanceRepository;
 import io.github.reata.sqllineage4j.common.model.Table;
 import io.github.reata.sqllineage4j.core.LineageRunner;
 import lombok.extern.slf4j.Slf4j;

@@ -1,17 +1,17 @@
 package com.xiaoxj.sqlworkflow.controller;
 
-import com.xiaoxj.sqlworkflow.common.BaseResult;
+import com.xiaoxj.sqlworkflow.common.result.BaseResult;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleInfoResp;
-import com.xiaoxj.sqlworkflow.domain.AlertWorkflowDeploy;
-import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
-import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
-import com.xiaoxj.sqlworkflow.repo.AlertWorkflowDeployRepository;
-import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
+import com.xiaoxj.sqlworkflow.entity.AlertWorkflowDeploy;
+import com.xiaoxj.sqlworkflow.entity.WorkflowDeploy;
+import com.xiaoxj.sqlworkflow.repository.AlertWorkflowDeployRepository;
+import com.xiaoxj.sqlworkflow.repository.WorkflowDeployRepository;
 import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import com.xiaoxj.sqlworkflow.service.SqlLineageService;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +30,7 @@ public class WorkflowController {
     @Autowired
     private SqlLineageService lineageService;
 
-    @Autowired
+    @Resource
     private DolphinSchedulerService dolphinSchedulerService;
 
     @Value("#{${dolphin.project.code}}")
@@ -74,7 +74,6 @@ public class WorkflowController {
         WorkflowDeploy workflowDeploy = lineageService.addWorkflowDeploy(workflowName, filePath, fileName, sqlContent, user, workflowCode, projectCode, taskCodesString);
         return BaseResult.success(workflowDeploy);
     }
-
 
     @PostMapping(value = "/updateWorkflow", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BaseResult<WorkflowDeploy> updateWorkflow(@RequestBody Map<String, String> payload) {
@@ -160,10 +159,7 @@ public class WorkflowController {
         long workflowCode = alertWorkflowDeploy.getWorkflowCode();
         long alertProjectCode = alertWorkflowDeploy.getProjectCode();
         long schedulerId = alertWorkflowDeploy.getScheduleId();
-        // 更新工作流之前，必须要下线改任务
         dolphinSchedulerService.offlineWorkflow(alertProjectCode, workflowCode);
-//        dolphinSchedulerService.offlineSchedule(alertProjectCode, alertWorkflowDeploy.getSchedulerId());
-
         WorkflowDefineParam workDefinition = dolphinSchedulerService.createAlertWorkDefinition(alertProjectCode, workflowName,sqlContent, dbName, token);
         dolphinSchedulerService.updateWorkflow(alertProjectCode, workflowCode, workDefinition);
         ScheduleDefineParam scheduleDefineParam = dolphinSchedulerService.createScheduleDefineParam(alertProjectCode, workflowCode, scheduleTime);

@@ -6,7 +6,7 @@ import com.google.common.io.CharStreams;
 import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
 import com.xiaoxj.sqlworkflow.remote.TypeReferenceHttpResult;
 import com.xiaoxj.sqlworkflow.remote.response.HttpClientResponse;
-import com.xiaoxj.sqlworkflow.util.JacksonUtils;
+import com.xiaoxj.sqlworkflow.common.utils.JacksonUtils;
 import org.apache.http.HttpStatus;
 
 import java.io.InputStream;

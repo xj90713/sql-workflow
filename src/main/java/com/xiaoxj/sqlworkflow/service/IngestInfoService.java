@@ -1,6 +1,6 @@
 package com.xiaoxj.sqlworkflow.service;
 
-import com.xiaoxj.sqlworkflow.repo.NoSchedulerTableRepository;
+import com.xiaoxj.sqlworkflow.repository.NoSchedulerTableRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

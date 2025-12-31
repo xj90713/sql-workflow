@@ -5,7 +5,7 @@ import com.google.common.net.MediaType;
 import com.xiaoxj.sqlworkflow.remote.handler.ResponseHandler;
 import com.xiaoxj.sqlworkflow.remote.request.HttpClientRequest;
 import com.xiaoxj.sqlworkflow.remote.response.HttpClientResponse;
-import com.xiaoxj.sqlworkflow.util.HttpUtils;
+import com.xiaoxj.sqlworkflow.common.utils.HttpUtils;
 import org.apache.http.entity.ContentType;
 
 import java.net.URI;

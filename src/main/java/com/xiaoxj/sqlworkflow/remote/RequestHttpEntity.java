@@ -1,6 +1,6 @@
 package com.xiaoxj.sqlworkflow.remote;
 
-import com.xiaoxj.sqlworkflow.util.JacksonUtils;
+import com.xiaoxj.sqlworkflow.common.utils.JacksonUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 

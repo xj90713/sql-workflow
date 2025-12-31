@@ -1,7 +1,7 @@
 package com.xiaoxj.sqlworkflow.service;
 
-import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
-import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
+import com.xiaoxj.sqlworkflow.entity.WorkflowDeploy;
+import com.xiaoxj.sqlworkflow.repository.WorkflowDeployRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.*;

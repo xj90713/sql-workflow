@@ -2,14 +2,14 @@ package com.xiaoxj.sqlworkflow.dolphinscheduler.instance;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.xiaoxj.sqlworkflow.common.PageInfo;
+import com.xiaoxj.sqlworkflow.common.result.PageInfo;
 import com.xiaoxj.sqlworkflow.core.AbstractOperator;
 import com.xiaoxj.sqlworkflow.core.DolphinClientConstant;
 import com.xiaoxj.sqlworkflow.core.DolphinException;
 import com.xiaoxj.sqlworkflow.remote.DolphinsRestTemplate;
 import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
 import com.xiaoxj.sqlworkflow.remote.Query;
-import com.xiaoxj.sqlworkflow.util.JacksonUtils;
+import com.xiaoxj.sqlworkflow.common.utils.JacksonUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

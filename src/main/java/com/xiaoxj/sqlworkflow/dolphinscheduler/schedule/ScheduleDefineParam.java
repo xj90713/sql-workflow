@@ -1,6 +1,6 @@
 package com.xiaoxj.sqlworkflow.dolphinscheduler.schedule;
 
-import com.xiaoxj.sqlworkflow.util.JacksonUtils;
+import com.xiaoxj.sqlworkflow.common.utils.JacksonUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

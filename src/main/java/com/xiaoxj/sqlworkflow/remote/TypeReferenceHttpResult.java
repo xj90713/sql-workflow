@@ -1,7 +1,7 @@
 package com.xiaoxj.sqlworkflow.remote;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.xiaoxj.sqlworkflow.util.JacksonUtils;
+import com.xiaoxj.sqlworkflow.common.utils.JacksonUtils;
 
 import java.lang.reflect.Type;
 

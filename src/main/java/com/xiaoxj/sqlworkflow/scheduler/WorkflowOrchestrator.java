@@ -1,11 +1,11 @@
 package com.xiaoxj.sqlworkflow.scheduler;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.xiaoxj.sqlworkflow.domain.WorkflowDeploy;
-import com.xiaoxj.sqlworkflow.domain.WorkflowInstance;
+import com.xiaoxj.sqlworkflow.entity.WorkflowDeploy;
+import com.xiaoxj.sqlworkflow.entity.WorkflowInstance;
 import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
-import com.xiaoxj.sqlworkflow.repo.WorkflowDeployRepository;
-import com.xiaoxj.sqlworkflow.repo.WorkflowInstanceRepository;
+import com.xiaoxj.sqlworkflow.repository.WorkflowDeployRepository;
+import com.xiaoxj.sqlworkflow.repository.WorkflowInstanceRepository;
 import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import com.xiaoxj.sqlworkflow.service.WorkflowQueueService;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
