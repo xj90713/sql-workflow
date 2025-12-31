@@ -427,7 +427,6 @@ public class DolphinSchedulerService {
         if (text == null || text.isEmpty()) {
             return text;
         }
-
         // 替换以 ---- 开头的行（包括换行符）
         return text.replaceAll("(?m)^----.*\\r?\\n?", "");
     }
