@@ -114,13 +114,13 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public AlertWorkflowDeploy addAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long schedulerId, long workflowCode, long projectCode, String scheduleTime) {
+    public AlertWorkflowDeploy addAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long scheduleId, long workflowCode, long projectCode, String scheduleTime) {
         AlertWorkflowDeploy deploy = new AlertWorkflowDeploy();
         deploy.setWorkflowId(workflowName);
         deploy.setWorkflowName(workflowName);
         deploy.setFilePath(filePath);
         deploy.setFileName(fileName);
-        deploy.setSchedulerId(schedulerId);
+        deploy.setScheduleId(scheduleId);
         deploy.setFileContent(sqlContent);
         deploy.setFileMd5(md5(sqlContent));
         deploy.setCommitUser(commitUser);
@@ -134,11 +134,11 @@ public class SqlLineageService {
     }
 
     @Transactional
-    public AlertWorkflowDeploy updateAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long schedulerId,long workflowCode, long projectCode, String scheduleTime) {
+    public AlertWorkflowDeploy updateAlertWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes,long scheduleId,long workflowCode, long projectCode, String scheduleTime) {
         AlertWorkflowDeploy latest = alertDeployRepo.findTopByWorkflowNameOrderByUpdateTimeDesc(workflowName);
 
         if (latest == null) {
-            return addAlertWorkflowDeploy(workflowName, filePath, fileName, sqlContent, commitUser,taskCodes,schedulerId, workflowCode, projectCode, scheduleTime);
+            return addAlertWorkflowDeploy(workflowName, filePath, fileName, sqlContent, commitUser,taskCodes,scheduleId, workflowCode, projectCode, scheduleTime);
         }
 
         String newMd5 = md5(sqlContent);
@@ -146,7 +146,7 @@ public class SqlLineageService {
         latest.setWorkflowName(workflowName);
         latest.setFilePath(filePath);
         latest.setFileName(fileName);
-        latest.setSchedulerId(schedulerId);
+        latest.setScheduleId(scheduleId);
         latest.setFileContent(sqlContent);
         latest.setFileMd5(md5(sqlContent));
         latest.setCommitUser(commitUser);

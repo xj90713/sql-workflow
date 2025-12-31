@@ -407,7 +407,7 @@ public class DolphinSchedulerService {
                     \\"msgtype\\": \\"text\\",
                     \\"text\\": {
                         \\"content\\": \\"%s\\",
-                        \\"mentioned_list\\": [%s]
+                        \\"mentioned_mobile_list\\": [%s]
                     }
                  }"
             exit 0

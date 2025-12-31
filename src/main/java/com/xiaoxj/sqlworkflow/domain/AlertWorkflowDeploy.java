@@ -12,7 +12,7 @@ public class AlertWorkflowDeploy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private long schedulerId;
+    private long scheduleId;
     private String workflowId;
     private String workflowName;
     private String taskCodes;

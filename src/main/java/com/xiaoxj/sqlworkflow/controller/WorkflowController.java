@@ -159,7 +159,7 @@ public class WorkflowController {
         }
         long workflowCode = alertWorkflowDeploy.getWorkflowCode();
         long alertProjectCode = alertWorkflowDeploy.getProjectCode();
-        long schedulerId = alertWorkflowDeploy.getSchedulerId();
+        long schedulerId = alertWorkflowDeploy.getScheduleId();
         // 更新工作流之前，必须要下线改任务
         dolphinSchedulerService.offlineWorkflow(alertProjectCode, workflowCode);
 //        dolphinSchedulerService.offlineSchedule(alertProjectCode, alertWorkflowDeploy.getSchedulerId());
