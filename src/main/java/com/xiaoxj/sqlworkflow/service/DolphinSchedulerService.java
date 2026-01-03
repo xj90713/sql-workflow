@@ -2,8 +2,8 @@ package com.xiaoxj.sqlworkflow.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.xiaoxj.sqlworkflow.common.enums.*;
+import com.xiaoxj.sqlworkflow.common.utils.*;
 import com.xiaoxj.sqlworkflow.core.DolphinClient;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryResp;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleInfoResp;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.*;
@@ -14,23 +14,15 @@ import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
 import com.xiaoxj.sqlworkflow.remote.HttpMethod;
 import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
-import com.xiaoxj.sqlworkflow.common.utils.TaskDefinitionUtils;
-import com.xiaoxj.sqlworkflow.common.utils.TaskLocationUtils;
-import com.xiaoxj.sqlworkflow.common.utils.TaskRelationUtils;
-import com.xiaoxj.sqlworkflow.common.utils.TaskUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 
-import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -193,11 +185,11 @@ public class DolphinSchedulerService {
 
         List<Long> taskCodes = dolphinClient.opsForWorkflow().generateTaskCode(projectCode, 2);
         Integer datasourceId = dolphinClient.opsForDataSource().getDatasource(dnName).getId();
-        List<String> strings = parseFirstLine(sqlContent);
+        List<String> strings = TextUtils.parseFirstLine(sqlContent);
         String alertTemplate = strings.get(3);
-        String mentionedUsers = getMentionedUsers(strings.get(4));
-        String sql = removeDashLines(sqlContent);
-        List<String> alertParamsList = extractFromBraces(alertTemplate);
+        String mentionedUsers = TextUtils.getMentionedUsers(strings.get(4));
+        String sql = TextUtils.removeDashLines(sqlContent);
+        List<String> alertParamsList = TextUtils.extractFromBraces(alertTemplate);
         List<Parameter> outTaskParamList = new ArrayList<>();
         List<Parameter> outLocalParams = new ArrayList<>();
         List<Parameter> inTaskParamList = new ArrayList<>();
@@ -230,7 +222,7 @@ public class DolphinSchedulerService {
         defs.add(TaskDefinitionUtils.createDefaultTaskDefinition(workflowName, taskCodes.get(0), sqlTask));
         ShellTask sh = new ShellTask();
 
-        String finalScript = getAlertShell(alertTemplate, token, mentionedUsers);
+        String finalScript = TextUtils.getAlertShell(alertTemplate, token, mentionedUsers);
         sh.setRawScript(finalScript);
         sh.setLocalParams(inLocalParams);
         sh.setTaskParamList(inTaskParamList);
@@ -248,19 +240,6 @@ public class DolphinSchedulerService {
                 .setTaskRelationJson(TaskRelationUtils.oneLineRelation(taskCodes.toArray(new Long[0])))
                 .setGlobalParams(null);
         return pcr;
-    }
-
-    public String getTaskCodesString(WorkflowDefineParam param) {
-        if (param == null || param.getTaskDefinitionJson() == null) return "";
-        StringBuilder sb = new StringBuilder();
-        List<TaskDefinition> list = param.getTaskDefinitionJson();
-        for (int i = 0; i < list.size(); i++) {
-            Long code = list.get(i).getCode();
-            if (code == null) continue;
-            if (sb.length() > 0) sb.append(',');
-            sb.append(code);
-        }
-        return sb.toString();
     }
 
     public String getWorkflowInstanceStatus(Long projectCode, Long workflowInstanceId) {
@@ -300,113 +279,5 @@ public class DolphinSchedulerService {
                                 .setEndTime(end.format(formatter))
                                 .setCrontab(schedule));
         return scheduleDefineParam;
-    }
-    public List<String> parseFirstLine(String input) {
-        if (input == null || input.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        // 1. 获取第一行内容
-
-        String firstLine = input.replace("--","").split("\n")[0];
-
-        // 2. 根据 "|" 分隔符拆分，并对每个元素进行去空格处理
-        return Arrays.stream(firstLine.split("\\|"))
-                .map(String::trim)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 提取字符串中花括号 {} 内的内容
-     * @param text 输入字符串
-     * @return 花括号内的内容列表
-     */
-    public static List<String> extractFromBraces(String text) {
-        List<String> result = new ArrayList<>();
-
-        if (text == null || text.isEmpty()) {
-            return result;
-        }
-        Pattern pattern = Pattern.compile("\\$\\{([^}]+)\\}");
-        Matcher matcher = pattern.matcher(text);
-
-        while (matcher.find()) {
-            String content = matcher.group(1);
-            if (content != null && !content.trim().isEmpty()) {
-                result.add(content.trim());
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * 解析 Shell 文本中的 target_tables 列表
-     * @param shellContent 完整的 Shell 脚本内容
-     * @return 提取到的表名列表
-     */
-    public List<String> extractTargetTables(String shellContent) {
-        List<String> tables = new ArrayList<>();
-        if (shellContent == null || shellContent.isEmpty()) {
-            return tables;
-        }
-
-        String marker = "##target_tables##";
-        int index = shellContent.indexOf(marker);
-        if (index == -1) {
-            return tables;
-        }
-
-        String subContent = shellContent.substring(index + marker.length());
-
-        // 匹配以 # 开头，后面跟表名（允许字母、数字、下划线和点），整行可有前后空格
-        Pattern pattern = Pattern.compile("(?m)^#\\s*([A-Za-z0-9_.]+)\\s*$");
-        Matcher matcher = pattern.matcher(subContent);
-
-        while (matcher.find()) {
-            String table = matcher.group(1).trim();
-            if (!table.isEmpty() && !tables.contains(table)) {
-                tables.add(table);
-            }
-        }
-        return tables;
-    }
-
-    public String getAlertShell(String alertTemplate, String token, String mentionedUsers) {
-        List<String> strings = extractFromBraces(alertTemplate);
-        String first = strings.getFirst();
-        String shellTemplate = """
-        #!/bin/bash
-        set -ex
-        if [ -n "${%s}" ]; then
-            # 发送企业微信 Webhook
-            curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s' \\
-                 -H 'Content-Type: application/json' \\
-                 -d "{
-                    \\"msgtype\\": \\"text\\",
-                    \\"text\\": {
-                        \\"content\\": \\"%s\\",
-                        \\"mentioned_mobile_list\\": [%s]
-                    }
-                 }"
-            exit 0
-        fi
-        """;
-        return String.format(shellTemplate, first, token, alertTemplate, mentionedUsers);
-    }
-
-    public String getMentionedUsers(String mentionedUsers) {
-        return Arrays.stream(mentionedUsers.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .map(s -> "\\\"" + s + "\\\"")
-                .collect(Collectors.joining(","));
-    }
-    public static String removeDashLines(String text) {
-        if (text == null || text.isEmpty()) {
-            return text;
-        }
-        // 替换以 ---- 开头的行（包括换行符）
-        return text.replaceAll("(?m)^----.*\\r?\\n?", "");
     }
 }
