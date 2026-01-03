@@ -26,8 +26,9 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class SqlLineageService {
 
-    @Autowired
+
     private DolphinSchedulerService dolphinSchedulerService;
+
     private final WorkflowDeployRepository deployRepo;
 
     private final AlertWorkflowDeployRepository alertDeployRepo;

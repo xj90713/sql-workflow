@@ -29,7 +29,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class WorkflowController {
-    @Autowired
+    @Resource
     private SqlLineageService lineageService;
 
     @Resource
@@ -41,10 +41,10 @@ public class WorkflowController {
     @Value("#{${dolphin.alertProject.code}}")
     private Long alertProjectCode;
 
-    @Autowired
+    @Resource
     private WorkflowDeployRepository deployRepo;
 
-    @Autowired
+    @Resource
     private AlertWorkflowDeployRepository alertDeployRepo;
 
     @PostMapping(value = "/addWorkflow", consumes = MediaType.APPLICATION_JSON_VALUE)

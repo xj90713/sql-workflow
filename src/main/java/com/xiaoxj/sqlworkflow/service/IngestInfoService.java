@@ -36,11 +36,11 @@ public class IngestInfoService {
         List<String> dbList = Arrays.stream((sourceDbs == null ? "" : sourceDbs).split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
-                .collect(Collectors.toList());
+                .toList();
         List<String> tableList = Arrays.stream((sourceTables == null ? "" : sourceTables).split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
-                .collect(Collectors.toList());
+                .toList();
 
         if (dbList.isEmpty() || tableList.isEmpty()) {
             res.addAll(noSchedulerTableRepository.findTableNamesByDeleteStatusNative());

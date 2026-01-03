@@ -1,6 +1,7 @@
 package com.xiaoxj.sqlworkflow.controller;
 
 import com.xiaoxj.sqlworkflow.service.OpenmetadataService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ import java.util.Map;
 @Slf4j
 public class OpenmetadataController {
 
-    @Autowired
+    @Resource
     private OpenmetadataService openmetadataService;
 
     @PostMapping("/api/openmetadata/lineage")
