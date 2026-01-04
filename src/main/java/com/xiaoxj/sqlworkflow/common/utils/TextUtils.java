@@ -106,7 +106,7 @@ public class TextUtils {
             shellTemplate = """
                     #!/bin/bash
                     set -ex
-                    if [ -n "${%s}" ] && [ "${%s}" != "0" ]; then
+                    if [ -n "${%s}" ] && [ "${%s}" != "0" ] && [ "${%s}" != "null" ]; then
                         # 发送企业微信 Webhook
                         curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s' \\
                              -H 'Content-Type: application/json' \\
@@ -119,7 +119,7 @@ public class TextUtils {
                         exit 0
                     fi
                     """;
-            return String.format(shellTemplate, first, first, token, alertTemplate);
+            return String.format(shellTemplate, first, first, first, token, alertTemplate);
         }
         return String.format(shellTemplate, first, token, alertTemplate, mentionedUsers);
     }
