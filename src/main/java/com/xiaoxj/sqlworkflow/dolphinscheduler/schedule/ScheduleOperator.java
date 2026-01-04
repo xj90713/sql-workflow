@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.xiaoxj.sqlworkflow.common.result.PageInfo;
 import com.xiaoxj.sqlworkflow.core.AbstractOperator;
-import com.xiaoxj.sqlworkflow.core.DolphinException;
+import com.xiaoxj.sqlworkflow.common.exception.DolphinException;
 import com.xiaoxj.sqlworkflow.remote.DolphinsRestTemplate;
 import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
 import com.xiaoxj.sqlworkflow.remote.Query;

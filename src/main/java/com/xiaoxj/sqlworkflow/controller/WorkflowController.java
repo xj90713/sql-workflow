@@ -1,7 +1,9 @@
 package com.xiaoxj.sqlworkflow.controller;
 
 import com.xiaoxj.sqlworkflow.common.result.BaseResult;
+import com.xiaoxj.sqlworkflow.common.utils.SchedulerUtils;
 import com.xiaoxj.sqlworkflow.common.utils.TextUtils;
+import com.xiaoxj.sqlworkflow.common.utils.WorkflowUtils;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.schedule.ScheduleInfoResp;
 import com.xiaoxj.sqlworkflow.entity.AlertWorkflowDeploy;
@@ -35,6 +37,12 @@ public class WorkflowController {
     @Resource
     private DolphinSchedulerService dolphinSchedulerService;
 
+    @Resource
+    private WorkflowUtils workflowUtils;
+
+    @Resource
+    private SchedulerUtils schedulerUtils;
+
     @Value("#{${dolphin.project.code}}")
     private Long projectCode;
 
@@ -58,7 +66,7 @@ public class WorkflowController {
         String user = payload.getOrDefault("commit_user", "system");
         List<Map<String, String>> taskTriples = TextUtils.workflowTriples(sqlContent,workflowName, filePath);
         String describe = TextUtils.extractComments(sqlContent);
-        WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, workflowName,describe);
+        WorkflowDefineParam workDefinition = workflowUtils.createWorkDefinition(taskTriples, projectCode, workflowName,describe);
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(projectCode, workDefinition);
         String taskCodesString = TextUtils.getTaskCodes(workDefinition);
         long workflowCode = workflowDefineResp.getCode();
@@ -97,7 +105,7 @@ public class WorkflowController {
         // 更新工作流之前，必须要下线改任务
         dolphinSchedulerService.offlineWorkflow(projectCode, workflowCode);
         List<Map<String, String>> taskTriples = TextUtils.workflowTriples(sqlContent, workflowName, filePath);
-        WorkflowDefineParam workDefinition = dolphinSchedulerService.createWorkDefinition(taskTriples, projectCode, workflowName, describe);
+        WorkflowDefineParam workDefinition = workflowUtils.createWorkDefinition(taskTriples, projectCode, workflowName, describe);
         String taskCodesString = TextUtils.getTaskCodes(workDefinition);
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.updateWorkflow(projectCode, workflowCode, workDefinition);
         // 更新工作流之后，在上线工作流
@@ -122,14 +130,14 @@ public class WorkflowController {
         String scheduleTime = alertScheduler.get(2);
         String alertTemplate = alertScheduler.get(3);
         log.info("dbName={}, token={}, scheduleTime={}, alertTemplate={}", dbName, token,scheduleTime, alertTemplate);
-        WorkflowDefineParam workDefinition = dolphinSchedulerService.createAlertWorkDefinition(alertProjectCode, workflowName,sqlContent, dbName, token);
+        WorkflowDefineParam workDefinition = workflowUtils.createAlertWorkDefinition(alertProjectCode, workflowName,sqlContent, dbName, token);
         log.info("workDefinition={}", workDefinition);
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.createWorkflow(alertProjectCode, workDefinition);
         log.info("workflowDefineResp={}", workflowDefineResp);
         String taskCodesString = TextUtils.getTaskCodes(workDefinition);
         long workflowCode = workflowDefineResp.getCode();
         dolphinSchedulerService.onlineWorkflow(alertProjectCode, workflowCode);
-        ScheduleDefineParam scheduleDefineParam = dolphinSchedulerService.createScheduleDefineParam(alertProjectCode, workflowCode, scheduleTime);
+        ScheduleDefineParam scheduleDefineParam = schedulerUtils.createScheduleDefineParam(alertProjectCode, workflowCode, scheduleTime);
         ScheduleInfoResp schedule = dolphinSchedulerService.createSchedule(alertProjectCode, scheduleDefineParam);
         dolphinSchedulerService.onlineSchedule(alertProjectCode, schedule.getId());
         lineageService.addAlertWorkflowDeploy(workflowName, filePath, fileName, sqlContent, user, taskCodesString, schedule.getId(), workflowCode, alertProjectCode, scheduleTime);
@@ -162,9 +170,9 @@ public class WorkflowController {
         long alertProjectCode = alertWorkflowDeploy.getProjectCode();
         long schedulerId = alertWorkflowDeploy.getScheduleId();
         dolphinSchedulerService.offlineWorkflow(alertProjectCode, workflowCode);
-        WorkflowDefineParam workDefinition = dolphinSchedulerService.createAlertWorkDefinition(alertProjectCode, workflowName,sqlContent, dbName, token);
+        WorkflowDefineParam workDefinition = workflowUtils.createAlertWorkDefinition(alertProjectCode, workflowName,sqlContent, dbName, token);
         dolphinSchedulerService.updateWorkflow(alertProjectCode, workflowCode, workDefinition);
-        ScheduleDefineParam scheduleDefineParam = dolphinSchedulerService.createScheduleDefineParam(alertProjectCode, workflowCode, scheduleTime);
+        ScheduleDefineParam scheduleDefineParam = schedulerUtils.createScheduleDefineParam(alertProjectCode, workflowCode, scheduleTime);
         dolphinSchedulerService.onlineWorkflow(alertProjectCode, workflowCode);
         ScheduleInfoResp schedule = dolphinSchedulerService.updateSchedule(alertProjectCode,schedulerId,scheduleDefineParam);
         String taskCodesString = TextUtils.getTaskCodes(workDefinition);

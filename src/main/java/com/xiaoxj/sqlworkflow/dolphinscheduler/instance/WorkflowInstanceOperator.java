@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xiaoxj.sqlworkflow.common.result.PageInfo;
 import com.xiaoxj.sqlworkflow.core.AbstractOperator;
 import com.xiaoxj.sqlworkflow.core.DolphinClientConstant;
-import com.xiaoxj.sqlworkflow.core.DolphinException;
+import com.xiaoxj.sqlworkflow.common.exception.DolphinException;
 import com.xiaoxj.sqlworkflow.remote.DolphinsRestTemplate;
 import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
 import com.xiaoxj.sqlworkflow.remote.Query;
@@ -122,10 +122,7 @@ public class WorkflowInstanceOperator extends AbstractOperator {
     try {
       HttpRestResult<JsonNode> restResult =
               dolphinsRestTemplate.get(url, getHeader(), null, JsonNode.class);
-      System.out.println("url: " + url);
       JsonNode state = restResult.getData().get("state");
-      System.out.println("state:" + JacksonUtils.parseObject(restResult.getData().toString(), WorkflowInstanceQueryResp.class));
-//      return JacksonUtils.parseObject(restResult.getData().toString(), WorkflowInstanceQueryResp.class);
       return state.textValue();
     } catch (Exception e) {
       throw new DolphinException("get workflow instance status fail", e);

@@ -1,4 +1,4 @@
-package com.xiaoxj.sqlworkflow.core;
+package com.xiaoxj.sqlworkflow.common.exception;
 
 public class DolphinException extends RuntimeException {
 

@@ -2,6 +2,7 @@ package com.xiaoxj.sqlworkflow.common.utils;
 
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskDefinition;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -10,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class TextUtils {
     public static List<String> parseFirstLine(String input) {
         if (input == null || input.isEmpty()) {
@@ -198,11 +200,9 @@ public class TextUtils {
 
             if (scriptContent.contains("target_tables")) {
                 List<String> targetTableList = TextUtils.extractTargetTables(scriptContent);
-                System.out.println("targetTableList:" + targetTableList);
                 String targetTables = targetTableList.stream()
                         .map( table -> "'" + table.replace("'", "''") + "'")
                         .collect(Collectors.joining(","));
-                System.out.println("targetTables:" + targetTables);
                 Map<String, String> task = new LinkedHashMap<>();
                 task.put("task_name", workflowName + "-callback");
                 task.put("task_type", "sql");
@@ -243,5 +243,10 @@ public class TextUtils {
             sb.append(code);
         }
         return sb.toString();
+    }
+
+    public static boolean checkDescriptionLength(String description) {
+        log.info("checkDescriptionLength description length:{}", description.length());
+        return description.codePointCount(0, description.length()) > 255;
     }
 }
