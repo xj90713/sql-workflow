@@ -113,10 +113,7 @@ public class WorkflowOrchestrator {
         running.forEach(instance -> {
             Long workflowInstanceId = instance.getWorkflowInstanceId();
             Long workflowCode = instance.getWorkflowCode();
-            System.out.println("workflowInstanceId: " + workflowInstanceId);
-            System.out.println("workflowCode: " + workflowCode);
             String status = dolphinService.getWorkflowInstanceStatus(instance.getProjectCode(), workflowInstanceId);
-            System.out.println("status: " + status);
             if (Objects.equals(status, "SUCCESS")) {
                 WorkflowDeploy workflowDeploy = deployRepo.findByWorkflowCode(workflowCode);
                 workflowDeploy.setStatus('Y');
