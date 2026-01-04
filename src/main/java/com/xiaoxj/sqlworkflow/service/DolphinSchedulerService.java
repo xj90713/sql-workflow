@@ -187,7 +187,7 @@ public class DolphinSchedulerService {
         Integer datasourceId = dolphinClient.opsForDataSource().getDatasource(dnName).getId();
         List<String> strings = TextUtils.parseFirstLine(sqlContent);
         String alertTemplate = strings.get(3);
-        String mentionedUsers = TextUtils.getMentionedUsers(strings.get(4));
+        String mentionedUsers = strings.size() > 4 ? TextUtils.getMentionedUsers(strings.get(4)) : "";
         String sql = TextUtils.removeDashLines(sqlContent);
         List<String> alertParamsList = TextUtils.extractFromBraces(alertTemplate);
         List<Parameter> outTaskParamList = new ArrayList<>();

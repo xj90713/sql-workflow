@@ -102,6 +102,25 @@ public class TextUtils {
             exit 0
         fi
         """;
+        if (mentionedUsers == null || mentionedUsers.isEmpty()) {
+            shellTemplate = """
+                    #!/bin/bash
+                    set -ex
+                    if [ -n "${%s}" ]; then
+                        # 发送企业微信 Webhook
+                        curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s' \\
+                             -H 'Content-Type: application/json' \\
+                             -d "{
+                                \\"msgtype\\": \\"markdown\\",
+                                \\"markdown\\": {
+                                    \\"content\\": \\"【%s】\\"
+                                }
+                             }"
+                        exit 0
+                    fi
+                    """;
+            return String.format(shellTemplate, first, token, alertTemplate);
+        }
         return String.format(shellTemplate, first, token, alertTemplate, mentionedUsers);
     }
 
