@@ -122,7 +122,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
 
     @Override
     public  List<String> getAffectedTables(String changedTable,
-                                                 Map<String, String[]> dependencies) {
+                                                 Map<String, String> dependencies) {
         List<String> result = new ArrayList<>();
         Set<String> visited = new HashSet<>();
 
@@ -132,15 +132,15 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
 
     @Override
     public void find(String currentTable,
-                             Map<String, String[]> deps,
+                             Map<String, String> deps,
                              List<String> result,
                              Set<String> visited) {
         if (visited.contains(currentTable)) return;
         visited.add(currentTable);
 
-        for (Map.Entry<String, String[]> entry : deps.entrySet()) {
+        for (Map.Entry<String, String> entry : deps.entrySet()) {
             String target = entry.getKey();
-            for (String source : entry.getValue()) {
+            for (String source : entry.getValue().split(",")) {
                 if (source.equals(currentTable)) {
                     result.add(target);
                     find(target, deps, result, visited);

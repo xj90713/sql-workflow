@@ -2,6 +2,7 @@ package com.xiaoxj.sqlworkflow.service.impl;
 
 import com.xiaoxj.sqlworkflow.repository.NoSchedulerTableRepository;
 import com.xiaoxj.sqlworkflow.service.IngestInfoService;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,7 @@ public class IngestInfoServiceImpl implements IngestInfoService {
     @Value("${postgres.password}")
     private String pgPass;
 
+    @Resource
     NoSchedulerTableRepository noSchedulerTableRepository;
 
     @Override

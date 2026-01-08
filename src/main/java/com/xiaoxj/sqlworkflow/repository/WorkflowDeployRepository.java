@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Map;
 
 public interface WorkflowDeployRepository extends JpaRepository<WorkflowDeploy, Integer> {
     List<WorkflowDeploy> findByStatusAndScheduleType(char status, int scheduleType);
@@ -20,4 +21,7 @@ public interface WorkflowDeployRepository extends JpaRepository<WorkflowDeploy, 
     @Modifying
     @Query(value = "UPDATE workflow_deploy w SET w.status = 'N', w.update_time = CURRENT_TIMESTAMP", nativeQuery = true)
     int initializeAllStatusToN();
+
+//    @Query("SELECT w.targetTable as target, w.sourceTables as source FROM WorkflowDeploy w")
+//    List<Object[]> findAllTargetAndSource();
 }
