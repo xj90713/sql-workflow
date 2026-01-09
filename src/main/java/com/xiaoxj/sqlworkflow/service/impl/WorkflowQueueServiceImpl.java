@@ -121,9 +121,9 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
     }
 
     @Override
-    public  List<String> getAffectedTables(String changedTable,
+    public  Set<String> getAffectedTables(String changedTable,
                                                  Map<String, String> dependencies) {
-        List<String> result = new ArrayList<>();
+        Set<String> result = new LinkedHashSet<>();
         Set<String> visited = new HashSet<>();
 
         find(changedTable, dependencies, result, visited);
@@ -133,7 +133,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
     @Override
     public void find(String currentTable,
                              Map<String, String> deps,
-                             List<String> result,
+                             Set<String> result,
                              Set<String> visited) {
         if (visited.contains(currentTable)) return;
         visited.add(currentTable);

@@ -143,19 +143,4 @@ public class WorkflowOrchestrator {
 //        int n = deployRepo.initializeAllStatusToN();
 //        log.info("Initialized {} workflow status to N.", n);
 //    }
-
-    @Scheduled(cron = "${workflow.schedule.checkRunning}")
-    @Async("taskExecutor")
-    public void testSchedule() {
-        log.info("Testing affected tables calculation.");
-        List<WorkflowDeploy> workflowDeployList = deployRepo.findByStatusAndScheduleType('Y', 1);
-
-        Map<String, String> map = new HashMap<>();
-        workflowDeployList.forEach(deploy -> {
-            map.put(deploy.getTargetTable(), deploy.getSourceTables());
-        });
-        List<String> affectedTables = queueService.getAffectedTables("cdm.dim_applet_openid_user_info_df", map);
-        log.info("Affected tables: {}", affectedTables);
-    }
-
 }

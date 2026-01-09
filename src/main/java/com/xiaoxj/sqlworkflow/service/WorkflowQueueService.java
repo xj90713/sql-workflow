@@ -12,7 +12,7 @@ public interface WorkflowQueueService {
 
     String filterTables(String targetTable, String sourceTables);
 
-    List<String> getAffectedTables(String changedTable, Map<String, String> dependencies);
+    Set<String> getAffectedTables(String changedTable, Map<String, String> dependencies);
 
-    void find(String currentTable, Map<String, String> deps, List<String> result, Set<String> visited) ;
+    void find(String currentTable, Map<String, String> deps, Set<String> result, Set<String> visited) ;
 }

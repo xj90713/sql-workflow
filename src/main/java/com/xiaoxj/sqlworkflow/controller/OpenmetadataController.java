@@ -1,5 +1,6 @@
 package com.xiaoxj.sqlworkflow.controller;
 
+import com.xiaoxj.sqlworkflow.common.utils.TextUtils;
 import com.xiaoxj.sqlworkflow.service.OpenmetadataService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +27,7 @@ public class OpenmetadataController {
         String filePath = payload.get("file_path");
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String content = payload.get("content");
-        byte[] decodedBytes = Base64.getDecoder().decode(content);
-        String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
+        String sqlContent = TextUtils.base64Decode(content);
         sqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
                 .replace("${imp_pt_date}", "'2025-01-01'");
         long start = System.currentTimeMillis();

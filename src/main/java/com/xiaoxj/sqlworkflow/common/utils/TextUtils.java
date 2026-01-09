@@ -249,4 +249,9 @@ public class TextUtils {
         log.info("checkDescriptionLength description length:{}", description.length());
         return description.codePointCount(0, description.length()) > 255;
     }
+
+    public static String base64Decode(String content) {
+        byte[] decodedBytes = Base64.getDecoder().decode(content);
+        return new String(decodedBytes, StandardCharsets.UTF_8);
+    }
 }

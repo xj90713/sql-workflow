@@ -14,6 +14,7 @@ import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import com.xiaoxj.sqlworkflow.service.SqlLineageService;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
+import com.xiaoxj.sqlworkflow.service.WorkflowQueueService;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/dependencies")
@@ -55,14 +54,16 @@ public class WorkflowController {
     @Resource
     private AlertWorkflowDeployRepository alertDeployRepo;
 
+    @Resource
+    private WorkflowQueueService queueService;
+
     @PostMapping(value = "/addWorkflow", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BaseResult<WorkflowDeploy> addWorkflow(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String content = payload.get("content");
-        byte[] decodedBytes = Base64.getDecoder().decode(content);
-        String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
+        String sqlContent = TextUtils.base64Decode(content);
         String user = payload.getOrDefault("commit_user", "system");
         List<Map<String, String>> taskTriples = TextUtils.workflowTriples(sqlContent,workflowName, filePath);
         String describe = TextUtils.extractComments(sqlContent);
@@ -91,8 +92,7 @@ public class WorkflowController {
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String content = payload.get("content");
-        byte[] decodedBytes = Base64.getDecoder().decode(content);
-        String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
+        String sqlContent = TextUtils.base64Decode(content);
         String user = payload.getOrDefault("commit_user", "system");
         WorkflowDeploy workflowDeploy = deployRepo.findByWorkflowName(workflowName);
         if (workflowDeploy == null) {
@@ -122,8 +122,7 @@ public class WorkflowController {
         String user = payload.getOrDefault("commit_user", "system");
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         log.info("fileName={}, content={}, workflowName={}", fileName, content, workflowName);
-        byte[] decodedBytes = Base64.getDecoder().decode(content);
-        String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
+        String sqlContent = TextUtils.base64Decode(content);
         List<String> alertScheduler = TextUtils.parseFirstLine(sqlContent);
         String dbName = alertScheduler.get(0);
         String token = alertScheduler.get(1);
@@ -151,8 +150,7 @@ public class WorkflowController {
         String filePath = payload.get("file_path");
         String user = payload.getOrDefault("commit_user", "system");
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
-        byte[] decodedBytes = Base64.getDecoder().decode(content);
-        String sqlContent = new String(decodedBytes, StandardCharsets.UTF_8);
+        String sqlContent = TextUtils.base64Decode(content);
         List<String> alertScheduler = TextUtils.parseFirstLine(sqlContent);
         String dbName = alertScheduler.get(0);
         String token = alertScheduler.get(1);
@@ -179,5 +177,20 @@ public class WorkflowController {
         dolphinSchedulerService.onlineSchedule(alertProjectCode, schedule.getId());
         lineageService.updateAlertWorkflowDeploy(workflowName, filePath, filelName, sqlContent, user, taskCodesString, schedulerId, workflowCode, alertProjectCode, scheduleTime);
         return BaseResult.success(schedule);
+    }
+
+    @PostMapping("/updateWorkflowStatus")
+    public BaseResult<String> updateWorkflowSchedulerStatus(@RequestBody String tableName) {
+        log.info("Testing affected tables calculation.");
+        List<WorkflowDeploy> workflowDeployList = deployRepo.findByStatusAndScheduleType('Y', 1);
+
+        Map<String, String> map = new HashMap<>();
+        workflowDeployList.forEach(deploy -> {
+            map.put(deploy.getTargetTable(), deploy.getSourceTables());
+        });
+        Set<String> affectedTables = queueService.getAffectedTables(tableName, map);
+        int num = deployRepo.updateStatusByTargetTable(affectedTables);
+        log.info("Affected tables size: {}", num);
+        return BaseResult.success("Updated rows: " + num);
     }
 }
