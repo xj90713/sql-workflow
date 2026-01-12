@@ -254,4 +254,27 @@ public class TextUtils {
         byte[] decodedBytes = Base64.getDecoder().decode(content);
         return new String(decodedBytes, StandardCharsets.UTF_8);
     }
+
+    public static String extractSql(String content) {
+        List<String> sqlList = new ArrayList<>();
+
+        // 匹配 sql="..." 格式，(?s) 相当于 Pattern.DOTALL
+        String regex = "sql\\s*=\\s*\"(.*?)\"";
+        Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(content);
+
+        while (matcher.find()) {
+            String sql = matcher.group(1).trim();
+            if (!sql.isEmpty()) {
+                // 确保 SQL 以分号结尾（如果没有的话）
+                if (!sql.endsWith(";")) {
+                    sql += ";";
+                }
+                sqlList.add(sql);
+            }
+        }
+
+        // 使用 Java 8 的流将 List 合并为 String，每个元素后接换行
+        return sqlList.stream().collect(Collectors.joining("\n"));
+    }
 }

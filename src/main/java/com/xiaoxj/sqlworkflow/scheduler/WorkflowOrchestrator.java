@@ -61,7 +61,7 @@ public class WorkflowOrchestrator {
             return;
         }
         String target = queueService.getTargetWorkflowName();
-        log.info("Triggering workflow: {}", target);
+//        log.info("Triggering workflow: {}", target);
         if (Objects.equals(target, "finished")) {
             log.info("All workflows have finished.");
             return;

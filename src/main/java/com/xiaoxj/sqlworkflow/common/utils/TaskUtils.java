@@ -4,8 +4,12 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.ConditionTask;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /** utils for task node */
 public class TaskUtils {

@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
 public class IngestInfoServiceImpl implements IngestInfoService {
     @Value("${postgres.url}")
     private String pgUrl;

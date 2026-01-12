@@ -82,6 +82,9 @@ public class SqlLineageServiceImpl implements SqlLineageService {
     public  Map<String, String> getTargetAndSourceTables(String sqlContent, String fileName) {
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
+        if (fileName.contains("shell") || fileName.contains("sh")) {
+            sqlContent = TextUtils.extractSql(sqlContent);
+        }
 
         try {
             String fixSqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")

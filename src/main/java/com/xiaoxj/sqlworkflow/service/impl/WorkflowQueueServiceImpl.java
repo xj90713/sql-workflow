@@ -42,7 +42,6 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
                 queue.add(table.trim());
             }
         }
-        log.info("queue: {} ", queue);
         return queue;
     }
 
@@ -76,9 +75,9 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         Set<String> dbs = new LinkedHashSet<>();
         Set<String> tables = new LinkedHashSet<>();
         for (WorkflowDeploy wd : repo.findByStatusAndScheduleType('N', 1)) {
-            log.info("Workflow:{} ", wd.getWorkflowName());
+//            log.info("Workflow:{} ", wd.getWorkflowName());
             String src = wd.getSourceTables();
-            log.info("Source tables:{} ", src);
+//            log.info("Source tables:{} ", src);
             if (src == null || src.isBlank()) continue;
             for (String s : src.split(",")) {
                 String t = s.trim();
