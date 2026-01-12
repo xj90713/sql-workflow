@@ -290,6 +290,7 @@ public class TextUtils {
                 sqlList.add(sql);
             }
         }
+        log.info("extractSql sqlList:{}", sqlList);
         return String.join("\n", sqlList);
     }
 }
