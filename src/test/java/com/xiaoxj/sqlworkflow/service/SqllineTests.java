@@ -25,12 +25,12 @@ public class SqllineTests {
                      , 1                                      as journeyType_out
                      , 1                                      as businessType_out
                      , '客户动态-视频回放'                    as title_out
-                     , concat_ws('_', circle_name, cast(circle_id as string)) as `圈子名称`
-                     , video_title                            as `视频标题`
-                     , last_review_time                       as `当天观看最晚时间`
-                     , visitor_cnt                            as `当天观看次数`
-                     , live_operator                          as `视频讲师`
-                     , live_time                              as `视频直播时间`
+                     , concat_ws('_', circle_name, cast(circle_id as string)) as \\`圈子名称\\`
+                     , video_title                            as \\`视频标题\\`
+                     , last_review_time                       as \\`当天观看最晚时间\\`
+                     , visitor_cnt                            as \\`当天观看次数\\`
+                     , live_operator                          as \\`视频讲师\\`
+                     , live_time                              as \\`视频直播时间\\`
                 from cdm.dwd_scrm_customer_video_review_change_hd
                 order by customer_id,last_review_time;
                 "
@@ -84,6 +84,7 @@ public class SqllineTests {
                 if (!sql.endsWith(";")) {
                     sql += ";";
                 }
+                sql = sql.replaceAll("\\\\", "");
                 sqlList.add(sql);
             }
         }

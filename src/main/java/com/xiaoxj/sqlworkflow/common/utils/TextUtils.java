@@ -285,12 +285,11 @@ public class TextUtils {
                 // 确保 SQL 以分号结尾（如果没有的话）
                 if (!sql.endsWith(";")) {
                     sql += ";";
+                    sql = sql.replaceAll("\\\\", "");
                 }
                 sqlList.add(sql);
             }
         }
-
-        // 使用 Java 8 的流将 List 合并为 String，每个元素后接换行
-        return sqlList.stream().collect(Collectors.joining("\n"));
+        return String.join("\n", sqlList);
     }
 }
