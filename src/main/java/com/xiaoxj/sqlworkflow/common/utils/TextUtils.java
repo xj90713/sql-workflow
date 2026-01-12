@@ -285,12 +285,11 @@ public class TextUtils {
                 // 确保 SQL 以分号结尾（如果没有的话）
                 if (!sql.endsWith(";")) {
                     sql += ";";
-                    sql = sql.replaceAll("\\\\", "");
                 }
+                sql = sql.replaceAll("\\\\", "");
                 sqlList.add(sql);
             }
         }
-        log.info("extractSql sqlList:{}", sqlList);
         return String.join("\n", sqlList);
     }
 }
