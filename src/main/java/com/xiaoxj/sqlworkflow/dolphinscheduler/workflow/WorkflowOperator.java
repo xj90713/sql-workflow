@@ -115,6 +115,36 @@ public class WorkflowOperator extends AbstractOperator {
   }
 
   /**
+   * get dolphin scheduler workflow
+   *
+   * <p>api:/dolphinscheduler/projects/{projectCode}/workflow-definition/{workflow-definition-code}
+   *
+   * @param workflowDefineParam get workflow
+   * @param workflowCode workflow code
+   * @return get response json
+   */
+  public WorkflowDefineResp getWorkflow(
+          Long projectCode, String workflowName) {
+    String url = dolphinAddress + "/projects/" + projectCode + "/workflow-definition/query-by-name";
+    Query query = new Query();
+    query.addParam("name", workflowName);
+    log.info("get workflow definition, url:{}, param:{}", url);
+    try {
+      HttpRestResult<JsonNode> restResult = dolphinsRestTemplate.get(
+              url, getHeader(), query, JsonNode.class);
+      if (restResult.getSuccess()) {
+         return JacksonUtils.parseObject(
+                restResult.getData().get("workflowDefinition").toString(), WorkflowDefineResp.class);
+      } else {
+        log.error("dolphin scheduler response:{}", restResult);
+        throw new DolphinException("get dolphin scheduler workflow fail");
+      }
+    } catch (Exception e) {
+      throw new DolphinException("get dolphin scheduler workflow fail", e);
+    }
+  }
+
+  /**
    * delete workflow
    *
    * @param projectCode project code

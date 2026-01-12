@@ -1,6 +1,7 @@
 package com.xiaoxj.sqlworkflow.workflow;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.xiaoxj.sqlworkflow.BaseTest;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskDefinition;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
@@ -118,5 +119,11 @@ public class WorkflowTest extends BaseTest {
     String workflowInstanceStatus = getClient().opsForWorkflowInst().getWorkflowInstanceStatus(projectCode, 486L);
 //    WorkflowInstanceRepository workflowInstanceRepository = new WorkflowInstanceRepository();
     System.out.println(workflowInstanceStatus);
+  }
+  @Test
+  public void testGetWorkflow() {
+    WorkflowDefineResp workflowDefineResp = getClient().opsForWorkflow().getWorkflow(projectCode, "test");
+//    WorkflowInstanceRepository workflowInstanceRepository = new WorkflowInstanceRepository();
+    System.out.println("workflowDefineResp" + workflowDefineResp);
   }
 }

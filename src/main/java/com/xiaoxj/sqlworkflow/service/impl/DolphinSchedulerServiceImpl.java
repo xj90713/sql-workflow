@@ -93,4 +93,9 @@ public class DolphinSchedulerServiceImpl implements DolphinSchedulerService {
         return dolphinClient.opsForSchedule().update(projectCode,scheduleId, scheduleDefineParam);
     }
 
+    @Override
+    public WorkflowDefineResp getWorkflow(Long projectCode, String workflowName) {
+        return dolphinClient.opsForWorkflow().getWorkflow(projectCode, workflowName);
+    }
+
 }

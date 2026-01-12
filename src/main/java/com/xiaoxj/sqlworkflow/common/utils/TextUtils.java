@@ -1,7 +1,11 @@
 package com.xiaoxj.sqlworkflow.common.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.xiaoxj.sqlworkflow.common.result.PageInfo;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskDefinition;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.task.TaskLocation;
 import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineParam;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.workflow.WorkflowDefineResp;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
@@ -239,12 +243,24 @@ public class TextUtils {
         for (int i = 0; i < list.size(); i++) {
             Long code = list.get(i).getCode();
             if (code == null) continue;
-            if (sb.length() > 0) sb.append(',');
+            if (!sb.isEmpty()) sb.append(',');
             sb.append(code);
         }
         return sb.toString();
     }
 
+    public static String getTaskCodes(WorkflowDefineResp workflowDefineResp) {
+        if (workflowDefineResp == null || workflowDefineResp.getLocations() == null) return "";
+        StringBuilder sb = new StringBuilder();
+        List<TaskLocation> taskLocations = JacksonUtils.parseObject(
+                workflowDefineResp.getLocations(), new TypeReference<List<TaskLocation>>() {
+                });
+        String codes = taskLocations.stream().
+                map(location -> location.getTaskCode().toString())
+                .collect(Collectors.joining(","));
+
+        return codes;
+    }
     public static boolean checkDescriptionLength(String description) {
         log.info("checkDescriptionLength description length:{}", description.length());
         return description.codePointCount(0, description.length()) > 255;

@@ -39,4 +39,5 @@ public interface DolphinSchedulerService {
 
     ScheduleInfoResp updateSchedule(Long projectCode,Long scheduleId, ScheduleDefineParam scheduleDefineParam);
 
+    WorkflowDefineResp getWorkflow(Long projectCode, String workflowName);
 }

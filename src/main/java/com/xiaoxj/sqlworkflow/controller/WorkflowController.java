@@ -97,6 +97,13 @@ public class WorkflowController {
         WorkflowDeploy workflowDeploy = deployRepo.findByWorkflowName(workflowName);
         if (workflowDeploy == null) {
             log.info("工作流不存在，创建工作流");
+            WorkflowDefineResp workflow = dolphinSchedulerService.getWorkflow(projectCode, workflowName);
+            if (workflow != null) {
+                String taskCodes = TextUtils.getTaskCodes(workflow);
+                long workflowCode = workflow.getCode();
+                WorkflowDeploy workflowDeployResp = lineageService.addWorkflowDeploy(workflowName, filePath, fileName, sqlContent, user, workflowCode, projectCode, taskCodes);
+                return BaseResult.success(workflowDeployResp);
+            }
             return addWorkflow(payload);
         }
         long workflowCode = workflowDeploy.getWorkflowCode();
