@@ -28,8 +28,7 @@ public class OpenmetadataController {
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String content = payload.get("content");
         String sqlContent = TextUtils.base64Decode(content);
-        sqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
-                .replace("${imp_pt_date}", "'2025-01-01'");
+        sqlContent = TextUtils.replaceSqlContent(sqlContent);
         long start = System.currentTimeMillis();
         String resp = openmetadataService.getSqlLineage(fileName, sqlContent);
         long cost = System.currentTimeMillis() - start;

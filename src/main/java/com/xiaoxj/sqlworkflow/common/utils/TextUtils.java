@@ -251,7 +251,6 @@ public class TextUtils {
 
     public static String getTaskCodes(WorkflowDefineResp workflowDefineResp) {
         if (workflowDefineResp == null || workflowDefineResp.getLocations() == null) return "";
-        StringBuilder sb = new StringBuilder();
         List<TaskLocation> taskLocations = JacksonUtils.parseObject(
                 workflowDefineResp.getLocations(), new TypeReference<List<TaskLocation>>() {
                 });
