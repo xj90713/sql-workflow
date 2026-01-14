@@ -75,6 +75,7 @@ public class WorkflowController {
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         long projectCode = workflowDefineResp.getProjectCode();
         List<String> targetTables = TextUtils.extractTargetTables(sqlContent);
+        List<String> sourceTables = TextUtils.extractSourceTables(sqlContent);
         if (!targetTables.isEmpty()) {
             targetTables.forEach(targetTable ->
                     lineageService.addWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, workflowCode, projectCode, taskCodesString));

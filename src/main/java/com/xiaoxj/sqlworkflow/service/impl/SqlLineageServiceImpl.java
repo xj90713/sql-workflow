@@ -91,9 +91,15 @@ public class SqlLineageServiceImpl implements SqlLineageService {
             LineageRunner runner = LineageRunner.builder(fixSqlContent).build();
             List<Table> sources = runner.sourceTables();
             List<Table> targets = runner.targetTables();
-
-            sources.forEach(table -> sourceTables.add(table.toString().replace("..", ".")));
+            for (Table table : sources) {
+                String tableName = table.toString().replace("..", ".");
+                sourceTables.add(tableName);
+            }
             targets.forEach(table -> targetTables.add(table.toString().replace("..", ".")));
+            Set<String> extractedSourceTables = TextUtils.extractSourceTables(sqlContent);
+            if (!extractedSourceTables.isEmpty()) {
+                sourceTables = extractedSourceTables;  // 替换整个集合
+            }
         } catch (Exception e) {
             throw new IllegalArgumentException("解析 SQL 失败: " + fileName, e);
         }

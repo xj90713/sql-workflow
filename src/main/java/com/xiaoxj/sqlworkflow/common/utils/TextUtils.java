@@ -88,6 +88,33 @@ public class TextUtils {
         return tables;
     }
 
+    public static Set<String> extractSourceTables(String shellContent) {
+        Set<String> tables = new LinkedHashSet<>();
+        if (shellContent == null || shellContent.isEmpty()) {
+            return tables;
+        }
+
+        String marker = "##source_tables##";
+        int index = shellContent.indexOf(marker);
+        if (index == -1) {
+            return tables;
+        }
+
+        String subContent = shellContent.substring(index + marker.length());
+
+        // 匹配以 # 开头，后面跟表名（允许字母、数字、下划线和点），整行可有前后空格
+        Pattern pattern = Pattern.compile("(?m)^#\\s*([A-Za-z0-9_.]+)\\s*$");
+        Matcher matcher = pattern.matcher(subContent);
+
+        while (matcher.find()) {
+            String table = matcher.group(1).trim();
+            if (!table.isEmpty() && !tables.contains(table)) {
+                tables.add(table);
+            }
+        }
+        return tables;
+    }
+
     public static String getAlertShell(String alertTemplate, String token, String mentionedUsers) {
         List<String> strings = extractFromBraces(alertTemplate);
         String first = strings.getFirst();
