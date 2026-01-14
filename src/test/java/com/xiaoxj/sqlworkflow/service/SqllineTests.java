@@ -12,32 +12,17 @@ import java.util.stream.Collectors;
 public class SqllineTests {
     public static void main(String[] args) {
         String sqlContent = """
-                #!/bin/bash
-                #客户动态-视频回放
-                source /data/apps/SparkRuntimeTempDir/readmqconfig.sh source4
-                source /data/apps/pushSomeInfo/bin/impala2mq.sh
-                exchangeName=customer-event
-                routingKey=azt-event-key
-                api=azt-event-queue
-                isFilter=0
-                sql="
-                select customer_id                            as accountId_out
-                     , 1                                      as journeyType_out
-                     , 1                                      as businessType_out
-                     , '客户动态-视频回放'                    as title_out
-                     , concat_ws('_', circle_name, cast(circle_id as string)) as \\`圈子名称\\`
-                     , video_title                            as \\`视频标题\\`
-                     , last_review_time                       as \\`当天观看最晚时间\\`
-                     , visitor_cnt                            as \\`当天观看次数\\`
-                     , live_operator                          as \\`视频讲师\\`
-                     , live_time                              as \\`视频直播时间\\`
-                from cdm.dwd_scrm_customer_video_review_change_hd
-                order by customer_id,last_review_time;
-                "
-                impala2mq 2
-                """;
+---doris---
+CALL EXECUTE_STMT("c_hz_middle", "truncate table phpmanager.t_user_tags_test;");
+insert into c_hz_middle.phpmanager.t_user_tags_test select * from hive.db_tag.dwd_user_tag_to_interface_dd;
+
+---doris---
+CALL EXECUTE_STMT("c_hz_middle", "DELETE t1 FROM phpmanager.t_user_tags_test as t1 LEFT JOIN phpmanager.t_user_tags_tmp_test as t2 ON  t1.tag_id=t2.tag_id and t1.user_id=t2.user_id WHERE t2.tag_id IS NULL and t1.tag_id not rlike 'fz_';");
+insert into c_hz_middle.phpmanager.t_user_tags_tmp_test select * from hive.db_tag.dwd_user_tag_to_interface_dd;
+           """;
+        System.out.println("extractSql:" + sqlContent);
         String strings = extractSqlToString(sqlContent);
-        LineageRunner runner = LineageRunner.builder(strings).build();
+        LineageRunner runner = LineageRunner.builder(sqlContent).build();
         System.out.println("sql:" + strings);
         List<Table> sources = runner.sourceTables();
         List<Table> targets = runner.targetTables();
