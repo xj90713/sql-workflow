@@ -140,7 +140,8 @@ public class WorkflowOperator extends AbstractOperator {
         throw new DolphinException("get dolphin scheduler workflow fail");
       }
     } catch (Exception e) {
-      throw new DolphinException("get dolphin scheduler workflow fail", e);
+      log.error("DolphinScheduler接口调用失败, 工作流不存在");
+      return null;
     }
   }
 

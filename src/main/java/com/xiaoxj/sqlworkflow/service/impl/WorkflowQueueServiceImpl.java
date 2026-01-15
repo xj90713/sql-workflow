@@ -18,6 +18,10 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
     private final WorkflowDeployRepository repo;
     private final IngestInfoServiceImpl ingestInfoService;
 
+    /**
+     * 获取已经完成的加工表或者采集表以及无需加工的基础维度表
+     * @return
+     */
     @Override
     public Set<String> buildReadyQueue() {
         String dbsAndTables = getDbsAndTables();
@@ -45,6 +49,10 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         return queue;
     }
 
+    /**
+     * 获取下一个加工任务的名称
+     * @return
+     */
     @Override
     public String getTargetWorkflowName() {
         List<WorkflowDeploy> readyWrokflowList = repo.findByStatusAndScheduleType('N',1);
@@ -55,16 +63,24 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
             return "finished";
         }
         for (WorkflowDeploy wd : readyWrokflowList) {
-            String tgt = wd.getTargetTable();
-            String src = wd.getSourceTables();
+            String targetTable = wd.getTargetTable();
+            String sourceTables = wd.getSourceTables();
+            String dependencies = wd.getDependencies();
             boolean allReady = true;
-            if (src != null && !src.isBlank()) {
-                for (String s : src.split(",")) {
-                    String t = s.trim();
-                    if (!t.isEmpty() && !ready.contains(t)) { allReady = false; break; }
+            if (sourceTables != null && !sourceTables.isBlank()) {
+                for (String sourceTable : sourceTables.split(",")) {
+                    sourceTable = sourceTable.trim();
+                    if (!sourceTable.isEmpty() && !ready.contains(sourceTable)) { allReady = false; break; }
                 }
             }
-            if (allReady && tgt != null && !tgt.isBlank() && !ready.contains(tgt)) return tgt.trim();
+            if (allReady && targetTable != null && !targetTable.isBlank() && !ready.contains(targetTable)) return targetTable.trim();
+            if (dependencies != null && !dependencies.isBlank()) {
+                for (String dependency : dependencies.split(",")) {
+                    char status = repo.findByWorkflowName(dependency).getStatus();
+                    if (status != 'Y') break;
+                }
+                return repo.findByDependencies(dependencies).getFirst().getWorkflowName();
+            }
         }
         return null;
     }
@@ -75,9 +91,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         Set<String> dbs = new LinkedHashSet<>();
         Set<String> tables = new LinkedHashSet<>();
         for (WorkflowDeploy wd : repo.findByStatusAndScheduleType('N', 1)) {
-//            log.info("Workflow:{} ", wd.getWorkflowName());
             String src = wd.getSourceTables();
-//            log.info("Source tables:{} ", src);
             if (src == null || src.isBlank()) continue;
             for (String s : src.split(",")) {
                 String t = s.trim();

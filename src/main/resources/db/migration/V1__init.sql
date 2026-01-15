@@ -11,6 +11,7 @@ CREATE TABLE workflow_deploy (
                                  file_md5 VARCHAR(255),
                                  source_tables VARCHAR(1000),
                                  target_table VARCHAR(255),
+                                 dependencies VARCHAR(1000) default null,
                                  status CHAR(1) DEFAULT 'N' comment 'N:未运行，R:运行中,Y:已发布，E:运行错误',
                                  schedule_type tinyint(4) COMMENT '任务调度类型 0定时调度 1依赖调度',
                                  is_deleted TINYINT(1) DEFAULT 0 COMMENT '是否删除,0:未删除,1:已删除',

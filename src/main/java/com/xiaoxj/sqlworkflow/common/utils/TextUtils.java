@@ -56,45 +56,15 @@ public class TextUtils {
         return result;
     }
 
-    /**
-     * 解析 Shell 文本中的 target_tables 列表
-     * @param shellContent 完整的 Shell 脚本内容
-     * @return 提取到的表名列表
-     */
-    public static List<String> extractTargetTables(String shellContent) {
-        List<String> tables = new ArrayList<>();
-        if (shellContent == null || shellContent.isEmpty()) {
-            return tables;
-        }
 
-        String marker = "##target_tables##";
-        int index = shellContent.indexOf(marker);
-        if (index == -1) {
-            return tables;
-        }
-
-        String subContent = shellContent.substring(index + marker.length());
-
-        // 匹配以 # 开头，后面跟表名（允许字母、数字、下划线和点），整行可有前后空格
-        Pattern pattern = Pattern.compile("(?m)^#\\s*([A-Za-z0-9_.]+)\\s*$");
-        Matcher matcher = pattern.matcher(subContent);
-
-        while (matcher.find()) {
-            String table = matcher.group(1).trim();
-            if (!table.isEmpty() && !tables.contains(table)) {
-                tables.add(table);
-            }
-        }
-        return tables;
-    }
-
-    public static Set<String> extractSourceTables(String shellContent) {
+    public static Set<String> getTablesOrDependencies(String shellContent, String type) {
         Set<String> tables = new LinkedHashSet<>();
         if (shellContent == null || shellContent.isEmpty()) {
             return tables;
         }
 
-        String marker = "##source_tables##";
+        String marker = String.format("##%s##", type);
+        System.out.println("marker:" + marker);
         int index = shellContent.indexOf(marker);
         if (index == -1) {
             return tables;
@@ -103,7 +73,7 @@ public class TextUtils {
         String subContent = shellContent.substring(index + marker.length());
 
         // 匹配以 # 开头，后面跟表名（允许字母、数字、下划线和点），整行可有前后空格
-        Pattern pattern = Pattern.compile("(?m)^#\\s*([A-Za-z0-9_.]+)\\s*$");
+        Pattern pattern = Pattern.compile("(?m)^#\\s*([A-Za-z0-9_.-]+)\\s*$");
         Matcher matcher = pattern.matcher(subContent);
 
         while (matcher.find()) {
@@ -112,6 +82,7 @@ public class TextUtils {
                 tables.add(table);
             }
         }
+        System.out.println("tables:" + tables);
         return tables;
     }
 
@@ -230,7 +201,7 @@ public class TextUtils {
             res.add(t);
 
             if (scriptContent.contains("target_tables")) {
-                List<String> targetTableList = TextUtils.extractTargetTables(scriptContent);
+                Set<String> targetTableList = TextUtils.getTablesOrDependencies(scriptContent, "target_tables");
                 String targetTables = targetTableList.stream()
                         .map( table -> "'" + table.replace("'", "''") + "'")
                         .collect(Collectors.joining(","));

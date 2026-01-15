@@ -16,6 +16,12 @@ public interface WorkflowDeployRepository extends JpaRepository<WorkflowDeploy, 
 
     @Query(value = "SELECT * FROM workflow_deploy WHERE target_table = ?1 and status='N'", nativeQuery = true)
     List<WorkflowDeploy> findByTargetTable(String targetTable);
+
+    @Query(value = "SELECT * FROM workflow_deploy WHERE dependencies = ?1 and status='N'", nativeQuery = true)
+    List<WorkflowDeploy> findByDependencies(String dependencies);
+
+
+
     WorkflowDeploy findByWorkflowCode(Long workflowCode);
 
     // 初始化整个表：将所有记录的status更新为N

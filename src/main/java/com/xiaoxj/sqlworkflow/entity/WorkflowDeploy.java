@@ -24,6 +24,7 @@ public class WorkflowDeploy {
     private String fileMd5;
     private String sourceTables;
     private String targetTable;
+    private String dependencies;
     private char status;
     private int scheduleType=1;
     private int isDelete=0;

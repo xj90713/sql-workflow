@@ -74,7 +74,7 @@ public class WorkflowController {
         // 创建任务流之后 需要上线该任务W
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
         long projectCode = workflowDefineResp.getProjectCode();
-        List<String> targetTables = TextUtils.extractTargetTables(sqlContent);
+        Set<String> targetTables = TextUtils.getTablesOrDependencies(sqlContent,"target_tables");
         if (!targetTables.isEmpty()) {
             targetTables.forEach(targetTable ->
                     lineageService.addWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, workflowCode, projectCode, taskCodesString));

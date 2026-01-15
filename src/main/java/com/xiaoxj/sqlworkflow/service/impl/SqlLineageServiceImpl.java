@@ -40,8 +40,9 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         deploy.setWorkflowName(workflowName);
         deploy.setFilePath(filePath);
         deploy.setFileName(fileName);
-        deploy.setSourceTables(getTargetAndSourceTables(sqlContent, fileName).get("sourceTables"));
-        deploy.setTargetTable(getTargetAndSourceTables(sqlContent, fileName).get("targetTable"));
+        deploy.setSourceTables(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("sourceTables"));
+        deploy.setTargetTable(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("targetTable"));
+        deploy.setDependencies(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("dependencies"));
         deploy.setFileContent(sqlContent);
         deploy.setFileMd5(TextUtils.md5(sqlContent));
         deploy.setCommitUser(commitUser);
@@ -70,8 +71,9 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         latest.setFileContent(sqlContent);
         latest.setFileMd5(newMd5);
         latest.setCommitUser(commitUser);
-        latest.setSourceTables(getTargetAndSourceTables(sqlContent, fileName).get("sourceTables"));
-        latest.setTargetTable(getTargetAndSourceTables(sqlContent, fileName).get("targetTable"));
+        latest.setSourceTables(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("sourceTables"));
+        latest.setTargetTable(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("targetTable"));
+        latest.setDependencies(getTargetAndSourceTablesOrDepedencies(sqlContent,fileName).get("dependencies"));
         latest.setUpdateTime(LocalDateTime.now());
         latest.setTaskCodes(taskCodes);
         deployRepo.save(latest);
@@ -79,10 +81,14 @@ public class SqlLineageServiceImpl implements SqlLineageService {
     }
 
     @Override
-    public  Map<String, String> getTargetAndSourceTables(String sqlContent, String fileName) {
+    public  Map<String, String> getTargetAndSourceTablesOrDepedencies(String sqlContent, String fileName) {
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
-        if (!sqlContent.contains("target_tables") && (fileName.contains("shell") || fileName.contains("sh"))) {
+        Set<String> dependencies ;
+        if (!sqlContent.contains("target_tables") &&
+                !sqlContent.contains("source_tables") &&
+                !sqlContent.contains("dependencies") &&
+                (fileName.contains("shell") || fileName.contains("sh"))) {
             sqlContent = TextUtils.extractSql(sqlContent);
         }
         try {
@@ -96,9 +102,12 @@ public class SqlLineageServiceImpl implements SqlLineageService {
                 sourceTables.add(tableName);
             }
             targets.forEach(table -> targetTables.add(table.toString().replace("..", ".")));
-            Set<String> extractedSourceTables = TextUtils.extractSourceTables(sqlContent);
+            Set<String> extractedSourceTables = TextUtils.getTablesOrDependencies(sqlContent, "source_tables");
+            dependencies = TextUtils.getTablesOrDependencies(sqlContent, "dependencies");
+            System.out.println("dependencies:" + dependencies);
             if (!extractedSourceTables.isEmpty()) {
-                sourceTables = extractedSourceTables;  // 替换整个集合
+                sourceTables = extractedSourceTables;// 替换整个集合
+                log.info("使用 extractSourceTables 替换 sourceTables: {}", sourceTables);
             }
         } catch (Exception e) {
             throw new IllegalArgumentException("解析 SQL 失败: " + fileName, e);
@@ -114,7 +123,9 @@ public class SqlLineageServiceImpl implements SqlLineageService {
                 .map(table -> table.replaceFirst("^hive\\.", ""))
                 .filter(t -> !t.contains(targetTable))
                 .collect(Collectors.joining(","));
-        return Map.of("sourceTables", sourceTableStrings, "targetTable", targetTable);
+        String dependencyStrings = String.join(",", dependencies);
+        System.out.println("dependencies:" + dependencyStrings);
+        return Map.of("sourceTables", sourceTableStrings, "targetTable", targetTable, "dependencies", dependencyStrings);
     }
 
     @Override
