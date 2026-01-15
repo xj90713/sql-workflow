@@ -13,10 +13,6 @@ public class SqllineTests {
     public static void main(String[] args) {
         String sqlContent = """
 ---doris---
-CALL EXECUTE_STMT("c_hz_middle", "truncate table phpmanager.t_user_tags_test;");
-insert into c_hz_middle.phpmanager.t_user_tags_test select * from hive.db_tag.dwd_user_tag_to_interface_dd;
-
----doris---
 CALL EXECUTE_STMT("c_hz_middle", "DELETE t1 FROM phpmanager.t_user_tags_test as t1 LEFT JOIN phpmanager.t_user_tags_tmp_test as t2 ON  t1.tag_id=t2.tag_id and t1.user_id=t2.user_id WHERE t2.tag_id IS NULL and t1.tag_id not rlike 'fz_';");
 insert into c_hz_middle.phpmanager.t_user_tags_tmp_test select * from hive.db_tag.dwd_user_tag_to_interface_dd;
            """;
