@@ -108,6 +108,17 @@ public class WorkflowController {
         }
         long workflowCode = workflowDeploy.getWorkflowCode();
         long projectCode = workflowDeploy.getProjectCode();
+        Set<String> targetTables = TextUtils.getTablesOrDependencies(sqlContent,"target_tables");
+        if (!targetTables.isEmpty()) {
+            targetTables.forEach(targetTable ->  {
+                        List<WorkflowDeploy> byTargetTable = deployRepo.findByTargetTable(targetTable);
+                Optional<WorkflowDeploy> deploy = byTargetTable.stream().filter(w -> w.getWorkflowName().equals(targetTable)).findFirst();
+                if (deploy.isEmpty()) {
+                            lineageService.addWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, workflowCode, projectCode, null);
+                        }
+                        lineageService.updateWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, workflowCode, projectCode,null);
+                    });
+        }
         String describe = TextUtils.extractComments(sqlContent);
         // 更新工作流之前，必须要下线改任务
         dolphinSchedulerService.offlineWorkflow(projectCode, workflowCode);
@@ -117,7 +128,7 @@ public class WorkflowController {
         WorkflowDefineResp workflowDefineResp = dolphinSchedulerService.updateWorkflow(projectCode, workflowCode, workDefinition);
         // 更新工作流之后，在上线工作流
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
-        WorkflowDeploy updateWorkflowDeploy = lineageService.updateWorkflowDeploy(workflowName, filePath, fileName, sqlContent, user, taskCodesString, workflowCode, projectCode);
+        WorkflowDeploy updateWorkflowDeploy = lineageService.updateWorkflowDeploy(workflowName, filePath, fileName, sqlContent, user, workflowCode, projectCode, taskCodesString);
         return BaseResult.success(updateWorkflowDeploy);
     }
 

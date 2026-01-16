@@ -59,7 +59,7 @@ public class SqlLineageServiceImpl implements SqlLineageService {
 
     @Override
     @Transactional
-    public WorkflowDeploy updateWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, String taskCodes, long workflowCode, long projectCode) {
+    public WorkflowDeploy updateWorkflowDeploy(String workflowName, String filePath, String fileName, String sqlContent, String commitUser, long workflowCode, long projectCode, String taskCodes) {
         WorkflowDeploy latest = deployRepo.findTopByWorkflowNameOrderByUpdateTimeDesc(workflowName);
         if (latest == null) {
             return addWorkflowDeploy(workflowName, filePath, fileName, sqlContent, commitUser, workflowCode, projectCode, taskCodes);
