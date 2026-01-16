@@ -85,10 +85,12 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
         Set<String> dependencies ;
-        if (!sqlContent.contains("target_tables") &&
-                !sqlContent.contains("source_tables") &&
-                !sqlContent.contains("dependencies") &&
-                (fileName.contains("shell") || fileName.contains("sh"))) {
+        boolean isShellFile = fileName.contains("shell") || fileName.contains("sh");
+        boolean hasKeywords = sqlContent.contains("target_tables") ||
+                sqlContent.contains("source_tables") ||
+                sqlContent.contains("dependencies");
+
+        if (isShellFile && !hasKeywords && !sqlContent.contains("values(1)")) {
             sqlContent = TextUtils.extractSql(sqlContent);
         }
         try {
@@ -104,10 +106,8 @@ public class SqlLineageServiceImpl implements SqlLineageService {
             targets.forEach(table -> targetTables.add(table.toString().replace("..", ".")));
             Set<String> extractedSourceTables = TextUtils.getTablesOrDependencies(sqlContent, "source_tables");
             dependencies = TextUtils.getTablesOrDependencies(sqlContent, "dependencies");
-            System.out.println("dependencies:" + dependencies);
             if (!extractedSourceTables.isEmpty()) {
                 sourceTables = extractedSourceTables;// 替换整个集合
-                log.info("使用 extractSourceTables 替换 sourceTables: {}", sourceTables);
             }
         } catch (Exception e) {
             throw new IllegalArgumentException("解析 SQL 失败: " + fileName, e);
@@ -124,7 +124,6 @@ public class SqlLineageServiceImpl implements SqlLineageService {
                 .filter(t -> !t.contains(targetTable))
                 .collect(Collectors.joining(","));
         String dependencyStrings = String.join(",", dependencies);
-        System.out.println("dependencies:" + dependencyStrings);
         return Map.of("sourceTables", sourceTableStrings, "targetTable", targetTable, "dependencies", dependencyStrings);
     }
 

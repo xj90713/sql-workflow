@@ -82,7 +82,6 @@ public class TextUtils {
                 tables.add(table);
             }
         }
-        System.out.println("tables:" + tables);
         return tables;
     }
 
