@@ -6,21 +6,26 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public interface WorkflowDeployRepository extends JpaRepository<WorkflowDeploy, Integer> {
+
+    List<WorkflowDeploy> findByStatusAndScheduleTypeIn(char status, List<Integer> scheduleTypes);
+
+
     List<WorkflowDeploy> findByStatusAndScheduleType(char status, int scheduleType);
+
     WorkflowDeploy findByWorkflowName(String workflowName);
     WorkflowDeploy findTopByWorkflowNameOrderByUpdateTimeDesc(String workflowName);
 
     @Query(value = "SELECT * FROM workflow_deploy WHERE target_table = ?1 and status='N'", nativeQuery = true)
-    List<WorkflowDeploy> findByTargetTable(String targetTable);
+    List<WorkflowDeploy> findByTargetTableAndStatus(String targetTable);
 
     @Query(value = "SELECT * FROM workflow_deploy WHERE dependencies = ?1 and status='N'", nativeQuery = true)
     List<WorkflowDeploy> findByDependencies(String dependencies);
 
 
+    List<WorkflowDeploy> findByTargetTable(String targetTable);
 
     WorkflowDeploy findByWorkflowCode(Long workflowCode);
 

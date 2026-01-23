@@ -22,14 +22,14 @@ spring:
         group: gushi-local
         namespace: gushi-local
         username: nacos
-        password: nacos
+        password: ERisi0aK_oo
       config:
         server-addr: testnacos.gp51.com:48848
         file-extension: yaml
         group: gushi-local
         namespace: gushi-local
         username: nacos
-        password: nacos
+        password: ERisi0aK_oo
 ---
 # 生产环境配置（k8s）
 spring:

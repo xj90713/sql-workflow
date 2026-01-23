@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @RestController
@@ -77,7 +76,7 @@ public class WorkflowController {
         Set<String> targetTables = TextUtils.getTablesOrDependencies(sqlContent,"target_tables");
         if (!targetTables.isEmpty()) {
             targetTables.forEach(targetTable ->
-                    lineageService.addWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, workflowCode, projectCode, taskCodesString));
+                    lineageService.addWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, 0, 0, null));
             WorkflowDeploy workflowDeploy = lineageService.addWorkflowDeploy(workflowName, filePath, fileName, sqlContent, user, workflowCode, projectCode, taskCodesString);
             return BaseResult.success(workflowDeploy);
 
@@ -111,12 +110,12 @@ public class WorkflowController {
         Set<String> targetTables = TextUtils.getTablesOrDependencies(sqlContent,"target_tables");
         if (!targetTables.isEmpty()) {
             targetTables.forEach(targetTable ->  {
-                        List<WorkflowDeploy> byTargetTable = deployRepo.findByTargetTable(targetTable);
+                        List<WorkflowDeploy> byTargetTable = deployRepo.findByTargetTableAndStatus(targetTable);
                 Optional<WorkflowDeploy> deploy = byTargetTable.stream().filter(w -> w.getWorkflowName().equals(targetTable)).findFirst();
                 if (deploy.isEmpty()) {
-                            lineageService.addWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, workflowCode, projectCode, null);
+                            lineageService.addWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, 0, 0, null);
                         }
-                        lineageService.updateWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, workflowCode, projectCode,null);
+                        lineageService.updateWorkflowDeploy(targetTable, filePath, fileName, "insert into " + targetTable + " values(1);", user, 0, 0,null);
                     });
         }
         String describe = TextUtils.extractComments(sqlContent);
@@ -199,6 +198,7 @@ public class WorkflowController {
 
     @PostMapping("/updateWorkflowStatus")
     public BaseResult<String> updateWorkflowSchedulerStatus(@RequestBody String tableName) {
+        System.out.println("Received table name: " + tableName);
         log.info("Testing affected tables calculation.");
         List<WorkflowDeploy> workflowDeployList = deployRepo.findByStatusAndScheduleType('Y', 1);
 
@@ -207,8 +207,9 @@ public class WorkflowController {
             map.put(deploy.getTargetTable(), deploy.getSourceTables());
         });
         Set<String> affectedTables = queueService.getAffectedTables(tableName, map);
-        int num = deployRepo.updateStatusByTargetTable(affectedTables);
-        log.info("Affected tables size: {}", num);
-        return BaseResult.success("Updated rows: " + num);
+        log.info("Affected tables: {}", affectedTables);
+//        int num = deployRepo.updateStatusByTargetTable(affectedTables);
+//        log.info("Affected tables size: {}", num);
+        return BaseResult.success("Updated rows: " + affectedTables.size());
     }
 }

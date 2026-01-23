@@ -61,7 +61,8 @@ public class WorkflowOrchestrator {
             return;
         }
         String target = queueService.getTargetWorkflowName();
-//        log.info("Triggering workflow: {}", target);
+
+        log.info("Triggering workflow: {}", target);
         if (Objects.equals(target, "finished")) {
             log.info("All workflows have finished.");
             return;
@@ -71,7 +72,7 @@ public class WorkflowOrchestrator {
             return;
         };
         WorkflowDeploy deploy;
-        List<WorkflowDeploy> deployList = deployRepo.findByTargetTable(target);
+        List<WorkflowDeploy> deployList = deployRepo.findByTargetTableAndStatus(target);
         if (deployList.size() > 1) {
             log.warn("More than one workflow found for target table: {}", target);
             List<WorkflowDeploy> list = deployList.stream().filter(x -> !x.getSourceTables().
@@ -80,6 +81,7 @@ public class WorkflowOrchestrator {
         } else  {
             deploy = deployList.getFirst();
         }
+        log.info("Starting workflow: {}", deploy.getWorkflowName());
         HttpRestResult<JsonNode> result = dolphinService.startWorkflow(deploy.getProjectCode(), deploy.getWorkflowCode());
         if (result != null && result.getSuccess()) {
             Long workflowInstanceId = Long.parseLong(result.getData().get("workflowInstanceId").toString());

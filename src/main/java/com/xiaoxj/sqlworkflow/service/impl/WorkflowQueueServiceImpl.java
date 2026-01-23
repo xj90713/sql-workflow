@@ -36,7 +36,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         }
         List<String> ingestTables = ingestInfoService.findIngestTables(dbs, tables);
         Set<String> queue = new LinkedHashSet<>();
-        for (WorkflowDeploy wd : repo.findByStatusAndScheduleType('Y', 1)) {
+        for (WorkflowDeploy wd : repo.findByStatusAndScheduleTypeIn('Y', Arrays.asList(0,1, 2))) {
             String tgt = wd.getTargetTable();
             if (tgt != null && !tgt.isBlank()) queue.add(tgt.trim());
         }
@@ -73,7 +73,12 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
                     if (!sourceTable.isEmpty() && !ready.contains(sourceTable)) { allReady = false; break; }
                 }
             }
-            if (allReady && targetTable != null && !targetTable.isBlank() && !ready.contains(targetTable)) return targetTable.trim();
+            if (allReady && targetTable != null && !targetTable.isBlank()) {
+                log.info("Found a ready workflow: {}", wd.getWorkflowName());
+                log.info("Target table: {}", targetTable);
+                if (repo.findByTargetTable(targetTable).size() > 1) return targetTable.trim();
+                if (!ready.contains(targetTable)) return targetTable.trim();
+            }
             if (dependencies != null && !dependencies.isBlank()) {
                 for (String dependency : dependencies.split(",")) {
                     char status = repo.findByWorkflowName(dependency).getStatus();
@@ -105,8 +110,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
                 }
             }
         }
-        log.info("Databases:{} ", dbs);
-        log.info("Tables:{} ", tables);
+
         String dbCsv = String.join(",", dbs);
         String tableCsv = String.join(",", tables);
         if (dbCsv.isEmpty() || tableCsv.isEmpty()) {
