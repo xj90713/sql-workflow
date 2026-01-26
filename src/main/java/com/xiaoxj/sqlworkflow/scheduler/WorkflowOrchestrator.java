@@ -75,8 +75,10 @@ public class WorkflowOrchestrator {
         List<WorkflowDeploy> deployList = deployRepo.findByTargetTableAndStatus(target);
         if (deployList.size() > 1) {
             log.warn("More than one workflow found for target table: {}", target);
-            List<WorkflowDeploy> list = deployList.stream().filter(x -> !x.getSourceTables().
-                    contains(x.getTargetTable())).toList();
+            List<WorkflowDeploy> list = deployList.stream()
+                    .filter(x -> !x.getSourceTables().contains(x.getTargetTable()))
+                    .filter(x -> x.getScheduleType() == 1)
+                    .toList();
             deploy = list.getFirst();
         } else  {
             deploy = deployList.getFirst();
