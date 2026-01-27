@@ -28,6 +28,7 @@ public interface WorkflowDeployRepository extends JpaRepository<WorkflowDeploy, 
     List<WorkflowDeploy> findByTargetTable(String targetTable);
 
     WorkflowDeploy findByWorkflowCode(Long workflowCode);
+    
 
     // 初始化整个表：将所有记录的status更新为N
     @Modifying

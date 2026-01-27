@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -137,14 +138,15 @@ public class WorkflowOrchestrator {
             }
         });
     }
-//    @Scheduled(cron = "${workflow.schedule.initialize}")
-//    @Async("taskExecutor")
-//    public void initializeStatus() {
-//        if (!scheduleEnabled) {
-//            log.warn("close workflow orchestrator schedule.");
-//            return;
-//        }
-//        int n = deployRepo.initializeAllStatusToN();
-//        log.info("Initialized {} workflow status to N.", n);
-//    }
+    @Scheduled(cron = "${workflow.schedule.initialize}")
+    @Async("taskExecutor")
+    @Transactional
+    public void initWorkflowStatus() {
+        if (!scheduleEnabled) {
+            log.warn("close workflow orchestrator schedule.");
+            return;
+        }
+        int n = deployRepo.initializeAllStatusToN();
+        log.info("Initialized {} workflow status to N.", n);
+    }
 }
