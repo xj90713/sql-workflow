@@ -72,18 +72,18 @@ public class WorkflowOrchestrator {
             log.info("No pending workflow found.");
             return;
         };
-        WorkflowDeploy deploy;
-        List<WorkflowDeploy> deployList = deployRepo.findByTargetTableAndStatus(target);
-        if (deployList.size() > 1) {
-            log.warn("More than one workflow found for target table: {}", target);
-            List<WorkflowDeploy> list = deployList.stream()
-                    .filter(x -> !x.getSourceTables().contains(x.getTargetTable()))
-                    .filter(x -> x.getScheduleType() == 1)
-                    .toList();
-            deploy = list.getFirst();
-        } else  {
-            deploy = deployList.getFirst();
-        }
+        WorkflowDeploy deploy = deployRepo.findByWorkflowName(target);
+//        List<WorkflowDeploy> deployList = deployRepo.findByTargetTableAndStatus(target);
+//        if (deployList.size() > 1) {
+//            log.warn("More than one workflow found for target table: {}", target);
+//            List<WorkflowDeploy> list = deployList.stream()
+//                    .filter(x -> !x.getSourceTables().contains(x.getTargetTable()))
+//                    .filter(x -> x.getScheduleType() == 1)
+//                    .toList();
+//            deploy = list.getFirst();
+//        } else  {
+//            deploy = deployList.getFirst();
+//        }
         log.info("Starting workflow: {}", deploy.getWorkflowName());
         HttpRestResult<JsonNode> result = dolphinService.startWorkflow(deploy.getProjectCode(), deploy.getWorkflowCode());
         if (result != null && result.getSuccess()) {

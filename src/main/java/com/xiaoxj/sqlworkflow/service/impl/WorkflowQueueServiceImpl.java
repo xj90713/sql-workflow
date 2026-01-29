@@ -76,8 +76,8 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
             if (allReady && targetTable != null && !targetTable.isBlank()) {
                 log.info("Found a ready workflow: {}", wd.getWorkflowName());
                 log.info("Target table: {}", targetTable);
-                if (repo.findByTargetTable(targetTable).size() > 1) return targetTable.trim();
-                if (!ready.contains(targetTable)) return targetTable.trim();
+                if (repo.findByTargetTable(targetTable).size() > 1) return wd.getWorkflowName().trim();
+                if (!ready.contains(targetTable)) return wd.getWorkflowName().trim();
             }
             if (dependencies != null && !dependencies.isBlank()) {
                 for (String dependency : dependencies.split(",")) {
