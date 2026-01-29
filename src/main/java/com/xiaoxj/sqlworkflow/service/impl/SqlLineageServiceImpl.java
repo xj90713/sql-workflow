@@ -116,8 +116,9 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         String targetTable = targetTables.stream()
                 .map(table -> table.replace("..", "."))
                 .map(table -> table.replaceFirst("^hive\\.", ""))
-                .findFirst()
-                .orElseGet(() -> TextUtils.inferTargetFromFilename(fileName));
+//                .findFirst()
+//                .orElseGet(() -> TextUtils.inferTargetFromFilename(fileName));
+                .collect(Collectors.joining(","));
         String sourceTableStrings = sourceTables.stream()
                 .map(table -> table.replace("..", "."))
                 .map(table -> table.replaceFirst("^hive\\.", ""))

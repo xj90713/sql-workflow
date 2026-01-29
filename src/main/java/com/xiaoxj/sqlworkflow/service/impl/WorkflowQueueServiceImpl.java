@@ -28,8 +28,8 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         String dbs;
         String tables;
         if (dbsAndTables != null) {
-            dbs = getDbsAndTables().split("-->")[0];
-            tables = getDbsAndTables().split("-->")[1];
+            dbs = dbsAndTables.split("-->")[0];
+            tables = dbsAndTables.split("-->")[1];
         } else {
             dbs = null;
             tables = null;
@@ -38,7 +38,12 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         Set<String> queue = new LinkedHashSet<>();
         for (WorkflowDeploy wd : repo.findByStatusAndScheduleTypeIn('Y', Arrays.asList(0,1, 2))) {
             String tgt = wd.getTargetTable();
-            if (tgt != null && !tgt.isBlank()) queue.add(tgt.trim());
+            String[] splitTables = tgt.split(",");
+            Arrays.stream(splitTables).forEach(table -> {
+                if (!tgt.isBlank()) {
+                    queue.add(table);
+                }
+            });
         }
         // 合并 ingestTables 到 queue 中
         for (String table : ingestTables) {
