@@ -99,6 +99,10 @@ public class SqlLineageServiceImpl implements SqlLineageService {
             LineageRunner runner = LineageRunner.builder(fixSqlContent).build();
             List<Table> sources = runner.sourceTables();
             List<Table> targets = runner.targetTables();
+            List<Table> intermediateTables = runner.intermediateTables();
+            if (!intermediateTables.isEmpty()) {
+                targets.addAll(intermediateTables);
+            }
             for (Table table : sources) {
                 String tableName = table.toString().replace("..", ".");
                 sourceTables.add(tableName);
