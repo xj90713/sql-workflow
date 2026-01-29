@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -98,12 +99,10 @@ public class SqlLineageServiceImpl implements SqlLineageService {
                     .replace("${imp_pt_day}", "'2025-01-01'");
             LineageRunner runner = LineageRunner.builder(fixSqlContent).build();
             List<Table> sources = runner.sourceTables();
-            List<Table> targets = runner.targetTables();
+            List<Table> originalTargets = runner.targetTables();
             List<Table> intermediateTables = runner.intermediateTables();
-            if (!intermediateTables.isEmpty()) {
-                log.info("intermediateTables found: {}", intermediateTables);
-                targets.addAll(intermediateTables);
-            }
+            List<Table> targets = Stream.concat(originalTargets.stream(), intermediateTables.stream())
+                    .toList();
             for (Table table : sources) {
                 String tableName = table.toString().replace("..", ".");
                 sourceTables.add(tableName);
