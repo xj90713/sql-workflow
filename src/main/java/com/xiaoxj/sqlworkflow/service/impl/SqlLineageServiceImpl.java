@@ -101,6 +101,7 @@ public class SqlLineageServiceImpl implements SqlLineageService {
             List<Table> targets = runner.targetTables();
             List<Table> intermediateTables = runner.intermediateTables();
             if (!intermediateTables.isEmpty()) {
+                log.info("intermediateTables found: {}", intermediateTables);
                 targets.addAll(intermediateTables);
             }
             for (Table table : sources) {
