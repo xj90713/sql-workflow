@@ -198,18 +198,14 @@ public class WorkflowController {
 
     @PostMapping("/updateWorkflowStatus")
     public BaseResult<String> updateWorkflowSchedulerStatus(@RequestBody String tableName) {
-        System.out.println("Received table name: " + tableName);
-        log.info("Testing affected tables calculation.");
         List<WorkflowDeploy> workflowDeployList = deployRepo.findByStatusAndScheduleType('Y', 1);
-
         Map<String, String> map = new HashMap<>();
         workflowDeployList.forEach(deploy -> {
             map.put(deploy.getTargetTable(), deploy.getSourceTables());
         });
         Set<String> affectedTables = queueService.getAffectedTables(tableName, map);
-        log.info("Affected tables: {}", affectedTables);
-//        int num = deployRepo.updateStatusByTargetTable(affectedTables);
-//        log.info("Affected tables size: {}", num);
+        int num = deployRepo.updateStatusByTargetTable(affectedTables);
+        log.info("Affected tables size: {}", num);
         return BaseResult.success("Updated rows: " + affectedTables.size());
     }
 }
