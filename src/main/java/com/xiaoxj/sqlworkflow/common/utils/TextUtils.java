@@ -191,7 +191,7 @@ public class TextUtils {
         if (types.isEmpty()) {
             Map<String, String> t = new LinkedHashMap<>();
             t.put("task_name", workflowName);
-            if (filePath.contains("shell") || filePath.contains("sh")) {
+            if (filePath.contains("shell") || filePath.contains(".sh")) {
                 t.put("task_type", "shell");
             } else {
                 t.put("task_type", "hive");
