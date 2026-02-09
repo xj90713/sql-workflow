@@ -97,7 +97,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
 
     @Override
     public String getTargetWorkflowName() {
-        List<WorkflowDeploy> readyWrokflowList = repo.findByStatusAndScheduleType('N', 1);
+        List<WorkflowDeploy> readyWrokflowList = repo.findByStatusAndScheduleTypeAndIsDelete('N', 1, 0);
         log.info("Pending workflows: {}", readyWrokflowList.size());
 
         Set<String> ready = buildReadyQueue();
@@ -183,7 +183,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
     public String getDbsAndTables() {
         Set<String> dbs = new LinkedHashSet<>();
         Set<String> tables = new LinkedHashSet<>();
-        for (WorkflowDeploy wd : repo.findByStatusAndScheduleType('N', 1)) {
+        for (WorkflowDeploy wd : repo.findByStatusAndScheduleTypeAndIsDelete('N', 1, 0)) {
             String src = wd.getSourceTables();
             if (src == null || src.isBlank()) continue;
             for (String s : src.split(",")) {

@@ -200,7 +200,7 @@ public class WorkflowController {
     @PostMapping("/updateWorkflowStatus")
     @Transactional
     public BaseResult<String> updateWorkflowSchedulerStatus(@RequestBody String tableName) {
-        List<WorkflowDeploy> workflowDeployList = deployRepo.findByStatusAndScheduleType('Y', 1);
+        List<WorkflowDeploy> workflowDeployList = deployRepo.findByStatusAndScheduleTypeAndIsDelete('Y', 1,0);
         Map<String, String> map = new HashMap<>();
         workflowDeployList.forEach(deploy -> {
             map.put(deploy.getTargetTable(), deploy.getSourceTables());

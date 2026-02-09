@@ -54,7 +54,7 @@ public class WorkflowOrchestrator {
             log.warn("close workflow orchestrator schedule.");
             return;
         }
-        int runningCount = deployRepo.findByStatusAndScheduleType('R',1).size();
+        int runningCount = deployRepo.findByStatusAndScheduleTypeAndIsDelete('R',1, 0).size();
         log.info("Running tasks: {}", runningCount);
         int slots = Math.max(0, maxParallelism - runningCount);
         if (slots <= 0) {

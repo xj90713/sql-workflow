@@ -17,7 +17,7 @@ public interface WorkflowDeployRepository extends JpaRepository<WorkflowDeploy, 
 
     long countByTargetTable(String targetTable);
 
-    List<WorkflowDeploy> findByStatusAndScheduleType(char status, int scheduleType);
+    List<WorkflowDeploy> findByStatusAndScheduleTypeAndIsDelete(char status, int scheduleType, int isDelete);
 
     WorkflowDeploy findByWorkflowName(String workflowName);
     WorkflowDeploy findTopByWorkflowNameOrderByUpdateTimeDesc(String workflowName);
