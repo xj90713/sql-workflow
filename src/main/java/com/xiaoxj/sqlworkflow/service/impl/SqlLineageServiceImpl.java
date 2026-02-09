@@ -86,7 +86,7 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
         Set<String> dependencies ;
-        boolean isShellFile = fileName.contains("shell") || fileName.contains("sh");
+        boolean isShellFile = fileName.contains("shell") || fileName.contains(".sh");
         boolean hasKeywords = sqlContent.contains("target_tables") ||
                 sqlContent.contains("source_tables") ||
                 sqlContent.contains("dependencies");
