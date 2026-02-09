@@ -91,7 +91,7 @@ public class TextUtils {
         String shellTemplate = """
         #!/bin/bash
         set -ex
-        if [ -n "${%s}" ]; then
+        if [ -n "${%s}" ] && [ "${%s}" != "0" ] && [ "${%s}" != "null" ]; then
             # 发送企业微信 Webhook
             curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=%s' \\
                  -H 'Content-Type: application/json' \\
@@ -124,7 +124,7 @@ public class TextUtils {
                     """;
             return String.format(shellTemplate, first, first, first, token, alertTemplate);
         }
-        return String.format(shellTemplate, first, token, alertTemplate, mentionedUsers);
+        return String.format(shellTemplate, first, first, first, token, alertTemplate, mentionedUsers);
     }
 
     public static String getMentionedUsers(String mentionedUsers) {
