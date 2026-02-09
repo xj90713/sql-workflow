@@ -9,9 +9,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.RequestContent;
 public class BaseTest {
 
-  protected final String dolphinAddress = "https://ds.gp51.com/dolphinscheduler";
+  protected final String dolphinAddress = "https://ds.demo.com/dolphinscheduler";
   protected final Long projectCode = 159198460609120L;
-  private final String token = "9fffbf2afa33e37eed7588f7e2918826";
+  private final String token = "9fffbf2afa33e37eed75234f7e2918826";
   protected final String tenantCode = "admin";
 
   protected DolphinsRestTemplate restTemplate =
