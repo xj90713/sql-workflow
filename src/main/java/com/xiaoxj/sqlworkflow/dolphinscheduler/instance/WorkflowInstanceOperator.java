@@ -13,9 +13,10 @@ import com.xiaoxj.sqlworkflow.remote.Query;
 import com.xiaoxj.sqlworkflow.common.utils.JacksonUtils;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class WorkflowInstanceOperator extends AbstractOperator {
@@ -85,32 +86,56 @@ public class WorkflowInstanceOperator extends AbstractOperator {
    * @param workflowCode workflow id
    * @return
    */
-  public List<WorkflowInstanceQueryResp> page(
-      Integer page, Integer size, Long projectCode, Long workflowCode) {
+
+
+
+  public String  getWorkflowInstanceIds(
+          Integer page, Integer size, Long projectCode, Integer days) {
+
+    // 1. 设置默认分页值
     page = Optional.ofNullable(page).orElse(DolphinClientConstant.Page.DEFAULT_PAGE);
     size = Optional.ofNullable(size).orElse(DolphinClientConstant.Page.DEFAULT_SIZE);
+    // 如果未传入天数，默认 30 天
+    int retentionDays = Optional.ofNullable(days).orElse(60);
+
+    // 2. 动态计算日期范围
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime now = LocalDateTime.now();
+    // 起始时间：当前时间减去 X 天，并设置为当天的零点
+    String startDate = "2025-01-01 00:00:00";
+    // 结束时间：当前时间
+    String endDate = now.minusDays(retentionDays).withHour(23).withMinute(59).withSecond(59).format(formatter);
 
     String url = dolphinAddress + "/projects/" + projectCode + "/workflow-instances";
-
+    log.info("start time：{}，end time：{}", startDate, endDate);
     Query query = new Query();
     query
-        .addParam("pageNo", String.valueOf(page))
-        .addParam("pageSize", String.valueOf(size))
-        .addParam("workflowDefineCode", String.valueOf(workflowCode));
+            .addParam("pageNo", String.valueOf(page))
+            .addParam("pageSize", String.valueOf(size))
+            .addParam("startDate", startDate) // 动态起始时间
+            .addParam("endDate", endDate);     // 动态结束时间
+
+    // 如果需要按具体的 workflowCode 过滤，通常也需要在此添加参数
 
     try {
       HttpRestResult<JsonNode> restResult =
-          dolphinsRestTemplate.get(url, getHeader(), query, JsonNode.class);
-      return JacksonUtils.parseObject(
-              restResult.getData().toString(),
-              new TypeReference<PageInfo<WorkflowInstanceQueryResp>>() {})
-          .getTotalList();
+              dolphinsRestTemplate.get(url, getHeader(), query, JsonNode.class);
+
+      List<WorkflowInstanceQueryResp> totalList = JacksonUtils.parseObject(
+                      restResult.getData().toString(),
+                      new TypeReference<PageInfo<WorkflowInstanceQueryResp>>() {
+                      })
+              .getTotalList();
+        return totalList.stream()
+                .map(WorkflowInstanceQueryResp::getId)
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
     } catch (Exception e) {
-      throw new DolphinException("page dolphin scheduler workflow instance list fail", e);
+      throw new DolphinException("require dolphin scheduler workflow instances ids fail", e);
     }
   }
 
-  /**
+      /**
    * query workflow's instance status
    *
    * @param projectCode project code
@@ -198,6 +223,19 @@ public class WorkflowInstanceOperator extends AbstractOperator {
       return restResult.getSuccess();
     } catch (Exception e) {
       throw new DolphinException("delete dolphin scheduler workflow instance fail", e);
+    }
+  }
+
+  public Boolean batchDelete(Long projectCode, String workflowInstanceIds) {
+    // 构建包含查询参数的URL
+    String url = dolphinAddress + "/projects/" + projectCode + "/workflow-instances/batch-delete?workflowInstanceIds=" + workflowInstanceIds;
+
+    try {
+      // 发送POST请求，请求体为空。这里假设postForm方法在第二个参数为null或空时发送空体。
+      HttpRestResult<JsonNode> restResult = dolphinsRestTemplate.postForm(url, getHeader(), null, JsonNode.class);
+      return restResult.getSuccess();
+    } catch (Exception e) {
+      throw new DolphinException("delete dolphin scheduler workflow instances fail", e);
     }
   }
 }

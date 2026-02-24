@@ -1,6 +1,7 @@
 package com.xiaoxj.sqlworkflow.scheduler;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.xiaoxj.sqlworkflow.core.DolphinClient;
 import com.xiaoxj.sqlworkflow.entity.WorkflowDeploy;
 import com.xiaoxj.sqlworkflow.entity.WorkflowInstance;
 import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
@@ -30,6 +31,7 @@ public class WorkflowOrchestrator {
     private final WorkflowDeployRepository deployRepo;
     private final DolphinSchedulerService dolphinService;
     private final WorkflowQueueService queueService;
+    private final DolphinClient dolphinClient;
 
     @Value("${workflow.schedule.maxParallelism:16}")
     private int maxParallelism;
@@ -37,6 +39,11 @@ public class WorkflowOrchestrator {
     @Value("${workflow.schedule.enabled}")
     private boolean scheduleEnabled;
 
+    @Value("${workflow.schedule.projectCodes}")
+    private String projectCodes;
+
+    @Value("${workflow.schedule.days}")
+    private int days;
 
     private List<String> parseSources(String s) {
         if (s == null || s.isBlank()) return List.of();
@@ -148,5 +155,30 @@ public class WorkflowOrchestrator {
         }
         int n = deployRepo.initializeAllStatusToN();
         log.info("Initialized {} workflow status to N.", n);
+    }
+
+    @Scheduled(cron = "${workflow.schedule.deleteWorkflowInstance}")
+    @Async("taskExecutor")
+    public void deleteWorkflowInstance() {
+        int nums = 0;
+        String[] split = projectCodes.split(",");
+        for (String projectCode : split) {
+            System.out.println("projectCode:" + Long.parseLong(projectCode));;
+        }
+        List<Long> list = Arrays.stream(projectCodes.split(",")).map(Long::parseLong).toList();
+        for (Long projectCode : list) {
+            while (true) {
+                String page = dolphinClient.opsForWorkflowInst().getWorkflowInstanceIds(1, 100, projectCode, days);
+                nums += 100;
+                Boolean b = dolphinClient.opsForWorkflowInst().batchDelete(projectCode, page);
+                if (b) {
+                    log.info("Delete workflow instance completed for projectCode: {}, total deleted: {}", projectCode, nums);
+                }
+                if (page.isEmpty()) {
+                    break;
+                }
+            }
+            nums = 0;
+        }
     }
 }

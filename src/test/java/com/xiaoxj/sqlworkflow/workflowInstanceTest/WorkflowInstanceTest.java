@@ -2,7 +2,7 @@ package com.xiaoxj.sqlworkflow.workflowInstanceTest;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.xiaoxj.sqlworkflow.BaseTest;
-import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.TaskInstanceQueryResp;
+import com.xiaoxj.sqlworkflow.dolphinscheduler.instance.WorkflowInstanceQueryResp;
 import com.xiaoxj.sqlworkflow.remote.HttpRestResult;
 import com.xiaoxj.sqlworkflow.service.DolphinSchedulerService;
 import org.junit.Test;
@@ -10,10 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -45,5 +42,31 @@ public class WorkflowInstanceTest extends BaseTest {
     public void testGetWorkflowInstance() {
         String workflowInstanceStatus = dolphinSchedulerService.getWorkflowInstanceStatus(projectCode, 500L);
         System.out.println(workflowInstanceStatus);
+    }
+
+    @Test
+    public void testGetPage() {
+        int nums = 0;
+        while (true) {
+            String page = getClient().opsForWorkflowInst().getWorkflowInstanceIds(1, 100, projectCode, 12);
+            System.out.println( "page:" + page);
+            nums += 100;
+        Boolean b = getClient().opsForWorkflowInst().batchDelete(projectCode, page);
+
+        System.out.println( page);
+            if (page.isEmpty()) {
+                System.out.println( "nums:" + nums);
+                break;
+            }
+
+        }
+    }
+
+    @Test
+    public void testQueryLog() {
+        Long taskInstanceId = 1L;
+        String log = getClient().opsForTaskInstance().queryLog(projectCode, null, null, taskInstanceId);
+
+        System.out.println(log);
     }
 }
