@@ -87,8 +87,6 @@ public class WorkflowInstanceOperator extends AbstractOperator {
    * @return
    */
 
-
-
   public String  getWorkflowInstanceIds(
           Integer page, Integer size, Long projectCode, Integer days) {
 
@@ -96,7 +94,7 @@ public class WorkflowInstanceOperator extends AbstractOperator {
     page = Optional.ofNullable(page).orElse(DolphinClientConstant.Page.DEFAULT_PAGE);
     size = Optional.ofNullable(size).orElse(DolphinClientConstant.Page.DEFAULT_SIZE);
     // 如果未传入天数，默认 30 天
-    int retentionDays = Optional.ofNullable(days).orElse(60);
+    int retentionDays = Optional.ofNullable(days).orElse(30);
 
     // 2. 动态计算日期范围
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -194,7 +192,6 @@ public class WorkflowInstanceOperator extends AbstractOperator {
 
   /**
    * execute dolphin scheduler workflow instance with custom execute type
-   *
    * @param projectCode project code
    * @param workflowInstanceId workflow instance id
    * @return true for success,otherwise false
