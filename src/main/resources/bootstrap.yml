@@ -18,18 +18,18 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: testnacos.gp51.com:48848
-        group: gushi-local
-        namespace: gushi-local
+        server-addr: testnacos.demo.com:48848
+        group: demo-local
+        namespace: demo-local
         username: nacos
-        password: ERisi0aK_oo
+        password: nacos
       config:
-        server-addr: testnacos.gp51.com:48848
+        server-addr: testnacos.demo.com:48848
         file-extension: yaml
-        group: gushi-local
-        namespace: gushi-local
+        group: demo-local
+        namespace: demo-local
         username: nacos
-        password: ERisi0aK_oo
+        password: nacos
 ---
 # 生产环境配置（k8s）
 spring:
@@ -42,14 +42,14 @@ spring:
     nacos:
       discovery:
         server-addr: nacos-headless.nacos.svc.cluster.local:8848
-        group: gushi-prod
-        namespace: gushi-prod
+        group: demo-prod
+        namespace: demo-prod
         username: nacos
-        password: Toh0auwa
+        password: nacos
       config:
         server-addr: nacos-headless.nacos.svc.cluster.local:8848
         file-extension: yaml
-        group: gushi-prod
-        namespace: gushi-prod
+        group: demo-prod
+        namespace: demo-prod
         username: nacos
-        password: Toh0auwa
+        password: nacos
