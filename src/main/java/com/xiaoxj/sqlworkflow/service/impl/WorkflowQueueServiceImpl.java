@@ -132,13 +132,11 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
                 for (String s : sourceTablesField.split(",")) {
                     String sourceTable = s.trim();
                     if (sourceTable.isEmpty()) continue;
-
-                    // --- 核心修复：如果源表就在当前任务的目标表列表里，直接跳过检查 ---
                     if (targetTableSet.contains(sourceTable)) {
+                        if (targetTableSet.size()==1 && sourceTable.equals(targetTableField)) break;
                         log.info("Skipping self-dependency check for table: {} in workflow: {}", sourceTable, currentName);
                         continue;
                     }
-
                     if (!ready.contains(sourceTable)) {
                         sourceTablesReady = false;
                         break;
