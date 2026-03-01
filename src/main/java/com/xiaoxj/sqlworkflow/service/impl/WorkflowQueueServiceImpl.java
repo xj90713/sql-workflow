@@ -135,7 +135,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
 
                     // --- 核心修复：如果源表就在当前任务的目标表列表里，直接跳过检查 ---
                     if (targetTableSet.contains(sourceTable)) {
-                        log.debug("Skipping self-dependency check for table: {} in workflow: {}", sourceTable, currentName);
+                        log.info("Skipping self-dependency check for table: {} in workflow: {}", sourceTable, currentName);
                         continue;
                     }
 
