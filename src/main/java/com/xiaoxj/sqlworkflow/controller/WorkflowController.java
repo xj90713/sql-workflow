@@ -211,6 +211,6 @@ public class WorkflowController {
 
         int num = deployRepo.updateStatusByTargetTable(filteredSet);
         log.info("Affected tables size: {}", num);
-        return BaseResult.success("Updated rows: " + affectedTables.size());
+        return BaseResult.success("Updated rows: " + filteredSet.size());
     }
 }
