@@ -40,7 +40,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
             String tgt = wd.getTargetTable();
             String[] splitTables = tgt.split(",");
             Arrays.stream(splitTables).forEach(table -> {
-                if (tgt.equals(wd.getSourceTables()) && !table.isBlank()) {
+                if (wd.getWorkflowCode()==0) {
                     List<WorkflowDeploy> byTargetTable = repo.findByTargetTable(table);
                     log.info("{} is ready", table);
                     if (byTargetTable.size() > 1 && byTargetTable.stream().anyMatch(w -> w.getStatus() != 'Y')) {
