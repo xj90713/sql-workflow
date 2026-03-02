@@ -42,7 +42,6 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
             Arrays.stream(splitTables).forEach(table -> {
                 if (wd.getWorkflowCode()==0) {
                     List<WorkflowDeploy> byTargetTable = repo.findByTargetTable(table);
-                    log.info("{} is ready", table);
                     if (byTargetTable.size() > 1 && byTargetTable.stream().anyMatch(w -> w.getStatus() != 'Y')) {
                         log.info("{} is not ready, because it has unfinished dependencies", table);
                         return;
