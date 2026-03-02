@@ -134,6 +134,10 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
                     if (sourceTable.isEmpty()) continue;
                     if (targetTableSet.contains(sourceTable)) {
                         if (targetTableSet.size()==1 && sourceTable.equals(targetTableField)) {
+                            if (repo.findByWorkflowName(targetTableField).getStatus() == 'N') {
+                                sourceTablesReady = false;
+                                break;
+                            }
                             break;
                         }
                         log.info("Skipping self-dependency check for table: {} in workflow: {}", sourceTable, currentName);
