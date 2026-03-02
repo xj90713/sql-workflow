@@ -36,7 +36,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         }
         List<String> ingestTables = ingestInfoService.findIngestTables(dbs, tables);
         Set<String> queue = new LinkedHashSet<>();
-        for (WorkflowDeploy wd : repo.findByStatusAndScheduleTypeIn('Y', Arrays.asList(0,1, 2))) {
+        for (WorkflowDeploy wd : repo.findByStatusAndScheduleTypeIn('Y', Arrays.asList(0, 1, 2))) {
             String tgt = wd.getTargetTable();
             String[] splitTables = tgt.split(",");
             Arrays.stream(splitTables).forEach(table -> {
@@ -134,7 +134,6 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
                     if (sourceTable.isEmpty()) continue;
                     if (targetTableSet.contains(sourceTable)) {
                         if (targetTableSet.size()==1 && sourceTable.equals(targetTableField)) {
-                            sourceTablesReady = false;
                             break;
                         }
                         log.info("Skipping self-dependency check for table: {} in workflow: {}", sourceTable, currentName);
