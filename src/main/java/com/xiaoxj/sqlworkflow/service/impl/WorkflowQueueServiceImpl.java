@@ -52,6 +52,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
                 }
             });
         }
+
         // 合并 ingestTables 到 queue 中
         for (String table : ingestTables) {
             if (table != null && !table.isBlank()) {
