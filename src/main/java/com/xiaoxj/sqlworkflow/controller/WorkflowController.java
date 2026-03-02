@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/dependencies")
@@ -206,7 +207,9 @@ public class WorkflowController {
             map.put(deploy.getTargetTable(), deploy.getSourceTables());
         });
         Set<String> affectedTables = queueService.getAffectedTables(tableName, map);
-        int num = deployRepo.updateStatusByTargetTable(affectedTables);
+        Set<String> filteredSet = affectedTables.stream().filter(t -> !t.equals(tableName)).collect(Collectors.toSet()); // 剔除掉自身
+
+        int num = deployRepo.updateStatusByTargetTable(filteredSet);
         log.info("Affected tables size: {}", num);
         return BaseResult.success("Updated rows: " + affectedTables.size());
     }
