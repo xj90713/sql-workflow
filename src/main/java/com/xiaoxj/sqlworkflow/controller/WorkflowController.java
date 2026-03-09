@@ -43,8 +43,8 @@ public class WorkflowController {
     @Resource
     private SchedulerUtils schedulerUtils;
 
-    @Value("#{${dolphin.project.code}}")
-    private Long projectCode;
+//    @Value("#{${dolphin.project.code}}")
+//    private Long projectCode;
 
     @Value("#{${dolphin.alertProject.code}}")
     private Long alertProjectCode;

@@ -1,153 +1,176 @@
-# SQL 工作流调度器 (SQL Workflow Scheduler)
+# SQL Workflow
 
-本项目是一个基于 **Apache DolphinScheduler** 的自动化服务，旨在解决 SQL 脚本的依赖解析与自动调度问题。它作为中间件连接了 SQL 代码仓库与工作流调度系统，能够自动分析表级血缘关系并管理执行顺序。
+基于 Spring Boot + Apache DolphinScheduler 的 SQL 工作流编排服务。  
+核心能力是将 SQL 脚本解析为表级依赖关系，并自动完成工作流创建、更新、触发与状态回写。
 
-## 🚀 功能特性
+## 1. 项目目标
 
-- **自动依赖解析**：深度解析 SQL 脚本，自动提取源表（输入）和目标表（输出），构建依赖关系图。
-- **DolphinScheduler 集成**：通过 API 无缝对接 DolphinScheduler，自动创建、更新和管理工作流定义。
-- **数据驱动调度**：不仅支持定时调度，更支持基于上游数据（源表）就绪状态的触发式调度。
-- **并发控制**：内置全局并发控制机制，防止因任务过多导致资源耗尽。
-- **全生命周期管理**：提供完整的 API 用于工作流的发布、更新和状态监控。
-- **归档删除历史**：支持工作流归档和删除，可配置历史保存时长。
-- **告警支持**：集成了工作流告警配置机制。
+- 接收 SQL（通常来自 GitLab/CI）并解析血缘关系。
+- 将 SQL 任务映射为 DolphinScheduler 工作流。
+- 基于依赖就绪状态自动调度执行，并控制全局并发。
+- 提供告警类工作流的创建和定时配置能力。
 
-## 🏗 架构设计
+## 2. 核心功能
 
-本系统作为 SQL 仓库与 DolphinScheduler 之间的桥梁：
+- SQL 血缘解析：提取 `source_tables`、`target_table`、`dependencies`。
+- 工作流生命周期管理：创建、更新、上下线、启动、状态查询。
+- 依赖调度编排：按上游表/任务完成情况触发下游任务。
+- 运行态记录：保存部署信息与实例运行状态。
+- OpenMetadata 血缘代理：转发 SQL 血缘查询请求。
 
-1.  **接收 (Ingestion)**：通过 API 接收 SQL 脚本内容。
-2.  **解析 (Parsing)**：利用 `SqlLineageService` 分析 SQL 逻辑，识别输入/输出表。
-3.  **注册 (Registration)**：
-    -   在 DolphinScheduler 中创建对应的工作流定义。
-    -   在本地 `workflow_deploy` 表中存储元数据（依赖关系、调度配置）。
-4.  **编排 (Orchestration)**：
-    -   `WorkflowOrchestrator` 定期轮询，检查待执行任务的源表是否已就绪。
-    -   当依赖满足且有可用执行槽位时，触发 DolphinScheduler 工作流实例。
+## 3. 架构概览
 
-## 🛠 环境要求
+1. CI/调用方提交 SQL（Base64 编码）到本服务。
+2. 服务解析 SQL，落库到 `workflow_deploy`。
+3. 服务调用 DolphinScheduler API 创建或更新工作流定义。
+4. `WorkflowOrchestrator` 定时轮询，挑选可执行任务并触发运行。
+5. 定时检查实例状态，回写 `workflow_instance` 与 `workflow_deploy`。
 
-- **Java**: 17+ (推荐)
-- **Maven**: 3.6+
-- **Apache DolphinScheduler**: 3.x
-- **Nacos**: 用于配置管理
-- **MySQL**: 用于元数据存储
+## 4. 技术栈
 
-## ⚙️ 配置指南
+- Java 21
+- Spring Boot 3.2.4
+- Spring Data JPA
+- MySQL / PostgreSQL Driver
+- Nacos（配置与服务发现）
+- sqllineage4j（SQL 血缘解析）
+- Apache DolphinScheduler（工作流调度）
 
-项目主要通过 **Nacos** 进行配置管理。
+## 5. 目录结构
 
-### 引导配置 (`bootstrap.yml`)
-在 `src/main/resources/bootstrap.yml` 中配置 Nacos 服务地址和命名空间：
+```text
+src/main/java/com/xiaoxj/sqlworkflow
+├── controller        # 对外 REST API
+├── service           # 业务服务接口与实现
+├── scheduler         # 定时编排器
+├── dolphinscheduler  # DS 相关对象与操作封装
+├── repository        # JPA Repository
+├── entity            # 数据实体
+├── common            # 工具类/异常/返回对象
+└── core/remote       # HTTP 客户端与 DS 网关底层实现
+```
+
+## 6. 配置说明
+
+项目通过 Nacos 加载业务配置，`bootstrap.yml` 负责引导连接信息。
+
+### 6.1 启动配置（示例）
 
 ```yaml
 spring:
-  cloud:
-    nacos:
-      discovery:
-        server-addr: ${NACOS_HOST:localhost}:8848
-        namespace: ${NACOS_NAMESPACE}
-      config:
-        server-addr: ${NACOS_HOST:localhost}:8848
-        file-extension: yaml
+  application:
+    name: sql-workflow
+  profiles:
+    active: local
 ```
 
-### 核心参数 (在 Nacos 或 `application.yml` 中配置)
+### 6.2 关键业务配置（建议放 Nacos）
 
 ```yaml
 dolphin:
-  base-url: http://dolphinscheduler-api:12345/dolphinscheduler
-  token: <your-dolphin-token>
-  project:
-    code: <default-project-code>
+  base-url: http://<dolphinscheduler-host>/dolphinscheduler
+  token: <token>
+  tenant:
+    code: <tenant-code>
   alertProject:
-    code: <alert-project-code>
+    code: 123456789
 
 workflow:
   schedule:
-    enabled: true            # 是否启用调度编排器
-    triggerPending: "0/30 * * * * ?" # 检查待执行任务的 Cron 表达式
-    maxParallelism: 16       # 最大并发工作流数量
+    enabled: true
+    triggerPending: "0/30 * * * * ?"
+    checkRunning: "0/30 * * * * ?"
+    initialize: "0 0 0 * * ?"
+    deleteWorkflowInstance: "0 0 3 * * ?"
+    maxParallelism: 16
+    projectCodes: "123,456"
+    days: 7
+
+openmetadata:
+  api:
+    url: http://<openmetadata-api>/api/v1/sql/lineage
 ```
 
-## 🔌 API 使用说明
+## 7. API 概览
 
-服务提供 REST API 用于管理工作流。
+### 7.1 工作流接口
 
-### 新增工作流
+1. `POST /api/dependencies/addWorkflow`  
+新增工作流（自动建流并上线）。
 
-注册一个新的 SQL 工作流。
+2. `POST /api/dependencies/updateWorkflow`  
+更新已有工作流（先下线、更新、再上线）。
 
-- **URL**: `/api/dependencies/addWorkflow`
-- **Method**: `POST`
-- **Content-Type**: `application/json`
+3. `POST /api/dependencies/addWorkflowAndScheduler`  
+新增“告警类”工作流并创建调度。
 
-**请求体:**
+4. `POST /api/dependencies/updateWorkflowAndScheduler`  
+更新“告警类”工作流及调度配置。
+
+5. `POST /api/dependencies/updateWorkflowStatus`  
+按变更表名批量重置受影响下游任务状态。
+
+### 7.2 OpenMetadata 接口
+
+1. `POST /api/openmetadata/lineage`  
+转发 SQL 到 OpenMetadata 血缘接口并返回结果。
+
+### 7.3 典型请求体（`addWorkflow` / `updateWorkflow`）
 
 ```json
 {
-  "file_path": "/path/to/your/script.sql",
-  "content": "<base64-encoded-sql-content>",
-  "commit_user": "user_name"
+  "file_path": "/dw/path/ods_xxx.sql",
+  "project_code": "123456789",
+  "content": "<base64-sql>",
+  "commit_user": "your_name"
 }
 ```
 
-### 更新工作流
+说明：
+- `content` 为 Base64 编码 SQL 内容。
+- `project_code` 为 DolphinScheduler 项目编码，当前实现中必填。
 
-更新现有的工作流定义及其依赖关系。
+## 8. 数据表
 
-- **URL**: `/api/dependencies/updateWorkflow`
-- **Method**: `POST`
-- **Content-Type**: `application/json`
+初始化脚本位于 `src/main/resources/db/migration/V1__init.sql`，核心表如下：
 
-**请求体:**
+- `workflow_deploy`：工作流部署元信息、解析结果、状态。
+- `workflow_instance`：工作流实例运行记录。
+- `alert_workflow_deploy`：告警类工作流部署与调度信息。
+- `no_scheduler_table`：无需调度的表配置。
 
-```json
-{
-  "file_path": "/path/to/your/script.sql",
-  "content": "<base64-encoded-sql-content>",
-  "commit_user": "user_name"
-}
-```
+状态约定（`workflow_deploy.status`）：
+- `N`：未运行
+- `R`：运行中
+- `Y`：成功
+- `E`：失败
 
-### 重跑任务
-当某个表重新加工，需要重新跑相关依赖的后续任务。
+## 9. 本地构建与运行
 
-**请求命令：**
 ```bash
-curl -X POST "http://localhost:8080/api/dependencies/rerun" \
-     -H "Content-Type: application/json" \
-     -d '{
-           "table_name": "your_table_name",
-           "commit_user": "user_name"
-         }'
+# 构建
+mvn clean package -DskipTests
 
+# 运行
+java -jar target/sql-workflow-*.jar --spring.profiles.active=local
 ```
 
-## 🗄 数据库模型
+## 10. 常见问题
 
-核心调度表说明：
+1. 任务一直不触发
+- 检查 `workflow.schedule.enabled=true`。
+- 检查待执行任务是否为 `schedule_type=1` 且 `status=N`。
+- 检查依赖表是否已进入就绪队列。
 
--   `workflow_deploy`: 存储工作流定义、源表/目标表信息及当前状态。
--   `workflow_instance`: 记录工作流的执行历史和运行时状态。
--   `alert_workflow_deploy`: 管理告警相关配置。
+2. 创建工作流失败
+- 检查 `dolphin.base-url`、`token`、`project_code` 是否正确。
+- 检查 DolphinScheduler 项目和租户权限。
 
-## 📦 构建与运行
+3. SQL 解析失败
+- 优先确认 SQL 语法和方言兼容性。
+- 对复杂脚本可先在 CI 侧做预清洗，再提交。
 
-1.  **构建项目**:
-    ```bash
-    mvn clean package -DskipTests
-    ```
+## 11. 版本与贡献
 
-2.  **启动应用**:
-    ```bash
-    java -jar target/sql-workflow-*.jar --spring.profiles.active=local
-    ```
-
-## 🤝 参与贡献
-
-1.  Fork 本仓库
-2.  创建特性分支 (`git checkout -b feature/amazing-feature`)
-3.  提交改动 (`git commit -m 'Add some amazing feature'`)
-4.  推送到分支 (`git push origin feature/amazing-feature`)
-5.  提交 Pull Request
+- 当前版本：`1.59.0-SNAPSHOT`
+- 提交规范：建议分支命名 `feature/*`、`fix/*`，PR 描述包含变更动机、影响范围、验证方式。
