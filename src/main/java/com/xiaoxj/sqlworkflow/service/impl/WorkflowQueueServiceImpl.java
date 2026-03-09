@@ -36,15 +36,23 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         }
         List<String> ingestTables = ingestInfoService.findIngestTables(dbs, tables);
         Set<String> queue = new LinkedHashSet<>();
-        for (WorkflowDeploy wd : repo.findByStatusAndScheduleTypeIn('Y', Arrays.asList(0,1, 2))) {
+        for (WorkflowDeploy wd : repo.findByStatusAndScheduleTypeIn('Y', Arrays.asList(0, 1, 2))) {
             String tgt = wd.getTargetTable();
             String[] splitTables = tgt.split(",");
             Arrays.stream(splitTables).forEach(table -> {
+                if (wd.getWorkflowCode()==0) {
+                    List<WorkflowDeploy> byTargetTable = repo.findByTargetTable(table);
+                    if (byTargetTable.size() > 1 && byTargetTable.stream().anyMatch(w -> w.getStatus() != 'Y')) {
+                        log.info("{} is not ready, because it has unfinished dependencies", table);
+                        return;
+                    }
+                }
                 if (!tgt.isBlank()) {
                     queue.add(table);
                 }
             });
         }
+
         // 合并 ingestTables 到 queue 中
         for (String table : ingestTables) {
             if (table != null && !table.isBlank()) {
@@ -132,13 +140,17 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
                 for (String s : sourceTablesField.split(",")) {
                     String sourceTable = s.trim();
                     if (sourceTable.isEmpty()) continue;
-
-                    // --- 核心修复：如果源表就在当前任务的目标表列表里，直接跳过检查 ---
                     if (targetTableSet.contains(sourceTable)) {
-                        log.debug("Skipping self-dependency check for table: {} in workflow: {}", sourceTable, currentName);
+                        if (targetTableSet.size()==1 && sourceTable.equals(targetTableField)) {
+                            if (repo.findByWorkflowName(targetTableField).getStatus() == 'N') {
+                                sourceTablesReady = false;
+                                break;
+                            }
+                            break;
+                        }
+                        log.info("Skipping self-dependency check for table: {} in workflow: {}", sourceTable, currentName);
                         continue;
                     }
-
                     if (!ready.contains(sourceTable)) {
                         sourceTablesReady = false;
                         break;

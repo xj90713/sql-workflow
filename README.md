@@ -110,6 +110,20 @@ workflow:
 }
 ```
 
+### 重跑任务
+当某个表重新加工，需要重新跑相关依赖的后续任务。
+
+**请求命令：**
+```bash
+curl -X POST "http://localhost:8080/api/dependencies/rerun" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "table_name": "your_table_name",
+           "commit_user": "user_name"
+         }'
+
+```
+
 ## 🗄 数据库模型
 
 核心调度表说明：

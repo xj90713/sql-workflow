@@ -121,8 +121,9 @@ public class TaskDefinitionUtils {
         .setWorkerGroup("default")
         .setFailRetryTimes("3")
         .setFailRetryInterval("1")
-        .setTimeoutFlag("CLOSE")
-        .setTimeoutNotifyStrategy("WARN")
+        .setTimeoutFlag("OPEN")
+        .setTimeoutNotifyStrategy("WARNFAILED")
+        .setTimeout(60)
         .setIsCache("NO");
     Optional.ofNullable(cpuQuota).ifPresent(taskDefinition::setCpuQuota);
     Optional.ofNullable(memoryMax).ifPresent(taskDefinition::setMemoryMax);
@@ -156,8 +157,9 @@ public class TaskDefinitionUtils {
             .setWorkerGroup("default")
             .setFailRetryTimes("3")
             .setFailRetryInterval("1")
-            .setTimeoutFlag("CLOSE")
-            .setTimeoutNotifyStrategy("WARN")
+            .setTimeoutFlag("OPEN")
+            .setTimeoutNotifyStrategy("WARNFAILED")
+            .setTimeout(60)
             .setIsCache("NO");
     Optional.ofNullable(cpuQuota).ifPresent(taskDefinition::setCpuQuota);
     Optional.ofNullable(memoryMax).ifPresent(taskDefinition::setMemoryMax);
