@@ -107,11 +107,17 @@ public class SqlLineageServiceImpl implements SqlLineageService {
                 String tableName = table.toString().replace("..", ".");
                 sourceTables.add(tableName);
             }
-            targets.forEach(table -> targetTables.add(table.toString().replace("..", ".")));
+            for (Table table : targets) {
+                String tableName = table.toString().replace("..", ".");
+                targetTables.add(tableName);
+            }
             Set<String> extractedSourceTables = TextUtils.getTablesOrDependencies(sqlContent, "source_tables");
             dependencies = TextUtils.getTablesOrDependencies(sqlContent, "dependencies");
             if (!extractedSourceTables.isEmpty()) {
                 sourceTables = extractedSourceTables;// 替换整个集合
+            }
+            if (!targetTables.isEmpty()) {
+                targetTables = TextUtils.getTablesOrDependencies(sqlContent, "target_tables");
             }
         } catch (Exception e) {
             throw new IllegalArgumentException("解析 SQL 失败: " + fileName, e);

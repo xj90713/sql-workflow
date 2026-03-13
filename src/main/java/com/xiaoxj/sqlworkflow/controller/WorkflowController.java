@@ -61,7 +61,7 @@ public class WorkflowController {
     @PostMapping(value = "/addWorkflow", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BaseResult<WorkflowDeploy> addWorkflow(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
-        Long projectCode = Long.parseLong(payload.get("project_code"));
+        long projectCode = Long.parseLong(payload.get("project_code"));
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String content = payload.get("content");
