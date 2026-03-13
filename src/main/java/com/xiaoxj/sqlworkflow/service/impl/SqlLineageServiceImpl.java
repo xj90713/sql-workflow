@@ -42,7 +42,7 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         deploy.setFilePath(filePath);
         deploy.setFileName(fileName);
         deploy.setSourceTables(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("sourceTables"));
-        deploy.setTargetTable(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("targetTable"));
+        deploy.setTargetTable(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("targetTables"));
         deploy.setDependencies(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("dependencies"));
         deploy.setFileContent(sqlContent);
         deploy.setFileMd5(TextUtils.md5(sqlContent));
@@ -73,7 +73,7 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         latest.setFileMd5(newMd5);
         latest.setCommitUser(commitUser);
         latest.setSourceTables(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("sourceTables"));
-        latest.setTargetTable(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("targetTable"));
+        latest.setTargetTable(getTargetAndSourceTablesOrDepedencies(sqlContent, fileName).get("targetTables"));
         latest.setDependencies(getTargetAndSourceTablesOrDepedencies(sqlContent,fileName).get("dependencies"));
         latest.setUpdateTime(LocalDateTime.now());
         latest.setTaskCodes(taskCodes);
@@ -81,61 +81,174 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         return latest;
     }
 
+//    @Override
+//    public  Map<String, String> getTargetAndSourceTablesOrDepedencies(String sqlContent, String fileName) {
+//        Set<String> sourceTables = new LinkedHashSet<>();
+//        Set<String> targetTables = new LinkedHashSet<>();
+//        Set<String> dependencies ;
+//        boolean isShellFile = fileName.contains("shell") || fileName.contains(".sh");
+//        boolean hasKeywords = sqlContent.contains("target_tables") ||
+//                sqlContent.contains("source_tables") ||
+//                sqlContent.contains("dependencies");
+//
+//        if (isShellFile && !hasKeywords && !sqlContent.contains("values(1)")) {
+//            sqlContent = TextUtils.extractSql(sqlContent);
+//        }
+//        try {
+//            String fixSqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
+//                    .replace("${imp_pt_day}", "'2025-01-01'");
+//            LineageRunner runner = LineageRunner.builder(fixSqlContent).build();
+//            List<Table> sources = runner.sourceTables();
+//            List<Table> originalTargets = runner.targetTables();
+//            List<Table> intermediateTables = runner.intermediateTables();
+//            List<Table> targets = Stream.concat(originalTargets.stream(), intermediateTables.stream())
+//                    .toList();
+//            for (Table table : sources) {
+//                String tableName = table.toString().replace("..", ".");
+//                sourceTables.add(tableName);
+//            }
+//            for (Table table : targets) {
+//                String tableName = table.toString().replace("..", ".");
+//                targetTables.add(tableName);
+//            }
+//            Set<String> extractedSourceTables = TextUtils.getTablesOrDependencies(sqlContent, "source_tables");
+//            dependencies = TextUtils.getTablesOrDependencies(sqlContent, "dependencies");
+//            if (!extractedSourceTables.isEmpty()) {
+//                sourceTables = extractedSourceTables;// 替换整个集合
+//            }
+//            Set<String> extractedTargetTables = TextUtils.getTablesOrDependencies(sqlContent, "target_tables");
+//            if (!extractedTargetTables.isEmpty()) {
+//                targetTables = extractedTargetTables;
+//            }
+//        } catch (Exception e) {
+//            throw new IllegalArgumentException("解析 SQL 失败: " + fileName, e);
+//        }
+//
+//        String targetTable = targetTables.stream()
+//                .map(table -> table.replace("..", "."))
+//                .map(table -> table.replaceFirst("^hive\\.", ""))
+////                .findFirst()
+////                .orElseGet(() -> TextUtils.inferTargetFromFilename(fileName));
+//                .collect(Collectors.joining(","));
+//        Set<String> finalTargetTables = targetTables;
+//        String sourceTableStrings = sourceTables.stream()
+//                .map(table -> table.replace("..", "."))
+//                .map(table -> table.replaceFirst("^hive\\.", ""))
+//                .filter(t -> !finalTargetTables.contains(t))
+//                .collect(Collectors.joining(","));
+//        String dependencyStrings = String.join(",", dependencies);
+//        return Map.of("sourceTables", sourceTableStrings, "targetTable", targetTable, "dependencies", dependencyStrings);
+//    }
+
     @Override
-    public  Map<String, String> getTargetAndSourceTablesOrDepedencies(String sqlContent, String fileName) {
+    public Map<String, String> getTargetAndSourceTablesOrDepedencies(String sqlContent, String fileName) {
         Set<String> sourceTables = new LinkedHashSet<>();
         Set<String> targetTables = new LinkedHashSet<>();
-        Set<String> dependencies ;
-        boolean isShellFile = fileName.contains("shell") || fileName.contains(".sh");
-        boolean hasKeywords = sqlContent.contains("target_tables") ||
-                sqlContent.contains("source_tables") ||
-                sqlContent.contains("dependencies");
+        Set<String> dependencies = new LinkedHashSet<>();
+
+        if (sqlContent == null || sqlContent.trim().isEmpty()) {
+            return Map.of(
+                    "sourceTables", "",
+                    "targetTables", "",
+                    "dependencies", ""
+            );
+        }
+
+        boolean isShellFile = fileName != null && (fileName.contains("shell") || fileName.endsWith(".sh"));
+        boolean hasKeywords = sqlContent.contains("##target_tables##")
+                || sqlContent.contains("##source_tables##")
+                || sqlContent.contains("##dependencies##");
 
         if (isShellFile && !hasKeywords && !sqlContent.contains("values(1)")) {
             sqlContent = TextUtils.extractSql(sqlContent);
         }
+
         try {
-            String fixSqlContent = sqlContent.replace("${pt_day}", "'2025-01-01'")
-                    .replace("${imp_pt_day}", "'2025-01-01'");
+            String fixSqlContent = normalizeSqlVariables(sqlContent);
+
             LineageRunner runner = LineageRunner.builder(fixSqlContent).build();
+
             List<Table> sources = runner.sourceTables();
             List<Table> originalTargets = runner.targetTables();
             List<Table> intermediateTables = runner.intermediateTables();
+
+            // 业务口径：中间表也视为目标表
             List<Table> targets = Stream.concat(originalTargets.stream(), intermediateTables.stream())
                     .toList();
+
             for (Table table : sources) {
-                String tableName = table.toString().replace("..", ".");
-                sourceTables.add(tableName);
+                sourceTables.add(normalizeTableName(table.toString()));
             }
+
             for (Table table : targets) {
-                String tableName = table.toString().replace("..", ".");
-                targetTables.add(tableName);
+                targetTables.add(normalizeTableName(table.toString()));
             }
+
+            // 显式标注优先级高于自动血缘解析
             Set<String> extractedSourceTables = TextUtils.getTablesOrDependencies(sqlContent, "source_tables");
-            dependencies = TextUtils.getTablesOrDependencies(sqlContent, "dependencies");
+            Set<String> extractedTargetTables = TextUtils.getTablesOrDependencies(sqlContent, "target_tables");
+            Set<String> extractedDependencies = TextUtils.getTablesOrDependencies(sqlContent, "dependencies");
+
             if (!extractedSourceTables.isEmpty()) {
-                sourceTables = extractedSourceTables;// 替换整个集合
+                sourceTables = extractedSourceTables.stream()
+                        .map(this::normalizeTableName)
+                        .filter(s -> !s.isEmpty())
+                        .collect(Collectors.toCollection(LinkedHashSet::new));
             }
-            if (!targetTables.isEmpty()) {
-                targetTables = TextUtils.getTablesOrDependencies(sqlContent, "target_tables");
+
+            if (!extractedTargetTables.isEmpty()) {
+                targetTables = extractedTargetTables.stream()
+                        .map(this::normalizeTableName)
+                        .filter(s -> !s.isEmpty())
+                        .collect(Collectors.toCollection(LinkedHashSet::new));
             }
+
+            if (!extractedDependencies.isEmpty()) {
+                dependencies = extractedDependencies.stream()
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .collect(Collectors.toCollection(LinkedHashSet::new));
+            }
+
         } catch (Exception e) {
             throw new IllegalArgumentException("解析 SQL 失败: " + fileName, e);
         }
 
-        String targetTable = targetTables.stream()
-                .map(table -> table.replace("..", "."))
-                .map(table -> table.replaceFirst("^hive\\.", ""))
-//                .findFirst()
-//                .orElseGet(() -> TextUtils.inferTargetFromFilename(fileName));
-                .collect(Collectors.joining(","));
+        Set<String> normalizedTargetTables = targetTables.stream()
+                .map(this::normalizeTableName)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        String targetTable = String.join(",", normalizedTargetTables);
+
         String sourceTableStrings = sourceTables.stream()
-                .map(table -> table.replace("..", "."))
-                .map(table -> table.replaceFirst("^hive\\.", ""))
-                .filter(t -> !t.contains(targetTable))
+                .map(this::normalizeTableName)
+                .filter(s -> !s.isEmpty())
+                .filter(t -> !normalizedTargetTables.contains(t))
                 .collect(Collectors.joining(","));
+
         String dependencyStrings = String.join(",", dependencies);
-        return Map.of("sourceTables", sourceTableStrings, "targetTable", targetTable, "dependencies", dependencyStrings);
+
+        return Map.of(
+                "sourceTables", sourceTableStrings,
+                "targetTables", targetTable,
+                "dependencies", dependencyStrings
+        );
+    }
+
+    private String normalizeSqlVariables(String sqlContent) {
+        return sqlContent
+                .replace("${pt_day}", "'2025-01-01'")
+                .replace("${imp_pt_day}", "'2025-01-01'");
+    }
+
+    private String normalizeTableName(String table) {
+        if (table == null) {
+            return "";
+        }
+        return table.replace("..", ".")
+                .replaceFirst("^hive\\.", "")
+                .trim();
     }
 
     @Override
