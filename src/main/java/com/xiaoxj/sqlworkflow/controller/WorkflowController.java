@@ -43,8 +43,8 @@ public class WorkflowController {
     @Resource
     private SchedulerUtils schedulerUtils;
 
-    @Value("#{${dolphin.project.code}}")
-    private Long projectCode;
+//    @Value("#{${dolphin.project.code}}")
+//    private Long projectCode;
 
     @Value("#{${dolphin.alertProject.code}}")
     private Long alertProjectCode;
@@ -61,6 +61,7 @@ public class WorkflowController {
     @PostMapping(value = "/addWorkflow", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BaseResult<WorkflowDeploy> addWorkflow(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
+        long projectCode = Long.parseLong(payload.get("project_code"));
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String content = payload.get("content");
@@ -74,7 +75,7 @@ public class WorkflowController {
         long workflowCode = workflowDefineResp.getCode();
         // 创建任务流之后 需要上线该任务W
         dolphinSchedulerService.onlineWorkflow(projectCode, workflowCode);
-        long projectCode = workflowDefineResp.getProjectCode();
+        projectCode = workflowDefineResp.getProjectCode();
         Set<String> targetTables = TextUtils.getTablesOrDependencies(sqlContent,"target_tables");
         if (!targetTables.isEmpty()) {
             targetTables.forEach(targetTable ->
@@ -90,6 +91,7 @@ public class WorkflowController {
     @PostMapping(value = "/updateWorkflow", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BaseResult<WorkflowDeploy> updateWorkflow(@RequestBody Map<String, String> payload) {
         String filePath = payload.get("file_path");
+        Long projectCode = Long.parseLong(payload.get("project_code"));
         String workflowName = payload.get("file_path").substring(filePath.lastIndexOf("/") + 1, filePath.lastIndexOf("."));
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
         String content = payload.get("content");
@@ -108,7 +110,7 @@ public class WorkflowController {
             return addWorkflow(payload);
         }
         long workflowCode = workflowDeploy.getWorkflowCode();
-        long projectCode = workflowDeploy.getProjectCode();
+        projectCode = workflowDeploy.getProjectCode();
         Set<String> targetTables = TextUtils.getTablesOrDependencies(sqlContent,"target_tables");
         if (!targetTables.isEmpty()) {
             targetTables.forEach(targetTable ->  {

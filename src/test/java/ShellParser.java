@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,71 +35,60 @@ public class ShellParser {
         return tables;
     }
 
+    public static Set<String> getTablesOrDependencies(String shellContent, String type) {
+        Set<String> tables = new LinkedHashSet<>();
+        if (shellContent == null || shellContent.trim().isEmpty() || type == null || type.trim().isEmpty()) {
+            return tables;
+        }
+
+        String marker = String.format("##%s##", type.trim());
+        int start = shellContent.indexOf(marker);
+        if (start == -1) {
+            return tables;
+        }
+
+        // 从当前 marker 后开始截取
+        start += marker.length();
+
+        // 找下一个 ##...## marker，避免把后续 block 也解析进来
+        Pattern nextMarkerPattern = Pattern.compile("(?m)^##[A-Za-z0-9_]+##\\s*$");
+        Matcher nextMarkerMatcher = nextMarkerPattern.matcher(shellContent);
+        int end = shellContent.length();
+
+        while (nextMarkerMatcher.find()) {
+            if (nextMarkerMatcher.start() >= start) {
+                end = nextMarkerMatcher.start();
+                break;
+            }
+        }
+
+        String blockContent = shellContent.substring(start, end);
+
+        // 匹配以 # 开头的表名/依赖名
+        Pattern tablePattern = Pattern.compile("(?m)^#\\s*([A-Za-z0-9_.-]+)\\s*$");
+        Matcher tableMatcher = tablePattern.matcher(blockContent);
+
+        while (tableMatcher.find()) {
+            String table = tableMatcher.group(1).trim();
+            if (!table.isEmpty()) {
+                tables.add(table);
+            }
+        }
+
+        return tables;
+    }
+
+
     public static void main(String[] args) {
         String shellScript = """
-                #!/bin/bash
-                #默认 pt_day=$(date +%F)
-                count=1
-                NGINX_HOME=/data/apps/openresty/nginx
-                DATA_HOME=/formalData/flume/buryPointData
-                currentDay=$(date -d ${pt_day}" 0 day" +"%Y%m%d")
-                left1Day=$(date -d ${pt_day}" -1 day" +"%y-%m-%d")
-                hadoop fs -test -d ${DATA_HOME}/${left1Day}
-                if [ $? -eq 0 ]; then
-                    hadoop fs -rm -r /formalData/flume/buryPointData/${left1Day}
-                    hadoop fs -mkdir /formalData/flume/buryPointData/${left1Day}
-                else
-                    hadoop fs -mkdir /formalData/flume/buryPointData/${left1Day}
-                fi
-                local93=$(ssh root@nfbigdata-93 "hadoop fs -put ${NGINX_HOME}/logs/access.log-${currentDay} ${DATA_HOME}/${left1Day}/access.log-${currentDay}-93; ls -l ${NGINX_HOME}/logs/access.log-${currentDay}"|awk '{print $5}')
-                local92=$(ssh root@nfbigdata-92 "hadoop fs -put ${NGINX_HOME}/logs/access.log-${currentDay} ${DATA_HOME}/${left1Day}/access.log-${currentDay}-92; ls -l ${NGINX_HOME}/logs/access.log-${currentDay}"|awk '{print $5}')
-                local91=$(ssh root@nfbigdata-91 "hadoop fs -put ${NGINX_HOME}/logs/access.log-${currentDay} ${DATA_HOME}/${left1Day}/access.log-${currentDay}-91; ls -l ${NGINX_HOME}/logs/access.log-${currentDay}"|awk '{print $5}')
-                hdfs93=0
-                hdfs92=0
-                hdfs91=0
-                until [ $local93 -eq $hdfs93 ] && [ $local92 -eq $hdfs92 ] && [ $local91 -eq $hdfs91 ]
-                do
-                  hdfs93=$(hadoop fs -ls ${DATA_HOME}/${left1Day}/access.log-${currentDay}-93|awk '{print $5}')
-                  hdfs92=$(hadoop fs -ls ${DATA_HOME}/${left1Day}/access.log-${currentDay}-92|awk '{print $5}')
-                  hdfs91=$(hadoop fs -ls ${DATA_HOME}/${left1Day}/access.log-${currentDay}-91|awk '{print $5}')
-                  sleep 10
-                  count=$((count + 1))
-                  if [ $count -eq 13 ]; then
-                    /data/apps/SparkRuntimeTempDir/WechatSend.sh '执行上传时间超过2分钟'
-                    exit 1
-                  fi
-                done
-                spark-submit --class com.spark_scala.app.BuryLogSplitApp \\
-                 --master yarn \\
-                 --deploy-mode cluster \\
-                 --driver-memory 2g \\
-                 --executor-memory 4g \\
-                 --executor-cores 2 \\
-                 --queue default \\
-                 hdfs://nameservice1/jars/buryLogProject-1.0-SNAPSHOT.jar ${pt_day}
-                
-                
+                python3 /root/python/user_action_tag_model.py
                 ##target_tables##
-                #ods_app_behavior_di_0log
-                #ods_app_em_behavior_di_0log 
-                #ods_app_heartbeat_di_0log
-                #ods_app_user_device_info_di_0log
-                #ods_pws_behavior_di_0log
-                #ods_mb_behavior_di_0log
-                #ods_pc_behavior_di_0log
-                #ods_pc_heartbeat_di_0log
-                #ods_wpf_error_di_0log
-                #ods_wmp_behavior_di_0log
-                #ods_wmp_heartbeat_di_0log
-                #ods_ios_traffic_reporting_di_0log
-                #ods_ios_push_receipt_di_0log
-                #ods_tougu_live_video_hb_di_0log
-                #ods_financial_sdk_di_0log
-                #ods_scrm_behavior_di_2log
-                #dim_gzg_bury_data_size_di
+                #db_tag.dwd_user_action_tag_dd
+                ##source_tables##
+                #db_tag.dwd_user_action_summary_30d
                 """;
 
-        List<String> tableList = extractTargetTables(shellScript);
+        List<String> tableList = getTablesOrDependencies(shellScript,"source_tables").stream().toList();
 
         // 打印结果
         tableList.forEach(System.out::println);

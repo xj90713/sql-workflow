@@ -59,31 +59,43 @@ public class TextUtils {
 
     public static Set<String> getTablesOrDependencies(String shellContent, String type) {
         Set<String> tables = new LinkedHashSet<>();
-        if (shellContent == null || shellContent.isEmpty()) {
+        if (shellContent == null || shellContent.trim().isEmpty() || type == null || type.trim().isEmpty()) {
             return tables;
         }
 
-        String marker = String.format("##%s##", type);
-        System.out.println("marker:" + marker);
-        int index = shellContent.indexOf(marker);
-        if (index == -1) {
+        String marker = String.format("##%s##", type.trim());
+        int start = shellContent.indexOf(marker);
+        if (start == -1) {
             return tables;
         }
+        // 从当前 marker 后开始截取
+        start += marker.length();
 
-        String subContent = shellContent.substring(index + marker.length());
+        // 找下一个 ##...## marker，避免把后续 block 也解析进来
+        Pattern nextMarkerPattern = Pattern.compile("(?m)^##[A-Za-z0-9_]+##\\s*$");
+        Matcher nextMarkerMatcher = nextMarkerPattern.matcher(shellContent);
+        int end = shellContent.length();
 
-        // 匹配以 # 开头，后面跟表名（允许字母、数字、下划线和点），整行可有前后空格
-        Pattern pattern = Pattern.compile("(?m)^#\\s*([A-Za-z0-9_.-]+)\\s*$");
-        Matcher matcher = pattern.matcher(subContent);
+        while (nextMarkerMatcher.find()) {
+            if (nextMarkerMatcher.start() >= start) {
+                end = nextMarkerMatcher.start();
+                break;
+            }
+        }
+        String blockContent = shellContent.substring(start, end);
+        // 匹配以 # 开头的表名/依赖名
+        Pattern tablePattern = Pattern.compile("(?m)^#\\s*([A-Za-z0-9_.-]+)\\s*$");
+        Matcher tableMatcher = tablePattern.matcher(blockContent);
 
-        while (matcher.find()) {
-            String table = matcher.group(1).trim();
-            if (!table.isEmpty() && !tables.contains(table)) {
+        while (tableMatcher.find()) {
+            String table = tableMatcher.group(1).trim();
+            if (!table.isEmpty()) {
                 tables.add(table);
             }
         }
         return tables;
     }
+
 
     public static String getAlertShell(String alertTemplate, String token, String mentionedUsers) {
         List<String> strings = extractFromBraces(alertTemplate);
