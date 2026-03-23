@@ -62,7 +62,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         return queue;
     }
 
-
+//
 //    @Override
 //    public String getTargetWorkflowName() {
 //        List<WorkflowDeploy> readyWrokflowList = repo.findByStatusAndScheduleTypeAndIsDelete('N', 1, 0);
@@ -182,6 +182,14 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
 
                     // 剔除自依赖逻辑
                     if (targetTableSet.contains(sourceTable)) {
+                        if (targetTableSet.size()==1 && sourceTable.equals(targetTableField)) {
+                            if (repo.findByWorkflowName(targetTableField).getStatus() == 'N') {
+                                sourceTablesReady = false;
+                                break;
+                            }
+                            break;
+                        }
+                        log.info("Skipping self-dependency check for table: {} in workflow: {}", sourceTable, currentName);
                         continue;
                     }
 
