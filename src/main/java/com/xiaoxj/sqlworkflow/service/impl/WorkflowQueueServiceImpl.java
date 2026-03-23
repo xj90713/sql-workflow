@@ -62,47 +62,86 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         return queue;
     }
 
-    /**
-     * 获取下一个加工任务的名称
-     * @return
-     */
+
 //    @Override
 //    public String getTargetWorkflowName() {
-//        List<WorkflowDeploy> readyWrokflowList = repo.findByStatusAndScheduleType('N',1);
-//        log.info("Pending workflows: {}" ,readyWrokflowList.size());
+//        List<WorkflowDeploy> readyWrokflowList = repo.findByStatusAndScheduleTypeAndIsDelete('N', 1, 0);
+//        log.info("Pending workflows: {}", readyWrokflowList.size());
+//
 //        Set<String> ready = buildReadyQueue();
-//        if (readyWrokflowList.isEmpty() || ready.isEmpty()) {
-//            log.info("No pending workflow found, all workflows have finished");
-//            return "finished";
+//        if (readyWrokflowList.isEmpty()) return "finished";
+//
+//        // 1. 预加载所有依赖工作流的状态 (保持高性能)
+//        Set<String> allDepNames = readyWrokflowList.stream()
+//                .map(WorkflowDeploy::getDependencies)
+//                .filter(d -> d != null && !d.isBlank())
+//                .flatMap(d -> Arrays.stream(d.split(",")))
+//                .map(String::trim).filter(d -> !d.isEmpty())
+//                .collect(Collectors.toSet());
+//
+//        Map<String, Character> statusMap = new HashMap<>();
+//        if (!allDepNames.isEmpty()) {
+//            repo.findByWorkflowNameIn(allDepNames).forEach(wd -> statusMap.put(wd.getWorkflowName(), wd.getStatus()));
 //        }
+//
+//        // 2. 遍历检查
 //        for (WorkflowDeploy wd : readyWrokflowList) {
-//            String targetTable = wd.getTargetTable();
-//            String sourceTables = wd.getSourceTables();
-//            String dependencies = wd.getDependencies();
-//            boolean allReady = true;
-//            if (sourceTables != null && !sourceTables.isBlank()) {
-//                for (String sourceTable : sourceTables.split(",")) {
-//                    sourceTable = sourceTable.trim();
-//                    if (!sourceTable.isEmpty() && !ready.contains(sourceTable)) { allReady = false; break; }
+//            String currentName = wd.getWorkflowName().trim();
+//            String targetTableField = wd.getTargetTable(); // 可能是逗号分隔的多个表
+//            String sourceTablesField = wd.getSourceTables();
+//
+//            // 将 targetTable 转为 Set 方便快速对比，剔除自依赖
+//            Set<String> targetTableSet = (targetTableField == null) ? Collections.emptySet() :
+//                    Arrays.stream(targetTableField.split(",")).map(String::trim).collect(Collectors.toSet());
+//
+//            // A. 校验数据源依赖 (增加“剔除自依赖”逻辑)
+//            boolean sourceTablesReady = true;
+//            if (sourceTablesField != null && !sourceTablesField.isBlank()) {
+//                for (String s : sourceTablesField.split(",")) {
+//                    String sourceTable = s.trim();
+//                    if (sourceTable.isEmpty()) continue;
+//                    if (targetTableSet.contains(sourceTable)) {
+//                        if (targetTableSet.size()==1 && sourceTable.equals(targetTableField)) {
+//                            if (repo.findByWorkflowName(targetTableField).getStatus() == 'N') {
+//                                sourceTablesReady = false;
+//                                break;
+//                            }
+//                            break;
+//                        }
+//                        log.info("Skipping self-dependency check for table: {} in workflow: {}", sourceTable, currentName);
+//                        continue;
+//                    }
+//                    if (!ready.contains(sourceTable)) {
+//                        sourceTablesReady = false;
+//                        break;
+//                    }
 //                }
 //            }
-//            if (allReady && targetTable != null && !targetTable.isBlank()) {
-//                log.info("Found a ready workflow: {}", wd.getWorkflowName());
-//                log.info("Target table: {}", targetTable);
-//                if (repo.findByTargetTable(targetTable).size() > 1) return wd.getWorkflowName().trim();
-//                if (!ready.contains(targetTable)) return wd.getWorkflowName().trim();
-//            }
-//            if (dependencies != null && !dependencies.isBlank()) {
-//                for (String dependency : dependencies.split(",")) {
-//                    char status = repo.findByWorkflowName(dependency).getStatus();
-//                    if (status != 'Y') break;
+//
+//            // B. 校验目标表执行条件
+//            if (sourceTablesReady && !targetTableSet.isEmpty()) {
+//                // 只要有一个目标表不在 ready 队列，或者存在多数据源配置，即可调度
+//                boolean needExecute = targetTableSet.stream().anyMatch(t -> !ready.contains(t))
+//                        || repo.countByTargetTable(targetTableField) > 1;
+//
+//                if (needExecute) {
+//                    log.info("Found a ready workflow: {}", currentName);
+//                    return currentName;
 //                }
-//                return repo.findByDependencies(dependencies).getFirst().getWorkflowName();
+//            }
+//
+//            // C. 校验显式工作流依赖
+//            if (checkWorkflowDependencies(wd.getDependencies(), statusMap)) {
+//                return currentName;
 //            }
 //        }
 //        return null;
 //    }
 
+    /**
+     * 获取下一个加工任务的名称
+     * @return
+     */
     @Override
     public String getTargetWorkflowName() {
         List<WorkflowDeploy> readyWrokflowList = repo.findByStatusAndScheduleTypeAndIsDelete('N', 1, 0);
@@ -111,7 +150,7 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         Set<String> ready = buildReadyQueue();
         if (readyWrokflowList.isEmpty()) return "finished";
 
-        // 1. 预加载所有依赖工作流的状态 (保持高性能)
+        // 1. 预加载所有依赖工作流的状态
         Set<String> allDepNames = readyWrokflowList.stream()
                 .map(WorkflowDeploy::getDependencies)
                 .filter(d -> d != null && !d.isBlank())
@@ -127,30 +166,25 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
         // 2. 遍历检查
         for (WorkflowDeploy wd : readyWrokflowList) {
             String currentName = wd.getWorkflowName().trim();
-            String targetTableField = wd.getTargetTable(); // 可能是逗号分隔的多个表
+            String targetTableField = wd.getTargetTable();
             String sourceTablesField = wd.getSourceTables();
+            String dependenciesField = wd.getDependencies();
 
-            // 将 targetTable 转为 Set 方便快速对比，剔除自依赖
             Set<String> targetTableSet = (targetTableField == null) ? Collections.emptySet() :
                     Arrays.stream(targetTableField.split(",")).map(String::trim).collect(Collectors.toSet());
 
-            // A. 校验数据源依赖 (增加“剔除自依赖”逻辑)
+            // --- 逻辑 A: 校验数据源依赖 ---
             boolean sourceTablesReady = true;
             if (sourceTablesField != null && !sourceTablesField.isBlank()) {
                 for (String s : sourceTablesField.split(",")) {
                     String sourceTable = s.trim();
                     if (sourceTable.isEmpty()) continue;
+
+                    // 剔除自依赖逻辑
                     if (targetTableSet.contains(sourceTable)) {
-                        if (targetTableSet.size()==1 && sourceTable.equals(targetTableField)) {
-                            if (repo.findByWorkflowName(targetTableField).getStatus() == 'N') {
-                                sourceTablesReady = false;
-                                break;
-                            }
-                            break;
-                        }
-                        log.info("Skipping self-dependency check for table: {} in workflow: {}", sourceTable, currentName);
                         continue;
                     }
+
                     if (!ready.contains(sourceTable)) {
                         sourceTablesReady = false;
                         break;
@@ -158,21 +192,24 @@ public class WorkflowQueueServiceImpl implements WorkflowQueueService {
                 }
             }
 
-            // B. 校验目标表执行条件
-            if (sourceTablesReady && !targetTableSet.isEmpty()) {
-                // 只要有一个目标表不在 ready 队列，或者存在多数据源配置，即可调度
-                boolean needExecute = targetTableSet.stream().anyMatch(t -> !ready.contains(t))
+            // --- 逻辑 B: 校验工作流显式依赖 ---
+            // 如果 dependencies 为空，默认为 ready (true)
+            boolean workflowDepsReady = true;
+            if (dependenciesField != null && !dependenciesField.isBlank()) {
+                workflowDepsReady = checkWorkflowDependencies(dependenciesField, statusMap);
+            }
+
+            // --- 逻辑 C: 综合判定 (AND 关系) ---
+            if (sourceTablesReady && workflowDepsReady) {
+                // 在满足所有依赖的前提下，判断是否真的需要执行（目标表未完成或存在多源配置）
+                boolean needExecute = targetTableSet.isEmpty() // 如果没定义目标表，默认执行
+                        || targetTableSet.stream().anyMatch(t -> !ready.contains(t))
                         || repo.countByTargetTable(targetTableField) > 1;
 
                 if (needExecute) {
-                    log.info("Found a ready workflow: {}", currentName);
+                    log.info("Found a ready workflow (All dependencies met): {}", currentName);
                     return currentName;
                 }
-            }
-
-            // C. 校验显式工作流依赖
-            if (checkWorkflowDependencies(wd.getDependencies(), statusMap)) {
-                return currentName;
             }
         }
         return null;
